@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSINT Username Search Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+        }
+        .sidebar h2 {
+            color: white;
+            border-bottom: 1px solid #555;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 5px 0;
+        }
+        .sidebar a:hover {
+            color: #4CAF50;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .tool-container {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .tool-container h2 {
+            color: #4CAF50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .checkbox-group {
+            margin-bottom: 15px;
+        }
+        .checkbox-group h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+        .checkbox-group label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        .button-group {
+            margin-top: 15px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button.clear {
+            background-color: #f44336;
+        }
+        button.clear:hover {
+            background-color: #d32f2f;
+        }
+        button.submit-all {
+            background-color: #2196F3;
+        }
+        button.submit-all:hover {
+            background-color: #0b7dda;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>OSINT Search Tools</h1>
+    </div>
+    
+    <div class="container">
+        <div class="sidebar">
+            <h2>Tools</h2>
+            <ul>
+                <li><a href="basic-search.html">Search Engines</a></li>
+                <li><a href="#">Facebook</a></li>
+                <li><a href="#">Twitter</a></li>
+                <li><a href="#">Instagram</a></li>
+                <li><a href="#">LinkedIn</a></li>
+                <li><a href="#">Email Addresses</a></li>
+                <li><a href="#" class="active">Usernames</a></li>
+                <li><a href="#">Names</a></li>
+                <li><a href="#">Addresses</a></li>
+                <li><a href="#">Phone Numbers</a></li>
+                <li><a href="#">Documents</a></li>
+                <li><a href="#">Images</a></li>
+                <li><a href="#">Videos</a></li>
+                <li><a href="#">Domains</a></li>
+                <li><a href="#">IP Addresses</a></li>
+                <li><a href="#">Breaches & Leaks</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <div class="tool-container">
+                <h2>Username Search Tool</h2>
+                
+                <div class="input-group">
+                    <label for="username-query">Username:</label>
+                    <input type="text" id="username-query" placeholder="Enter username">
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Social Media</h3>
+                    <label><input type="checkbox" id="twitter" checked> Twitter</label>
+                    <label><input type="checkbox" id="facebook" checked> Facebook</label>
+                    <label><input type="checkbox" id="instagram" checked> Instagram</label>
+                    <label><input type="checkbox" id="tiktok" checked> TikTok</label>
+                    <label><input type="checkbox" id="linkedin" checked> LinkedIn</label>
+                    <label><input type="checkbox" id="pinterest" checked> Pinterest</label>
+                    <label><input type="checkbox" id="reddit" checked> Reddit</label>
+                    <label><input type="checkbox" id="tumblr" checked> Tumblr</label>
+                    
+                    <div class="button-group">
+                        <button id="social-submit">Submit Selected</button>
+                        <button id="social-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Professional & Development</h3>
+                    <label><input type="checkbox" id="github" checked> GitHub</label>
+                    <label><input type="checkbox" id="gitlab"> GitLab</label>
+                    <label><input type="checkbox" id="stackoverflow"> Stack Overflow</label>
+                    <label><input type="checkbox" id="hackernews"> Hacker News</label>
+                    <label><input type="checkbox" id="medium" checked> Medium</label>
+                    <label><input type="checkbox" id="dev"> Dev.to</label>
+                    <label><input type="checkbox" id="patreon"> Patreon</label>
+                    <label><input type="checkbox" id="behance"> Behance</label>
+                    
+                    <div class="button-group">
+                        <button id="professional-submit">Submit Selected</button>
+                        <button id="professional-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Gaming & Entertainment</h3>
+                    <label><input type="checkbox" id="steam" checked> Steam</label>
+                    <label><input type="checkbox" id="xbox"> Xbox</label>
+                    <label><input type="checkbox" id="playstation"> PlayStation</label>
+                    <label><input type="checkbox" id="twitch" checked> Twitch</label>
+                    <label><input type="checkbox" id="discord"> Discord.id</label>
+                    <label><input type="checkbox" id="youtube" checked> YouTube</label>
+                    <label><input type="checkbox" id="soundcloud"> SoundCloud</label>
+                    <label><input type="checkbox" id="spotify"> Spotify</label>
+                    
+                    <div class="button-group">
+                        <button id="gaming-submit">Submit Selected</button>
+                        <button id="gaming-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Username Search Tools</h3>
+                    <label><input type="checkbox" id="namechk" checked> NameChk</label>
+                    <label><input type="checkbox" id="whatsmyname" checked> WhatsMyName</label>
+                    <label><input type="checkbox" id="namecheckup"> NameCheckup</label>
+                    <label><input type="checkbox" id="sherlock"> Sherlock Project</label>
+                    <label><input type="checkbox" id="usersearch" checked> UserSearch.org</label>
+                    <label><input type="checkbox" id="idcrawl" checked> IDCrawl</label>
+                    
+                    <div class="button-group">
+                        <button id="tools-submit">Submit Selected</button>
+                        <button id="tools-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button id="username-clear" class="clear">Clear All</button>
+                    <button id="username-submit-all" class="submit-all">Submit All Categories</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>&copy; 2024 OSINT Search Tools. All Rights Reserved.</p>
+    </div>
+    
+    <script>
+        // Social Media Submit
+        document.getElementById('social-submit').addEventListener('click', function() {
+            const username = document.getElementById('username-query').value;
+            if (!username) {
+                alert('Please enter a username');
+                return;
+            }
+            
+            const sites = {
+                'twitter': 'https://twitter.com/',
+                'facebook': 'https://www.facebook.com/',
+                'instagram': 'https://www.instagram.com/',
+                'tiktok': 'https://www.tiktok.com/@',
+                'linkedin': 'https://www.linkedin.com/in/',
+                'pinterest': 'https://www.pinterest.com/',
+                'reddit': 'https://www.reddit.com/user/',
+                'tumblr': 'https://{username}.tumblr.com'
+            };
+            
+            for (const [site, url] of Object.entries(sites)) {
+                if (document.getElementById(site).checked) {
+                    let finalUrl = url;
+                    if (site === 'tumblr') {
+                        finalUrl = finalUrl.replace('{username}', username);
+                    } else {
+                        finalUrl += username;
+                    }
+                    window.open(finalUrl, '_blank');
+                }
+            }
+        });
+        
+        // Social Media Submit All
+        document.getElementById('social-submit-all').addEventListener('click', function() {
+            const username = document.getElementById('username-query').value;
+            if (!username) {
+                alert('Please enter a username');
+                return;
+            }
+            
+            const sites = {
+                'twitter': 'https://twitter.com/',
+                'facebook': 'https://www.facebook.com/',
+                'instagram': 'https://www.instagram.com/',
+                'tiktok': 'https://www.tiktok.com/@',
+                'linkedin': 'https://www.linkedin.com/in/',
+                'pinterest': 'https://www.pinterest.com/',
+                'reddit': 'https://www.reddit.com/user/',
+                'tumblr': 'https://{username}.tumblr.com'
+            };
+            
+            for (const [site, url] of Object.entries(sites)) {
+                let finalUrl = url;
+                if (site === 'tumblr') {
+                    finalUrl = finalUrl.replace('{username}', username);
+                } else {
+                    finalUrl += username;
+                }
+                window.open(finalUrl, '_blank');
+            }
+        });
+        
+        // Professional & Development Submit
+        document.getElementById('professional-submit').addEventListener('click', function() {
+            const username = document.getElementById('username-query').value;
+            if (!username) {
+                alert('Please enter a username');
+                return;
+            }
+            
+            const sites = {
+                'github': 'https://github.com/',
+                'gitlab': 'https://gitlab.com/',
+                'stackoverflow': 'https://stackoverflow.com/users/',
+                'hackernews': 'https://news.ycombinator.com/user?id=',
+                'medium': 'https://medium.com/@',
+                'dev': 'https://dev.to/',
+                'patreon': 'https://www.patreon.com/',
+                'behance': 'https://www.behance.net/'
+            };
+            
+            for (const [site, url] of Object.entries(sites)) {
+                if (document.getElementById(site).checked) {
+                    window.open(url + username, '_blank');
+                }
+            }
+        });
+        
+        // Professional & Development Submit All
+        document.getElementById('professional-submit-all').addEventListener('click', function() {
+            const username = document.getElementById('username-query').value;
+            if (!username) {
+                alert('Please enter a username');
+                return;
+            }
+            
+            const sites = {
+                'github': 'https://github.com/',
+                'gitlab': 'https://gitlab.com/',
+                'stackoverflow': 'https://stackoverflow.com/users/',
+                'hackernews': 'https://news.ycombinator.com/user?id=',
+                'medium': 'https://medium.com/@',
+                'dev': 'https://dev.to/',
+                'patreon': 'https://www.patreon.com/',
+                'behance': 'https://www.behance.net/'
+            };
+            
+            for (const [site, url] of Object.entries(sites)) {
+                window.open(url + username, '_blank');
+            }
+        });
+        
+        // Gaming & Entertainment Submit
+        document.getElementById('gaming-submit').addEventListener('click', function() {
+            const username = document.getElementById('username-query').value;
+            if (!username) {
+                alert('Please enter a username');
+                return;
+            }
+            
+            const sites = {
+                'steam': 'https://steamcommunity.com/id/',
+                'xbox': 'https://xboxgamertag.com/search/',
+                'playstation': 'https://psnprofiles.com/',
+                'twitch': 'https://www.twitch.tv/',
+                'discord': 'https://discord.id/?prefill=',
+                'youtube': 'https://www.youtube.com/@',
+                'soundcloud': 'https://soundcloud.com/',
+                'spotify': 'https://open.spotify.com/user/'
+            };
+            
+            for (const [site, url] of Object.entries(sites)) {
+                if (document.getElementById(site).checked) {
+                    window.open(url + username, '_blank');
+                }
+            }
+        });
+        
+        // Gaming & Entertainment Submit All
+        document.getElementById('gaming-submit-all').addEventListener('click', function() {
+            const username = document.getElementById('username-query').value;
+            if (!username) {
+                alert('Please enter a username');
+                return;
+            }
+            
+            const sites = {
+                'steam': 'https://steamcommunity.com/id/',
+                'xbox': 'https://xboxgamertag.com/search/',
+                'playstation': 'https://psnprofiles.com/',
+                'twitch': 'https://www.twitch.tv/',
+                'discord': 'https://discord.id/?prefill=',
+                'youtube': 'https://www.youtube.com/@',
+                'soundcloud': 'https://soundcloud.com/',
+                'spotify': 'https://open.spotify.com/user/'
+            };
+            
+            for (const [site, url] of Object.entries(sites)) {
+                window.open(url + username, '_blank');
+            }
+        });
+        
+        // Username Search Tools Submit
+        document.getElementById('tools-submit').addEventListener('click', function() {
+            const username = document.getElementById('username-query').value;
+            if (!username) {
+                alert('Please enter a username');
+                return;
+            }
+            
+            const tools = {
+                'namechk': 'https://namechk.com/',
+                'whatsmyname': 'https://whatsmyname.app/?q=',
+                'namecheckup': 'https://namecheckup.com/',
+                'sherlock': 'https://github.com/sherlock-project/sherlock',
+                'usersearch': 'https://usersearch.org/results_normal.php?n=',
+                'idcrawl': 'https://www.idcrawl.com/u/'
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (document.getElementById(tool).checked) {
+                    if (tool === 'sherlock') {
+                        // Sherlock is a tool, not a website, so just open the GitHub page
+                        window.open(url, '_blank');
+                    } else if (tool === 'namechk' || tool === 'namecheckup') {
+                        // These sites need JavaScript to search, so just open the homepage
+                        window.open(url, '_blank');
+                    } else {
+                        window.open(url + username, '_blank');
+                    }
+                }
+            }
+        });
+        
+        // Username Search Tools Submit All
+        document.getElementById('tools-submit-all').addEventListener('click', function() {
+            const username = document.getElementById('username-query').value;
+            if (!username) {
+                alert('Please enter a username');
+                return;
+            }
+            
+            const tools = {
+                'namechk': 'https://namechk.com/',
+                'whatsmyname': 'https://whatsmyname.app/?q=',
+                'namecheckup': 'https://namecheckup.com/',
+                'sherlock': 'https://github.com/sherlock-project/sherlock',
+                'usersearch': 'https://usersearch.org/results_normal.php?n=',
+                'idcrawl': 'https://www.idcrawl.com/u/'
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (tool === 'sherlock') {
+                    // Sherlock is a tool, not a website, so just open the GitHub page
+                    window.open(url, '_blank');
+                } else if (tool === 'namechk' || tool === 'namecheckup') {
+                    // These sites need JavaScript to search, so just open the homepage
+                    window.open(url, '_blank');
+                } else {
+                    window.open(url + username, '_blank');
+                }
+            }
+        });
+        
+        // Submit All Categories
+        document.getElementById('username-submit-all').addEventListener('click', function() {
+            const username = document.getElementById('username-query').value;
+            if (!username) {
+                alert('Please enter a username');
+                return;
+            }
+            
+            // Trigger all category submit buttons
+            document.getElementById('social-submit-all').click();
+            document.getElementById('professional-submit-all').click();
+            document.getElementById('gaming-submit-all').click();
+            document.getElementById('tools-submit-all').click();
+        });
+        
+        // Clear All
+        document.getElementById('username-clear').addEventListener('click', function() {
+            document.getElementById('username-query').value = '';
+            
+            // Reset all checkboxes to their default state
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                const id = checkbox.id;
+                if (['twitter', 'facebook', 'instagram', 'tiktok', 'linkedin', 'pinterest', 'reddit', 'tumblr',
+                     'github', 'medium', 'steam', 'twitch', 'youtube', 'namechk', 'whatsmyname', 'usersearch', 'idcrawl'].includes(id)) {
+                    checkbox.checked = true;
+                } else {
+                    checkbox.checked = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

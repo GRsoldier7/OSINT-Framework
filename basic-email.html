@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSINT Email Search Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+        }
+        .sidebar h2 {
+            color: white;
+            border-bottom: 1px solid #555;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 5px 0;
+        }
+        .sidebar a:hover {
+            color: #4CAF50;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .tool-container {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .tool-container h2 {
+            color: #4CAF50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .checkbox-group {
+            margin-bottom: 15px;
+        }
+        .checkbox-group h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+        .checkbox-group label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        .button-group {
+            margin-top: 15px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button.clear {
+            background-color: #f44336;
+        }
+        button.clear:hover {
+            background-color: #d32f2f;
+        }
+        button.submit-all {
+            background-color: #2196F3;
+        }
+        button.submit-all:hover {
+            background-color: #0b7dda;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>OSINT Search Tools</h1>
+    </div>
+    
+    <div class="container">
+        <div class="sidebar">
+            <h2>Tools</h2>
+            <ul>
+                <li><a href="basic-search.html">Search Engines</a></li>
+                <li><a href="#">Facebook</a></li>
+                <li><a href="#">Twitter</a></li>
+                <li><a href="#">Instagram</a></li>
+                <li><a href="#">LinkedIn</a></li>
+                <li><a href="#" class="active">Email Addresses</a></li>
+                <li><a href="basic-username.html">Usernames</a></li>
+                <li><a href="#">Names</a></li>
+                <li><a href="#">Addresses</a></li>
+                <li><a href="#">Phone Numbers</a></li>
+                <li><a href="#">Documents</a></li>
+                <li><a href="#">Images</a></li>
+                <li><a href="#">Videos</a></li>
+                <li><a href="#">Domains</a></li>
+                <li><a href="#">IP Addresses</a></li>
+                <li><a href="#">Breaches & Leaks</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <div class="tool-container">
+                <h2>Email Address Search Tool</h2>
+                
+                <div class="input-group">
+                    <label for="email-query">Email Address:</label>
+                    <input type="email" id="email-query" placeholder="Enter email address">
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Email Verification</h3>
+                    <label><input type="checkbox" id="hunter" checked> Hunter.io</label>
+                    <label><input type="checkbox" id="emailrep" checked> EmailRep.io</label>
+                    <label><input type="checkbox" id="verify-email" checked> Verify-Email.org</label>
+                    <label><input type="checkbox" id="email-checker" checked> Email-Checker.net</label>
+                    <label><input type="checkbox" id="email-hippo"> Email Hippo</label>
+                    <label><input type="checkbox" id="email-format"> Email Format</label>
+                    
+                    <div class="button-group">
+                        <button id="verification-submit">Submit Selected</button>
+                        <button id="verification-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Data Breach Search</h3>
+                    <label><input type="checkbox" id="haveibeenpwned" checked> Have I Been Pwned</label>
+                    <label><input type="checkbox" id="dehashed" checked> DeHashed</label>
+                    <label><input type="checkbox" id="intelx" checked> IntelX.io</label>
+                    <label><input type="checkbox" id="leakcheck"> LeakCheck</label>
+                    <label><input type="checkbox" id="leakpeek"> LeakPeek</label>
+                    <label><input type="checkbox" id="scylla"> Scylla.sh</label>
+                    
+                    <div class="button-group">
+                        <button id="breach-submit">Submit Selected</button>
+                        <button id="breach-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Social Media & Profile Search</h3>
+                    <label><input type="checkbox" id="google" checked> Google</label>
+                    <label><input type="checkbox" id="epieos" checked> Epieos</label>
+                    <label><input type="checkbox" id="spokeo" checked> Spokeo</label>
+                    <label><input type="checkbox" id="that" checked> That's Them</label>
+                    <label><input type="checkbox" id="truepeoplesearch"> TruePeopleSearch</label>
+                    <label><input type="checkbox" id="whitepages"> Whitepages</label>
+                    
+                    <div class="button-group">
+                        <button id="profile-submit">Submit Selected</button>
+                        <button id="profile-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Domain Information</h3>
+                    <label><input type="checkbox" id="whois" checked> WHOIS Domain Lookup</label>
+                    <label><input type="checkbox" id="dns-lookup" checked> DNS Lookup</label>
+                    <label><input type="checkbox" id="mx-toolbox" checked> MX Toolbox</label>
+                    <label><input type="checkbox" id="spf-record"> SPF Record Lookup</label>
+                    <label><input type="checkbox" id="dmarc-record"> DMARC Record Lookup</label>
+                    <label><input type="checkbox" id="email-header"> Email Header Analyzer</label>
+                    
+                    <div class="button-group">
+                        <button id="domain-submit">Submit Selected</button>
+                        <button id="domain-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button id="email-clear" class="clear">Clear All</button>
+                    <button id="email-submit-all" class="submit-all">Submit All Categories</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>&copy; 2024 OSINT Search Tools. All Rights Reserved.</p>
+    </div>
+    
+    <script>
+        // Email Verification Submit
+        document.getElementById('verification-submit').addEventListener('click', function() {
+            const email = document.getElementById('email-query').value;
+            if (!email) {
+                alert('Please enter an email address');
+                return;
+            }
+            
+            const tools = {
+                'hunter': 'https://hunter.io/email-verifier/',
+                'emailrep': 'https://emailrep.io/',
+                'verify-email': 'https://verify-email.org/',
+                'email-checker': 'https://email-checker.net/check/',
+                'email-hippo': 'https://www.emailhippo.com/',
+                'email-format': 'https://www.email-format.com/d/'
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (document.getElementById(tool).checked) {
+                    if (tool === 'emailrep') {
+                        window.open(url + email, '_blank');
+                    } else if (tool === 'email-format') {
+                        // Extract domain from email
+                        const domain = email.split('@')[1];
+                        window.open(url + domain, '_blank');
+                    } else {
+                        window.open(url + email, '_blank');
+                    }
+                }
+            }
+        });
+        
+        // Email Verification Submit All
+        document.getElementById('verification-submit-all').addEventListener('click', function() {
+            const email = document.getElementById('email-query').value;
+            if (!email) {
+                alert('Please enter an email address');
+                return;
+            }
+            
+            const tools = {
+                'hunter': 'https://hunter.io/email-verifier/',
+                'emailrep': 'https://emailrep.io/',
+                'verify-email': 'https://verify-email.org/',
+                'email-checker': 'https://email-checker.net/check/',
+                'email-hippo': 'https://www.emailhippo.com/',
+                'email-format': 'https://www.email-format.com/d/'
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (tool === 'emailrep') {
+                    window.open(url + email, '_blank');
+                } else if (tool === 'email-format') {
+                    // Extract domain from email
+                    const domain = email.split('@')[1];
+                    window.open(url + domain, '_blank');
+                } else {
+                    window.open(url + email, '_blank');
+                }
+            }
+        });
+        
+        // Data Breach Search Submit
+        document.getElementById('breach-submit').addEventListener('click', function() {
+            const email = document.getElementById('email-query').value;
+            if (!email) {
+                alert('Please enter an email address');
+                return;
+            }
+            
+            const tools = {
+                'haveibeenpwned': 'https://haveibeenpwned.com/account/',
+                'dehashed': 'https://dehashed.com/search?query=',
+                'intelx': 'https://intelx.io/?s=',
+                'leakcheck': 'https://leakcheck.io/',
+                'leakpeek': 'https://leakpeek.com/',
+                'scylla': 'https://scylla.sh/'
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (document.getElementById(tool).checked) {
+                    window.open(url + email, '_blank');
+                }
+            }
+        });
+        
+        // Data Breach Search Submit All
+        document.getElementById('breach-submit-all').addEventListener('click', function() {
+            const email = document.getElementById('email-query').value;
+            if (!email) {
+                alert('Please enter an email address');
+                return;
+            }
+            
+            const tools = {
+                'haveibeenpwned': 'https://haveibeenpwned.com/account/',
+                'dehashed': 'https://dehashed.com/search?query=',
+                'intelx': 'https://intelx.io/?s=',
+                'leakcheck': 'https://leakcheck.io/',
+                'leakpeek': 'https://leakpeek.com/',
+                'scylla': 'https://scylla.sh/'
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                window.open(url + email, '_blank');
+            }
+        });
+        
+        // Social Media & Profile Search Submit
+        document.getElementById('profile-submit').addEventListener('click', function() {
+            const email = document.getElementById('email-query').value;
+            if (!email) {
+                alert('Please enter an email address');
+                return;
+            }
+            
+            const tools = {
+                'google': 'https://www.google.com/search?q=',
+                'epieos': 'https://epieos.com/?q=',
+                'spokeo': 'https://www.spokeo.com/email-search?q=',
+                'that': 'https://thatsthem.com/email/',
+                'truepeoplesearch': 'https://www.truepeoplesearch.com/results?emailaddress=',
+                'whitepages': 'https://www.whitepages.com/email/'
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (document.getElementById(tool).checked) {
+                    window.open(url + email, '_blank');
+                }
+            }
+        });
+        
+        // Social Media & Profile Search Submit All
+        document.getElementById('profile-submit-all').addEventListener('click', function() {
+            const email = document.getElementById('email-query').value;
+            if (!email) {
+                alert('Please enter an email address');
+                return;
+            }
+            
+            const tools = {
+                'google': 'https://www.google.com/search?q=',
+                'epieos': 'https://epieos.com/?q=',
+                'spokeo': 'https://www.spokeo.com/email-search?q=',
+                'that': 'https://thatsthem.com/email/',
+                'truepeoplesearch': 'https://www.truepeoplesearch.com/results?emailaddress=',
+                'whitepages': 'https://www.whitepages.com/email/'
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                window.open(url + email, '_blank');
+            }
+        });
+        
+        // Domain Information Submit
+        document.getElementById('domain-submit').addEventListener('click', function() {
+            const email = document.getElementById('email-query').value;
+            if (!email) {
+                alert('Please enter an email address');
+                return;
+            }
+            
+            // Extract domain from email
+            const domain = email.split('@')[1];
+            if (!domain) {
+                alert('Invalid email format');
+                return;
+            }
+            
+            const tools = {
+                'whois': 'https://whois.domaintools.com/',
+                'dns-lookup': 'https://dnschecker.org/all-dns-records-of-domain.php?query=',
+                'mx-toolbox': 'https://mxtoolbox.com/SuperTool.aspx?action=mx%3a',
+                'spf-record': 'https://dmarcian.com/spf-survey/?domain=',
+                'dmarc-record': 'https://dmarcian.com/dmarc-inspector/?domain=',
+                'email-header': 'https://mxtoolbox.com/EmailHeaders.aspx'
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (document.getElementById(tool).checked) {
+                    if (tool === 'email-header') {
+                        window.open(url, '_blank');
+                    } else {
+                        window.open(url + domain, '_blank');
+                    }
+                }
+            }
+        });
+        
+        // Domain Information Submit All
+        document.getElementById('domain-submit-all').addEventListener('click', function() {
+            const email = document.getElementById('email-query').value;
+            if (!email) {
+                alert('Please enter an email address');
+                return;
+            }
+            
+            // Extract domain from email
+            const domain = email.split('@')[1];
+            if (!domain) {
+                alert('Invalid email format');
+                return;
+            }
+            
+            const tools = {
+                'whois': 'https://whois.domaintools.com/',
+                'dns-lookup': 'https://dnschecker.org/all-dns-records-of-domain.php?query=',
+                'mx-toolbox': 'https://mxtoolbox.com/SuperTool.aspx?action=mx%3a',
+                'spf-record': 'https://dmarcian.com/spf-survey/?domain=',
+                'dmarc-record': 'https://dmarcian.com/dmarc-inspector/?domain=',
+                'email-header': 'https://mxtoolbox.com/EmailHeaders.aspx'
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (tool === 'email-header') {
+                    window.open(url, '_blank');
+                } else {
+                    window.open(url + domain, '_blank');
+                }
+            }
+        });
+        
+        // Submit All Categories
+        document.getElementById('email-submit-all').addEventListener('click', function() {
+            const email = document.getElementById('email-query').value;
+            if (!email) {
+                alert('Please enter an email address');
+                return;
+            }
+            
+            // Trigger all category submit buttons
+            document.getElementById('verification-submit-all').click();
+            document.getElementById('breach-submit-all').click();
+            document.getElementById('profile-submit-all').click();
+            document.getElementById('domain-submit-all').click();
+        });
+        
+        // Clear All
+        document.getElementById('email-clear').addEventListener('click', function() {
+            document.getElementById('email-query').value = '';
+            
+            // Reset all checkboxes to their default state
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                const id = checkbox.id;
+                if (['hunter', 'emailrep', 'verify-email', 'email-checker', 
+                     'haveibeenpwned', 'dehashed', 'intelx',
+                     'google', 'epieos', 'spokeo', 'that',
+                     'whois', 'dns-lookup', 'mx-toolbox'].includes(id)) {
+                    checkbox.checked = true;
+                } else {
+                    checkbox.checked = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

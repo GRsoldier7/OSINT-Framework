@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSINT Domain Analysis Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+        }
+        .sidebar h2 {
+            color: white;
+            border-bottom: 1px solid #555;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 5px 0;
+        }
+        .sidebar a:hover {
+            color: #4CAF50;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .tool-container {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .tool-container h2 {
+            color: #4CAF50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .checkbox-group {
+            margin-bottom: 15px;
+        }
+        .checkbox-group h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+        .checkbox-group label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        .button-group {
+            margin-top: 15px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button.clear {
+            background-color: #f44336;
+        }
+        button.clear:hover {
+            background-color: #d32f2f;
+        }
+        button.submit-all {
+            background-color: #2196F3;
+        }
+        button.submit-all:hover {
+            background-color: #0b7dda;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>OSINT Search Tools</h1>
+    </div>
+    
+    <div class="container">
+        <div class="sidebar">
+            <h2>Tools</h2>
+            <ul>
+                <li><a href="basic-search.html">Search Engines</a></li>
+                <li><a href="#">Facebook</a></li>
+                <li><a href="#">Twitter</a></li>
+                <li><a href="#">Instagram</a></li>
+                <li><a href="#">LinkedIn</a></li>
+                <li><a href="basic-email.html">Email Addresses</a></li>
+                <li><a href="basic-username.html">Usernames</a></li>
+                <li><a href="#">Names</a></li>
+                <li><a href="#">Addresses</a></li>
+                <li><a href="#">Phone Numbers</a></li>
+                <li><a href="#">Documents</a></li>
+                <li><a href="#">Images</a></li>
+                <li><a href="#">Videos</a></li>
+                <li><a href="#" class="active">Domains</a></li>
+                <li><a href="#">IP Addresses</a></li>
+                <li><a href="#">Breaches & Leaks</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <div class="tool-container">
+                <h2>Domain Analysis Tool</h2>
+                
+                <div class="input-group">
+                    <label for="domain-query">Domain:</label>
+                    <input type="text" id="domain-query" placeholder="Enter domain (e.g., example.com)">
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>WHOIS & Registration</h3>
+                    <label><input type="checkbox" id="whois" checked> WHOIS Lookup</label>
+                    <label><input type="checkbox" id="domaintools" checked> DomainTools</label>
+                    <label><input type="checkbox" id="whoxy" checked> WHOXY</label>
+                    <label><input type="checkbox" id="viewdns" checked> ViewDNS.info</label>
+                    <label><input type="checkbox" id="domainbigdata"> DomainBigData</label>
+                    <label><input type="checkbox" id="whoisology"> Whoisology</label>
+                    
+                    <div class="button-group">
+                        <button id="whois-submit">Submit Selected</button>
+                        <button id="whois-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>DNS & Technical</h3>
+                    <label><input type="checkbox" id="dnsdumpster" checked> DNSdumpster</label>
+                    <label><input type="checkbox" id="securitytrails" checked> SecurityTrails</label>
+                    <label><input type="checkbox" id="mxtoolbox" checked> MX Toolbox</label>
+                    <label><input type="checkbox" id="dnslytics" checked> DNSlytics</label>
+                    <label><input type="checkbox" id="intodns"> IntoDNS</label>
+                    <label><input type="checkbox" id="dnschecker"> DNS Checker</label>
+                    
+                    <div class="button-group">
+                        <button id="dns-submit">Submit Selected</button>
+                        <button id="dns-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Website Analysis</h3>
+                    <label><input type="checkbox" id="archive" checked> Wayback Machine</label>
+                    <label><input type="checkbox" id="urlscan" checked> URLScan.io</label>
+                    <label><input type="checkbox" id="builtwith" checked> BuiltWith</label>
+                    <label><input type="checkbox" id="wappalyzer"> Wappalyzer</label>
+                    <label><input type="checkbox" id="similarweb" checked> SimilarWeb</label>
+                    <label><input type="checkbox" id="visualping"> VisualPing</label>
+                    
+                    <div class="button-group">
+                        <button id="website-submit">Submit Selected</button>
+                        <button id="website-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Security & Reputation</h3>
+                    <label><input type="checkbox" id="virustotal" checked> VirusTotal</label>
+                    <label><input type="checkbox" id="siteadvisor" checked> McAfee SiteAdvisor</label>
+                    <label><input type="checkbox" id="sucuri" checked> Sucuri SiteCheck</label>
+                    <label><input type="checkbox" id="urlvoid" checked> URLVoid</label>
+                    <label><input type="checkbox" id="phishtank"> PhishTank</label>
+                    <label><input type="checkbox" id="threatcrowd"> ThreatCrowd</label>
+                    
+                    <div class="button-group">
+                        <button id="security-submit">Submit Selected</button>
+                        <button id="security-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>SSL Certificate</h3>
+                    <label><input type="checkbox" id="sslshopper" checked> SSL Shopper</label>
+                    <label><input type="checkbox" id="ssllabs" checked> Qualys SSL Labs</label>
+                    <label><input type="checkbox" id="crt" checked> crt.sh</label>
+                    <label><input type="checkbox" id="censys" checked> Censys</label>
+                    <label><input type="checkbox" id="certspotter"> Cert Spotter</label>
+                    <label><input type="checkbox" id="certdb"> CertDB</label>
+                    
+                    <div class="button-group">
+                        <button id="ssl-submit">Submit Selected</button>
+                        <button id="ssl-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button id="domain-clear" class="clear">Clear All</button>
+                    <button id="domain-submit-all" class="submit-all">Submit All Categories</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>&copy; 2024 OSINT Search Tools. All Rights Reserved.</p>
+    </div>
+    
+    <script>
+        // WHOIS & Registration Submit
+        document.getElementById('whois-submit').addEventListener('click', function() {
+            const domain = document.getElementById('domain-query').value;
+            if (!domain) {
+                alert('Please enter a domain');
+                return;
+            }
+            
+            const tools = {
+                'whois': 'https://whois.domaintools.com/',
+                'domaintools': 'https://whois.domaintools.com/',
+                'whoxy': 'https://whoxy.com/',
+                'viewdns': 'https://viewdns.info/whois/?domain=',
+                'domainbigdata': 'https://domainbigdata.com/',
+                'whoisology': 'https://whoisology.com/'
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (document.getElementById(tool).checked) {
+                    if (tool === 'whoxy' || tool === 'domainbigdata' || tool === 'whoisology') {
+                        // These sites need JavaScript to search, so just open the homepage
+                        window.open(url, '_blank');
+                    } else {
+                        window.open(url + domain, '_blank');
+                    }
+                }
+            }
+        });
+        
+        // WHOIS & Registration Submit All
+        document.getElementById('whois-submit-all').addEventListener('click', function() {
+            const domain = document.getElementById('domain-query').value;
+            if (!domain) {
+                alert('Please enter a domain');
+                return;
+            }
+            
+            const tools = {
+                'whois': 'https://whois.domaintools.com/',
+                'domaintools': 'https://whois.domaintools.com/',
+                'whoxy': 'https://whoxy.com/',
+                'viewdns': 'https://viewdns.info/whois/?domain=',
+                'domainbigdata': 'https://domainbigdata.com/',
+                'whoisology': 'https://whoisology.com/'
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (tool === 'whoxy' || tool === 'domainbigdata' || tool === 'whoisology') {
+                    // These sites need JavaScript to search, so just open the homepage
+                    window.open(url, '_blank');
+                } else {
+                    window.open(url + domain, '_blank');
+                }
+            }
+        });
+        
+        // DNS & Technical Submit
+        document.getElementById('dns-submit').addEventListener('click', function() {
+            const domain = document.getElementById('domain-query').value;
+            if (!domain) {
+                alert('Please enter a domain');
+                return;
+            }
+            
+            const tools = {
+                'dnsdumpster': 'https://dnsdumpster.com/',
+                'securitytrails': 'https://securitytrails.com/domain/',
+                'mxtoolbox': 'https://mxtoolbox.com/SuperTool.aspx?action=mx%3a',
+                'dnslytics': 'https://dnslytics.com/domain/',
+                'intodns': 'https://intodns.com/',
+                'dnschecker': 'https://dnschecker.org/all-dns-records-of-domain.php?query='
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (document.getElementById(tool).checked) {
+                    if (tool === 'dnsdumpster' || tool === 'intodns') {
+                        // These sites need JavaScript to search, so just open the homepage
+                        window.open(url, '_blank');
+                    } else {
+                        window.open(url + domain, '_blank');
+                    }
+                }
+            }
+        });
+        
+        // DNS & Technical Submit All
+        document.getElementById('dns-submit-all').addEventListener('click', function() {
+            const domain = document.getElementById('domain-query').value;
+            if (!domain) {
+                alert('Please enter a domain');
+                return;
+            }
+            
+            const tools = {
+                'dnsdumpster': 'https://dnsdumpster.com/',
+                'securitytrails': 'https://securitytrails.com/domain/',
+                'mxtoolbox': 'https://mxtoolbox.com/SuperTool.aspx?action=mx%3a',
+                'dnslytics': 'https://dnslytics.com/domain/',
+                'intodns': 'https://intodns.com/',
+                'dnschecker': 'https://dnschecker.org/all-dns-records-of-domain.php?query='
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (tool === 'dnsdumpster' || tool === 'intodns') {
+                    // These sites need JavaScript to search, so just open the homepage
+                    window.open(url, '_blank');
+                } else {
+                    window.open(url + domain, '_blank');
+                }
+            }
+        });
+        
+        // Website Analysis Submit
+        document.getElementById('website-submit').addEventListener('click', function() {
+            const domain = document.getElementById('domain-query').value;
+            if (!domain) {
+                alert('Please enter a domain');
+                return;
+            }
+            
+            const tools = {
+                'archive': 'https://web.archive.org/web/*/',
+                'urlscan': 'https://urlscan.io/result/',
+                'builtwith': 'https://builtwith.com/',
+                'wappalyzer': 'https://www.wappalyzer.com/lookup/',
+                'similarweb': 'https://www.similarweb.com/website/',
+                'visualping': 'https://visualping.io/'
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (document.getElementById(tool).checked) {
+                    if (tool === 'urlscan' || tool === 'builtwith' || tool === 'wappalyzer' || tool === 'visualping') {
+                        // These sites need JavaScript to search, so just open the homepage
+                        window.open(url, '_blank');
+                    } else {
+                        window.open(url + domain, '_blank');
+                    }
+                }
+            }
+        });
+        
+        // Website Analysis Submit All
+        document.getElementById('website-submit-all').addEventListener('click', function() {
+            const domain = document.getElementById('domain-query').value;
+            if (!domain) {
+                alert('Please enter a domain');
+                return;
+            }
+            
+            const tools = {
+                'archive': 'https://web.archive.org/web/*/',
+                'urlscan': 'https://urlscan.io/result/',
+                'builtwith': 'https://builtwith.com/',
+                'wappalyzer': 'https://www.wappalyzer.com/lookup/',
+                'similarweb': 'https://www.similarweb.com/website/',
+                'visualping': 'https://visualping.io/'
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (tool === 'urlscan' || tool === 'builtwith' || tool === 'wappalyzer' || tool === 'visualping') {
+                    // These sites need JavaScript to search, so just open the homepage
+                    window.open(url, '_blank');
+                } else {
+                    window.open(url + domain, '_blank');
+                }
+            }
+        });
+        
+        // Security & Reputation Submit
+        document.getElementById('security-submit').addEventListener('click', function() {
+            const domain = document.getElementById('domain-query').value;
+            if (!domain) {
+                alert('Please enter a domain');
+                return;
+            }
+            
+            const tools = {
+                'virustotal': 'https://www.virustotal.com/gui/domain/',
+                'siteadvisor': 'https://www.siteadvisor.com/sitereport.html?url=',
+                'sucuri': 'https://sitecheck.sucuri.net/results/',
+                'urlvoid': 'https://www.urlvoid.com/scan/',
+                'phishtank': 'https://phishtank.org/index.php',
+                'threatcrowd': 'https://www.threatcrowd.org/domain.php?domain='
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (document.getElementById(tool).checked) {
+                    if (tool === 'phishtank') {
+                        // These sites need JavaScript to search, so just open the homepage
+                        window.open(url, '_blank');
+                    } else {
+                        window.open(url + domain, '_blank');
+                    }
+                }
+            }
+        });
+        
+        // Security & Reputation Submit All
+        document.getElementById('security-submit-all').addEventListener('click', function() {
+            const domain = document.getElementById('domain-query').value;
+            if (!domain) {
+                alert('Please enter a domain');
+                return;
+            }
+            
+            const tools = {
+                'virustotal': 'https://www.virustotal.com/gui/domain/',
+                'siteadvisor': 'https://www.siteadvisor.com/sitereport.html?url=',
+                'sucuri': 'https://sitecheck.sucuri.net/results/',
+                'urlvoid': 'https://www.urlvoid.com/scan/',
+                'phishtank': 'https://phishtank.org/index.php',
+                'threatcrowd': 'https://www.threatcrowd.org/domain.php?domain='
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (tool === 'phishtank') {
+                    // These sites need JavaScript to search, so just open the homepage
+                    window.open(url, '_blank');
+                } else {
+                    window.open(url + domain, '_blank');
+                }
+            }
+        });
+        
+        // SSL Certificate Submit
+        document.getElementById('ssl-submit').addEventListener('click', function() {
+            const domain = document.getElementById('domain-query').value;
+            if (!domain) {
+                alert('Please enter a domain');
+                return;
+            }
+            
+            const tools = {
+                'sslshopper': 'https://www.sslshopper.com/ssl-checker.html#hostname=',
+                'ssllabs': 'https://www.ssllabs.com/ssltest/analyze.html?d=',
+                'crt': 'https://crt.sh/?q=',
+                'censys': 'https://search.censys.io/search?resource=hosts&q=',
+                'certspotter': 'https://sslmate.com/certspotter/api/v1/issuances?domain=',
+                'certdb': 'https://certdb.com/search?q='
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (document.getElementById(tool).checked) {
+                    window.open(url + domain, '_blank');
+                }
+            }
+        });
+        
+        // SSL Certificate Submit All
+        document.getElementById('ssl-submit-all').addEventListener('click', function() {
+            const domain = document.getElementById('domain-query').value;
+            if (!domain) {
+                alert('Please enter a domain');
+                return;
+            }
+            
+            const tools = {
+                'sslshopper': 'https://www.sslshopper.com/ssl-checker.html#hostname=',
+                'ssllabs': 'https://www.ssllabs.com/ssltest/analyze.html?d=',
+                'crt': 'https://crt.sh/?q=',
+                'censys': 'https://search.censys.io/search?resource=hosts&q=',
+                'certspotter': 'https://sslmate.com/certspotter/api/v1/issuances?domain=',
+                'certdb': 'https://certdb.com/search?q='
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                window.open(url + domain, '_blank');
+            }
+        });
+        
+        // Submit All Categories
+        document.getElementById('domain-submit-all').addEventListener('click', function() {
+            const domain = document.getElementById('domain-query').value;
+            if (!domain) {
+                alert('Please enter a domain');
+                return;
+            }
+            
+            // Trigger all category submit buttons
+            document.getElementById('whois-submit-all').click();
+            document.getElementById('dns-submit-all').click();
+            document.getElementById('website-submit-all').click();
+            document.getElementById('security-submit-all').click();
+            document.getElementById('ssl-submit-all').click();
+        });
+        
+        // Clear All
+        document.getElementById('domain-clear').addEventListener('click', function() {
+            document.getElementById('domain-query').value = '';
+            
+            // Reset all checkboxes to their default state
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                const id = checkbox.id;
+                if (['whois', 'domaintools', 'whoxy', 'viewdns',
+                     'dnsdumpster', 'securitytrails', 'mxtoolbox', 'dnslytics',
+                     'archive', 'urlscan', 'builtwith', 'similarweb',
+                     'virustotal', 'siteadvisor', 'sucuri', 'urlvoid',
+                     'sslshopper', 'ssllabs', 'crt', 'censys'].includes(id)) {
+                    checkbox.checked = true;
+                } else {
+                    checkbox.checked = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

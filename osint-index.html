@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate OSINT Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        .header p {
+            margin: 10px 0 0;
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .intro {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .tool-card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .tool-card h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .tool-card p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .tool-card a {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        .tool-card a:hover {
+            background-color: #2980b9;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #2c3e50;
+            color: white;
+            margin-top: 20px;
+        }
+        .footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .features {
+            margin: 40px 0;
+        }
+        .features h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .feature-card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+        .feature-card i {
+            font-size: 2.5rem;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+        .feature-card h3 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        .feature-card p {
+            color: #666;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="header">
+        <h1>Ultimate OSINT Tool</h1>
+        <p>A comprehensive platform for Open Source Intelligence gathering</p>
+    </div>
+
+    <div class="container">
+        <div class="intro">
+            <h2>Welcome to the Ultimate OSINT Tool</h2>
+            <p>This platform provides a collection of powerful tools for open source intelligence gathering and investigation. Whether you're a security professional, investigator, researcher, or journalist, our tools can help you find the information you need.</p>
+            <p>All tools are designed to be simple, effective, and privacy-focused. No data is stored on our servers, and all processing happens in your browser.</p>
+        </div>
+
+        <div class="features">
+            <h2>Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-search"></i>
+                    <h3>Multi-Engine Search</h3>
+                    <p>Search across multiple engines simultaneously to get comprehensive results.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-user-secret"></i>
+                    <h3>Username Analysis</h3>
+                    <p>Find accounts associated with usernames across various platforms.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-envelope"></i>
+                    <h3>Email Investigation</h3>
+                    <p>Verify emails, check for breaches, and find associated profiles.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-globe"></i>
+                    <h3>Domain Analysis</h3>
+                    <p>Investigate websites, check WHOIS data, and analyze DNS records.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Privacy Focused</h3>
+                    <p>All processing happens in your browser. No data is stored on our servers.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-robot"></i>
+                    <h3>AI Integration</h3>
+                    <p>Leverage AI capabilities for advanced analysis and insights.</p>
+                </div>
+            </div>
+        </div>
+
+        <h2>Available Tools</h2>
+        <div class="tools-grid">
+            <div class="tool-card">
+                <h3>Search Engines Tool</h3>
+                <p>Search across multiple search engines simultaneously, including specialized and social media search.</p>
+                <a href="basic-search.html">Open Tool</a>
+            </div>
+
+            <div class="tool-card">
+                <h3>Username Search</h3>
+                <p>Find accounts associated with a username across various social media and online platforms.</p>
+                <a href="basic-username.html">Open Tool</a>
+            </div>
+
+            <div class="tool-card">
+                <h3>Email Analysis</h3>
+                <p>Verify email addresses, check for data breaches, and find associated profiles and information.</p>
+                <a href="basic-email.html">Open Tool</a>
+            </div>
+
+            <div class="tool-card">
+                <h3>Domain Analysis</h3>
+                <p>Investigate websites, check WHOIS data, DNS records, and find related information.</p>
+                <a href="basic-domain.html">Open Tool</a>
+            </div>
+
+            <div class="tool-card">
+                <h3>IP Address Lookup</h3>
+                <p>Get detailed information about IP addresses, including geolocation and network data.</p>
+                <a href="basic-ip.html">Open Tool</a>
+            </div>
+
+            <div class="tool-card">
+                <h3>Social Media Analysis</h3>
+                <p>Analyze profiles and content from various social media platforms.</p>
+                <a href="#">Coming Soon</a>
+            </div>
+
+            <div class="tool-card">
+                <h3>Image Analysis</h3>
+                <p>Analyze images, extract metadata, and perform reverse image searches.</p>
+                <a href="#">Coming Soon</a>
+            </div>
+
+            <div class="tool-card">
+                <h3>Document Analysis</h3>
+                <p>Extract metadata from documents and find related information.</p>
+                <a href="#">Coming Soon</a>
+            </div>
+
+            <div class="tool-card">
+                <h3>AI-Powered Analysis</h3>
+                <p>Use AI to analyze data, generate insights, and assist with investigations.</p>
+                <a href="#">Coming Soon</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 Ultimate OSINT Tool. All Rights Reserved.</p>
+        <p>Powered by <a href="https://github.com/jivoi/awesome-osint" target="_blank">awesome-osint</a> and <a href="https://inteltechniques.com" target="_blank">IntelTechniques</a>.</p>
+    </div>
+</body>
+</html>
