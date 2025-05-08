@@ -4,214 +4,802 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Engines Tool - OSINT Framework</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/magicui.css">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-        .header {
-            background-color: #3498db;
+        /* Custom styles for the search tool */
+        .tool-header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            padding: var(--space-8) 0;
             color: white;
-            padding: 20px;
-            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
-        .container {
-            max-width: 1200px;
+
+        .tool-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1NiIgaGVpZ2h0PSIxMDAiPgo8cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiBmaWxsPSIjMDAwMCI+PC9yZWN0Pgo8cGF0aCBkPSJNMjggNjZMMCA1MEwwIDE2TDI4IDBMNTYgMTZMNTYgNTBMMjggNjZMMjggMTAwIiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIgc3Ryb2tlLXdpZHRoPSIyIj48L3BhdGg+CjxwYXRoIGQ9Ik0yOCAwTDI4IDM0TDAgNTBMMCA4NEwyOCAxMDBMNTYgODRMNTYgNTBMMjggMzQiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjIiPjwvcGF0aD4KPC9zdmc+');
+            opacity: 0.1;
+        }
+
+        .tool-header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .search-form {
+            max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
         }
-        .card {
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
+
+        .search-input-container {
+            position: relative;
+            margin-bottom: var(--space-6);
         }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="text"] {
+
+        .search-input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        .button {
-            display: inline-block;
-            background-color: #3498db;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
-            text-decoration: none;
-            margin-top: 10px;
+            padding: var(--space-4) var(--space-12) var(--space-4) var(--space-4);
+            border-radius: var(--border-radius-lg);
             border: none;
-            cursor: pointer;
-            font-size: 16px;
+            font-size: var(--font-size-lg);
+            box-shadow: var(--shadow-lg);
+            background-color: var(--color-surface);
+            color: var(--color-text-primary);
         }
-        .button:hover {
-            background-color: #2980b9;
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: var(--shadow-outline);
         }
-        .checkbox-group {
-            margin-bottom: 15px;
+
+        .search-icon {
+            position: absolute;
+            right: var(--space-4);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-primary);
+            font-size: var(--font-size-xl);
         }
-        .checkbox-group h3 {
+
+        .engine-categories {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: var(--space-6);
+            margin-bottom: var(--space-6);
+        }
+
+        @media (min-width: 768px) {
+            .engine-categories {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .engine-category {
+            background-color: var(--color-surface);
+            border-radius: var(--border-radius-lg);
+            padding: var(--space-4);
+            box-shadow: var(--shadow-md);
+        }
+
+        .engine-category h3 {
             margin-top: 0;
-            margin-bottom: 10px;
+            margin-bottom: var(--space-4);
+            color: var(--color-primary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
         }
-        .checkbox-item {
-            margin-bottom: 5px;
+
+        .engine-category h3 i {
+            margin-right: var(--space-2);
         }
-        .footer {
-            background-color: #333;
-            color: white;
-            padding: 20px;
-            text-align: center;
+
+        .engine-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--space-2);
+            padding: var(--space-2);
+            border-radius: var(--border-radius-md);
+            transition: background-color var(--transition-fast);
         }
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #3498db;
+
+        .engine-item:hover {
+            background-color: var(--color-surface-accent);
+        }
+
+        .engine-checkbox {
+            margin-right: var(--space-2);
+        }
+
+        .engine-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .engine-label {
+            cursor: pointer;
+            flex-grow: 1;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--space-4);
+            margin-top: var(--space-6);
+        }
+
+        .action-button {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+        }
+
+        .action-button i {
+            font-size: var(--font-size-lg);
+        }
+
+        .results-preview {
+            margin-top: var(--space-8);
+            padding: var(--space-4);
+            background-color: var(--color-surface);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            display: none;
+        }
+
+        .results-preview.show {
+            display: block;
+        }
+
+        .results-preview h3 {
+            margin-top: 0;
+            margin-bottom: var(--space-4);
+            color: var(--color-primary);
+        }
+
+        .results-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .result-item {
+            padding: var(--space-2) 0;
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-icon {
+            margin-right: var(--space-2);
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-primary);
+        }
+
+        .result-name {
+            flex-grow: 1;
+        }
+
+        .result-action {
+            margin-left: var(--space-2);
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            color: var(--color-text-primary);
             text-decoration: none;
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--border-radius-md);
+            transition: background-color var(--transition-fast);
+            margin-bottom: var(--space-4);
         }
-        .back-link:hover {
-            text-decoration: underline;
+
+        .back-button:hover {
+            background-color: var(--color-surface-accent);
+        }
+
+        .ai-suggestions {
+            margin-top: var(--space-6);
+            padding: var(--space-4);
+            background-color: var(--color-surface);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            border-left: 4px solid var(--color-secondary);
+        }
+
+        .ai-suggestions h3 {
+            margin-top: 0;
+            margin-bottom: var(--space-4);
+            color: var(--color-secondary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .suggestion-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .suggestion-item {
+            padding: var(--space-2) 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .suggestion-icon {
+            margin-right: var(--space-2);
+            color: var(--color-secondary);
+        }
+
+        .suggestion-text {
+            flex-grow: 1;
+        }
+
+        .suggestion-use {
+            background: none;
+            border: none;
+            color: var(--color-primary);
+            cursor: pointer;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--border-radius-sm);
+            transition: background-color var(--transition-fast);
+        }
+
+        .suggestion-use:hover {
+            background-color: var(--color-surface-accent);
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Search Engines Tool</h1>
-        <p>Search across multiple search engines simultaneously</p>
-    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <a href="../index.html" class="navbar-brand">
+                <i class="fas fa-search-location"></i> OSINT Framework
+            </a>
 
-    <div class="container">
-        <a href="../basic.html" class="back-link">← Back to Home</a>
-        
-        <div class="card">
-            <h2>Search Engines Tool</h2>
-            <p>This tool allows you to search across multiple search engines simultaneously. Enter your search query and select the search engines you want to use.</p>
-            
-            <form id="searchForm">
-                <div class="form-group">
-                    <label for="searchQuery">Search Query:</label>
-                    <input type="text" id="searchQuery" name="searchQuery" placeholder="Enter your search query..." required>
-                </div>
-                
-                <div class="checkbox-group">
-                    <h3>General Search Engines</h3>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="google" name="engines" value="google" checked>
-                        <label for="google">Google</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="bing" name="engines" value="bing" checked>
-                        <label for="bing">Bing</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="duckduckgo" name="engines" value="duckduckgo" checked>
-                        <label for="duckduckgo">DuckDuckGo</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="yandex" name="engines" value="yandex">
-                        <label for="yandex">Yandex</label>
-                    </div>
-                </div>
-                
-                <div class="checkbox-group">
-                    <h3>Specialized Search</h3>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="googleNews" name="engines" value="googleNews">
-                        <label for="googleNews">Google News</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="googleImages" name="engines" value="googleImages">
-                        <label for="googleImages">Google Images</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="googleScholar" name="engines" value="googleScholar">
-                        <label for="googleScholar">Google Scholar</label>
-                    </div>
-                </div>
-                
-                <div class="checkbox-group">
-                    <h3>Social Media Search</h3>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="twitter" name="engines" value="twitter">
-                        <label for="twitter">Twitter</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="reddit" name="engines" value="reddit">
-                        <label for="reddit">Reddit</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="linkedin" name="engines" value="linkedin">
-                        <label for="linkedin">LinkedIn</label>
-                    </div>
-                </div>
-                
-                <button type="submit" class="button">Search Selected Engines</button>
-                <button type="button" id="searchAllButton" class="button">Search All Engines</button>
-            </form>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a href="../index.html#tools" class="nav-link">Tools</a></li>
+                <li class="nav-item"><a href="../index.html#features" class="nav-link">Features</a></li>
+                <li class="nav-item"><a href="https://github.com/GRsoldier7/OSINT-Framework" target="_blank" class="nav-link">GitHub</a></li>
+            </ul>
+
+            <div class="theme-toggle-wrapper">
+                <span class="theme-toggle-icon"><i class="fas fa-sun"></i></span>
+                <label class="theme-toggle">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="theme-toggle-slider"></span>
+                </label>
+                <span class="theme-toggle-icon"><i class="fas fa-moon"></i></span>
+            </div>
         </div>
-    </div>
+    </nav>
 
-    <div class="footer">
-        <p>&copy; 2024 Ultimate OSINT Framework. All Rights Reserved.</p>
-        <p>For legitimate OSINT research and educational purposes only.</p>
-    </div>
+    <!-- Tool Header -->
+    <header class="tool-header">
+        <div class="container tool-header-content text-center">
+            <h1 data-animate="fade-in">Search Engines Tool</h1>
+            <p data-animate="slide-in">Search across multiple search engines simultaneously for comprehensive results</p>
+        </div>
+    </header>
 
+    <!-- Main Content -->
+    <main class="container mt-6">
+        <a href="../index.html" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <div class="card" data-animate="slide-in">
+            <h2>Multi-Engine Search</h2>
+            <p>This tool allows you to search across multiple search engines simultaneously. Enter your search query and select the search engines you want to use.</p>
+
+            <form id="searchForm" class="search-form">
+                <div class="search-input-container">
+                    <input type="text" id="searchQuery" class="search-input" placeholder="Enter your search query..." required>
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+
+                <div class="engine-categories">
+                    <div class="engine-category">
+                        <h3><i class="fas fa-globe"></i> General Search</h3>
+
+                        <div class="engine-item">
+                            <div class="engine-checkbox">
+                                <input type="checkbox" id="google" name="engines" value="google" checked>
+                            </div>
+                            <label for="google" class="engine-label">Google</label>
+                        </div>
+
+                        <div class="engine-item">
+                            <div class="engine-checkbox">
+                                <input type="checkbox" id="bing" name="engines" value="bing" checked>
+                            </div>
+                            <label for="bing" class="engine-label">Bing</label>
+                        </div>
+
+                        <div class="engine-item">
+                            <div class="engine-checkbox">
+                                <input type="checkbox" id="duckduckgo" name="engines" value="duckduckgo" checked>
+                            </div>
+                            <label for="duckduckgo" class="engine-label">DuckDuckGo</label>
+                        </div>
+
+                        <div class="engine-item">
+                            <div class="engine-checkbox">
+                                <input type="checkbox" id="yandex" name="engines" value="yandex">
+                            </div>
+                            <label for="yandex" class="engine-label">Yandex</label>
+                        </div>
+
+                        <div class="engine-item">
+                            <div class="engine-checkbox">
+                                <input type="checkbox" id="brave" name="engines" value="brave">
+                            </div>
+                            <label for="brave" class="engine-label">Brave Search</label>
+                        </div>
+                    </div>
+
+                    <div class="engine-category">
+                        <h3><i class="fas fa-newspaper"></i> Specialized Search</h3>
+
+                        <div class="engine-item">
+                            <div class="engine-checkbox">
+                                <input type="checkbox" id="googleNews" name="engines" value="googleNews">
+                            </div>
+                            <label for="googleNews" class="engine-label">Google News</label>
+                        </div>
+
+                        <div class="engine-item">
+                            <div class="engine-checkbox">
+                                <input type="checkbox" id="googleImages" name="engines" value="googleImages">
+                            </div>
+                            <label for="googleImages" class="engine-label">Google Images</label>
+                        </div>
+
+                        <div class="engine-item">
+                            <div class="engine-checkbox">
+                                <input type="checkbox" id="googleScholar" name="engines" value="googleScholar">
+                            </div>
+                            <label for="googleScholar" class="engine-label">Google Scholar</label>
+                        </div>
+
+                        <div class="engine-item">
+                            <div class="engine-checkbox">
+                                <input type="checkbox" id="googleBooks" name="engines" value="googleBooks">
+                            </div>
+                            <label for="googleBooks" class="engine-label">Google Books</label>
+                        </div>
+
+                        <div class="engine-item">
+                            <div class="engine-checkbox">
+                                <input type="checkbox" id="googlePatents" name="engines" value="googlePatents">
+                            </div>
+                            <label for="googlePatents" class="engine-label">Google Patents</label>
+                        </div>
+                    </div>
+
+                    <div class="engine-category">
+                        <h3><i class="fas fa-users"></i> Social Media</h3>
+
+                        <div class="engine-item">
+                            <div class="engine-checkbox">
+                                <input type="checkbox" id="twitter" name="engines" value="twitter">
+                            </div>
+                            <label for="twitter" class="engine-label">Twitter</label>
+                        </div>
+
+                        <div class="engine-item">
+                            <div class="engine-checkbox">
+                                <input type="checkbox" id="reddit" name="engines" value="reddit">
+                            </div>
+                            <label for="reddit" class="engine-label">Reddit</label>
+                        </div>
+
+                        <div class="engine-item">
+                            <div class="engine-checkbox">
+                                <input type="checkbox" id="linkedin" name="engines" value="linkedin">
+                            </div>
+                            <label for="linkedin" class="engine-label">LinkedIn</label>
+                        </div>
+
+                        <div class="engine-item">
+                            <div class="engine-checkbox">
+                                <input type="checkbox" id="facebook" name="engines" value="facebook">
+                            </div>
+                            <label for="facebook" class="engine-label">Facebook</label>
+                        </div>
+
+                        <div class="engine-item">
+                            <div class="engine-checkbox">
+                                <input type="checkbox" id="instagram" name="engines" value="instagram">
+                            </div>
+                            <label for="instagram" class="engine-label">Instagram</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary action-button">
+                        <i class="fas fa-search"></i> Search Selected Engines
+                    </button>
+                    <button type="button" id="searchAllButton" class="btn btn-secondary action-button">
+                        <i class="fas fa-globe"></i> Search All Engines
+                    </button>
+                </div>
+            </form>
+
+            <div class="ai-suggestions mt-6">
+                <h3><i class="fas fa-robot"></i> AI-Suggested Search Queries</h3>
+                <p>Based on your search query, here are some suggested search terms that might help you find more relevant information:</p>
+
+                <ul class="suggestion-list" id="aiSuggestions">
+                    <li class="suggestion-item">
+                        <i class="fas fa-lightbulb suggestion-icon"></i>
+                        <span class="suggestion-text">Enter a search query to get AI suggestions</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="results-preview" id="resultsPreview">
+                <h3>Search Results Preview</h3>
+                <ul class="results-list" id="resultsList">
+                    <!-- Results will be populated here -->
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="../index.html" class="footer-link">Home</a>
+                <a href="../index.html#tools" class="footer-link">Tools</a>
+                <a href="../index.html#features" class="footer-link">Features</a>
+                <a href="https://github.com/GRsoldier7/OSINT-Framework" target="_blank" class="footer-link">GitHub</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Use</a>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2024 Ultimate OSINT Framework. All Rights Reserved.</p>
+                <p class="mt-2">For legitimate OSINT research and educational purposes only.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="../js/magicui.js"></script>
     <script>
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Search Tool initialized');
+
+            // Add input event listener for AI suggestions
+            const searchInput = document.getElementById('searchQuery');
+            searchInput.addEventListener('input', debounce(generateAISuggestions, 500));
+
+            // Initialize results preview
+            const resultsPreview = document.getElementById('resultsPreview');
+            const resultsList = document.getElementById('resultsList');
+        });
+
+        // Form submission
         document.getElementById('searchForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             const query = document.getElementById('searchQuery').value;
             const selectedEngines = Array.from(document.querySelectorAll('input[name="engines"]:checked')).map(cb => cb.value);
-            
+
             if (query && selectedEngines.length > 0) {
+                // Show notification
+                if (window.MagicUI && window.MagicUI.notify) {
+                    window.MagicUI.notify.info(`Searching for "${query}" across ${selectedEngines.length} engines`);
+                }
+
+                // Show results preview
+                showResultsPreview(query, selectedEngines);
+
+                // Perform search
                 performSearch(query, selectedEngines);
             } else {
-                alert('Please enter a search query and select at least one search engine.');
+                if (window.MagicUI && window.MagicUI.notify) {
+                    window.MagicUI.notify.error('Please enter a search query and select at least one search engine.');
+                } else {
+                    alert('Please enter a search query and select at least one search engine.');
+                }
             }
         });
-        
+
+        // Search all engines
         document.getElementById('searchAllButton').addEventListener('click', function() {
             const query = document.getElementById('searchQuery').value;
             const allEngines = Array.from(document.querySelectorAll('input[name="engines"]')).map(cb => cb.value);
-            
+
             if (query) {
+                // Show notification
+                if (window.MagicUI && window.MagicUI.notify) {
+                    window.MagicUI.notify.info(`Searching for "${query}" across all engines`);
+                }
+
+                // Show results preview
+                showResultsPreview(query, allEngines);
+
+                // Perform search
                 performSearch(query, allEngines);
             } else {
-                alert('Please enter a search query.');
+                if (window.MagicUI && window.MagicUI.notify) {
+                    window.MagicUI.notify.error('Please enter a search query.');
+                } else {
+                    alert('Please enter a search query.');
+                }
             }
         });
-        
+
+        /**
+         * Perform search across multiple engines
+         * @param {string} query Search query
+         * @param {string[]} engines Array of engine IDs
+         */
         function performSearch(query, engines) {
             const engineUrls = {
                 google: `https://www.google.com/search?q=${encodeURIComponent(query)}`,
                 bing: `https://www.bing.com/search?q=${encodeURIComponent(query)}`,
                 duckduckgo: `https://duckduckgo.com/?q=${encodeURIComponent(query)}`,
                 yandex: `https://yandex.com/search/?text=${encodeURIComponent(query)}`,
+                brave: `https://search.brave.com/search?q=${encodeURIComponent(query)}`,
                 googleNews: `https://news.google.com/search?q=${encodeURIComponent(query)}`,
                 googleImages: `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}`,
                 googleScholar: `https://scholar.google.com/scholar?q=${encodeURIComponent(query)}`,
+                googleBooks: `https://www.google.com/search?tbm=bks&q=${encodeURIComponent(query)}`,
+                googlePatents: `https://patents.google.com/?q=${encodeURIComponent(query)}`,
                 twitter: `https://twitter.com/search?q=${encodeURIComponent(query)}`,
                 reddit: `https://www.reddit.com/search/?q=${encodeURIComponent(query)}`,
-                linkedin: `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(query)}`
+                linkedin: `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(query)}`,
+                facebook: `https://www.facebook.com/search/top/?q=${encodeURIComponent(query)}`,
+                instagram: `https://www.instagram.com/explore/tags/${encodeURIComponent(query.replace(/\s+/g, ''))}/`
             };
-            
+
             engines.forEach(engine => {
                 if (engineUrls[engine]) {
                     window.open(engineUrls[engine], '_blank');
                 }
             });
+        }
+
+        /**
+         * Generate AI suggestions for search query
+         */
+        function generateAISuggestions() {
+            const query = document.getElementById('searchQuery').value.trim();
+            const suggestionsContainer = document.getElementById('aiSuggestions');
+
+            if (query.length < 3) {
+                suggestionsContainer.innerHTML = `
+                    <li class="suggestion-item">
+                        <i class="fas fa-lightbulb suggestion-icon"></i>
+                        <span class="suggestion-text">Enter a search query to get AI suggestions</span>
+                    </li>
+                `;
+                return;
+            }
+
+            // Show loading state
+            suggestionsContainer.innerHTML = `
+                <li class="suggestion-item">
+                    <i class="fas fa-spinner fa-spin suggestion-icon"></i>
+                    <span class="suggestion-text">Generating suggestions...</span>
+                </li>
+            `;
+
+            // In a real implementation, this would call an AI API
+            // For now, we'll use some mock suggestions based on the query
+            setTimeout(() => {
+                const suggestions = generateMockSuggestions(query);
+
+                if (suggestions.length > 0) {
+                    suggestionsContainer.innerHTML = '';
+
+                    suggestions.forEach(suggestion => {
+                        const item = document.createElement('li');
+                        item.className = 'suggestion-item';
+                        item.innerHTML = `
+                            <i class="fas fa-lightbulb suggestion-icon"></i>
+                            <span class="suggestion-text">${suggestion}</span>
+                            <button class="suggestion-use" data-suggestion="${suggestion}">Use</button>
+                        `;
+                        suggestionsContainer.appendChild(item);
+                    });
+
+                    // Add event listeners to "Use" buttons
+                    document.querySelectorAll('.suggestion-use').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const suggestion = this.getAttribute('data-suggestion');
+                            document.getElementById('searchQuery').value = suggestion;
+
+                            // Show notification
+                            if (window.MagicUI && window.MagicUI.notify) {
+                                window.MagicUI.notify.success(`Using suggestion: "${suggestion}"`);
+                            }
+
+                            // Generate new suggestions
+                            generateAISuggestions();
+                        });
+                    });
+                } else {
+                    suggestionsContainer.innerHTML = `
+                        <li class="suggestion-item">
+                            <i class="fas fa-info-circle suggestion-icon"></i>
+                            <span class="suggestion-text">No suggestions available for this query</span>
+                        </li>
+                    `;
+                }
+            }, 1000);
+        }
+
+        /**
+         * Generate mock search suggestions based on query
+         * @param {string} query Search query
+         * @returns {string[]} Array of suggestions
+         */
+        function generateMockSuggestions(query) {
+            // In a real implementation, this would call an AI API
+            const suggestions = [];
+
+            // Add variations with quotes
+            suggestions.push(`"${query}"`);
+
+            // Add site-specific searches
+            suggestions.push(`${query} site:linkedin.com`);
+            suggestions.push(`${query} site:twitter.com`);
+
+            // Add filetype searches
+            suggestions.push(`${query} filetype:pdf`);
+
+            // Add time-based searches
+            suggestions.push(`${query} after:2023`);
+
+            // Add location-based searches
+            suggestions.push(`${query} location:us`);
+
+            // Add related terms
+            const words = query.split(' ');
+            if (words.length > 1) {
+                suggestions.push(words.slice(0, -1).join(' '));
+            }
+
+            // Add boolean operators
+            const lastWord = words[words.length - 1];
+            suggestions.push(`${query} AND security`);
+            suggestions.push(`${query} OR alternative`);
+            suggestions.push(`${query} -scam`);
+
+            return suggestions;
+        }
+
+        /**
+         * Show results preview
+         * @param {string} query Search query
+         * @param {string[]} engines Array of engine IDs
+         */
+        function showResultsPreview(query, engines) {
+            const resultsPreview = document.getElementById('resultsPreview');
+            const resultsList = document.getElementById('resultsList');
+
+            // Clear previous results
+            resultsList.innerHTML = '';
+
+            // Add results
+            engines.forEach(engine => {
+                const engineNames = {
+                    google: 'Google',
+                    bing: 'Bing',
+                    duckduckgo: 'DuckDuckGo',
+                    yandex: 'Yandex',
+                    brave: 'Brave Search',
+                    googleNews: 'Google News',
+                    googleImages: 'Google Images',
+                    googleScholar: 'Google Scholar',
+                    googleBooks: 'Google Books',
+                    googlePatents: 'Google Patents',
+                    twitter: 'Twitter',
+                    reddit: 'Reddit',
+                    linkedin: 'LinkedIn',
+                    facebook: 'Facebook',
+                    instagram: 'Instagram'
+                };
+
+                const engineIcons = {
+                    google: 'fa-google',
+                    bing: 'fa-microsoft',
+                    duckduckgo: 'fa-duck',
+                    yandex: 'fa-y',
+                    brave: 'fa-shield',
+                    googleNews: 'fa-newspaper',
+                    googleImages: 'fa-image',
+                    googleScholar: 'fa-graduation-cap',
+                    googleBooks: 'fa-book',
+                    googlePatents: 'fa-file-contract',
+                    twitter: 'fa-twitter',
+                    reddit: 'fa-reddit',
+                    linkedin: 'fa-linkedin',
+                    facebook: 'fa-facebook',
+                    instagram: 'fa-instagram'
+                };
+
+                const item = document.createElement('li');
+                item.className = 'result-item';
+
+                const iconClass = engineIcons[engine] || 'fa-search';
+
+                item.innerHTML = `
+                    <div class="result-icon">
+                        <i class="fab ${iconClass}"></i>
+                    </div>
+                    <div class="result-name">
+                        ${engineNames[engine] || engine}
+                    </div>
+                    <div class="result-action">
+                        <i class="fas fa-external-link-alt"></i>
+                    </div>
+                `;
+
+                resultsList.appendChild(item);
+            });
+
+            // Show results preview
+            resultsPreview.classList.add('show');
+        }
+
+        /**
+         * Debounce function to limit how often a function can be called
+         * @param {Function} func Function to debounce
+         * @param {number} wait Wait time in milliseconds
+         * @returns {Function} Debounced function
+         */
+        function debounce(func, wait) {
+            let timeout;
+
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
         }
     </script>
 </body>

@@ -3,95 +3,618 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Ultimate OSINT Framework</title>
-    
-    <!-- Meta tags for SEO and social sharing -->
     <meta name="description" content="A comprehensive, browser-based Open Source Intelligence (OSINT) framework for investigators, researchers, journalists, and security professionals.">
     <meta name="keywords" content="OSINT, intelligence, investigation, research, security, framework">
     <meta name="author" content="OSINT Framework Team">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://osint-framework.example.com/">
     <meta property="og:title" content="Ultimate OSINT Framework">
     <meta property="og:description" content="A comprehensive, browser-based Open Source Intelligence (OSINT) framework for investigators, researchers, journalists, and security professionals.">
     <meta property="og:image" content="https://osint-framework.example.com/img/osint-framework-preview.jpg">
-    
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://osint-framework.example.com/">
     <meta property="twitter:title" content="Ultimate OSINT Framework">
     <meta property="twitter:description" content="A comprehensive, browser-based Open Source Intelligence (OSINT) framework for investigators, researchers, journalists, and security professionals.">
     <meta property="twitter:image" content="https://osint-framework.example.com/img/osint-framework-preview.jpg">
-    
+
     <!-- Favicon -->
-    <link rel="icon" href="/favicon.ico">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <link rel="manifest" href="/manifest.json">
-    
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="/css/normalize.css">
-    <link rel="stylesheet" href="/css/main.css">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <!-- Preload critical assets -->
-    <link rel="preload" href="/js/main.js" as="script">
-    <link rel="preload" href="/css/main.css" as="style">
-    
-    <!-- Application scripts -->
-    <script src="/js/main.js" defer></script>
+    <link rel="icon" href="favicon.ico">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/magicui.css">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Custom styles for the home page */
+        .hero {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            padding: var(--space-16) 0;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1NiIgaGVpZ2h0PSIxMDAiPgo8cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiBmaWxsPSIjMDAwMCI+PC9yZWN0Pgo8cGF0aCBkPSJNMjggNjZMMCA1MEwwIDE2TDI4IDBMNTYgMTZMNTYgNTBMMjggNjZMMjggMTAwIiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIgc3Ryb2tlLXdpZHRoPSIyIj48L3BhdGg+CjxwYXRoIGQ9Ik0yOCAwTDI4IDM0TDAgNTBMMCA4NEwyOCAxMDBMNTYgODRMNTYgNTBMMjggMzQiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjIiPjwvcGF0aD4KPC9zdmc+');
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: var(--font-size-5xl);
+            margin-bottom: var(--space-4);
+            font-weight: 800;
+        }
+
+        .hero p {
+            font-size: var(--font-size-xl);
+            max-width: 600px;
+            margin: 0 auto var(--space-8);
+            opacity: 0.9;
+        }
+
+        .search-bar {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: var(--space-4) var(--space-12) var(--space-4) var(--space-4);
+            border-radius: var(--border-radius-full);
+            border: none;
+            font-size: var(--font-size-lg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .search-bar button {
+            position: absolute;
+            right: var(--space-2);
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-full);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .features {
+            padding: var(--space-16) 0;
+        }
+
+        .feature-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feature-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-4);
+            color: var(--color-primary);
+        }
+
+        .tools {
+            padding: var(--space-16) 0;
+            background-color: var(--color-surface-accent);
+        }
+
+        .tool-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tool-card .card-body {
+            flex-grow: 1;
+        }
+
+        .tool-card .icon {
+            font-size: 2rem;
+            margin-bottom: var(--space-4);
+            color: var(--color-primary);
+        }
+
+        .tool-card .btn {
+            margin-top: auto;
+        }
+
+        .navbar {
+            background-color: var(--color-surface);
+            box-shadow: var(--shadow-md);
+            padding: var(--space-4) 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navbar-brand {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .navbar-nav {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item {
+            margin-left: var(--space-4);
+        }
+
+        .nav-link {
+            color: var(--color-text-primary);
+            text-decoration: none;
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--border-radius-md);
+            transition: background-color var(--transition-fast);
+        }
+
+        .nav-link:hover {
+            background-color: var(--color-surface-accent);
+        }
+
+        .theme-toggle-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .theme-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .theme-toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--color-surface-accent);
+            transition: var(--transition-normal);
+            border-radius: 24px;
+        }
+
+        .theme-toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: var(--transition-normal);
+            border-radius: 50%;
+        }
+
+        .theme-toggle input:checked + .theme-toggle-slider {
+            background-color: var(--color-primary);
+        }
+
+        .theme-toggle input:checked + .theme-toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        .theme-toggle-icon {
+            margin: 0 var(--space-2);
+            font-size: var(--font-size-sm);
+        }
+
+        .footer {
+            background-color: var(--color-surface);
+            padding: var(--space-8) 0;
+            margin-top: var(--space-16);
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: var(--space-4);
+        }
+
+        .footer-link {
+            margin: 0 var(--space-2);
+            color: var(--color-text-secondary);
+            text-decoration: none;
+        }
+
+        .footer-link:hover {
+            color: var(--color-primary);
+        }
+
+        .copyright {
+            text-align: center;
+            color: var(--color-text-tertiary);
+            font-size: var(--font-size-sm);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: var(--font-size-4xl);
+            }
+
+            .hero p {
+                font-size: var(--font-size-lg);
+            }
+
+            .navbar-nav {
+                display: none;
+            }
+        }
+
+        /* Notifications */
+        .notifications-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: var(--z-index-tooltip);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 350px;
+        }
+
+        .notification {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: var(--border-radius-md);
+            background-color: var(--color-surface);
+            box-shadow: var(--shadow-lg);
+            animation: slideInRight 0.3s ease-out forwards;
+        }
+
+        .notification.fade-out {
+            animation: fadeOut 0.3s ease-out forwards;
+        }
+
+        .notification-success {
+            border-left: 4px solid var(--color-success);
+        }
+
+        .notification-error {
+            border-left: 4px solid var(--color-error);
+        }
+
+        .notification-info {
+            border-left: 4px solid var(--color-info);
+        }
+
+        .notification-warning {
+            border-left: 4px solid var(--color-warning);
+        }
+
+        .notification-icon {
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification-success .notification-icon {
+            color: var(--color-success);
+        }
+
+        .notification-error .notification-icon {
+            color: var(--color-error);
+        }
+
+        .notification-info .notification-icon {
+            color: var(--color-info);
+        }
+
+        .notification-warning .notification-icon {
+            color: var(--color-warning);
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            color: var(--color-text-tertiary);
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+        }
+
+        .notification-close:hover {
+            color: var(--color-text-primary);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        /* Search suggestions */
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: var(--color-surface);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-lg);
+            margin-top: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 10;
+            display: none;
+        }
+
+        .search-suggestions.show {
+            display: block;
+        }
+
+        .suggestion-item {
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: background-color var(--transition-fast);
+        }
+
+        .suggestion-item:hover {
+            background-color: var(--color-surface-accent);
+        }
+    </style>
 </head>
 <body>
-    <div id="app">
-        <!-- App content will be rendered here -->
-        <div class="loading-container">
-            <div class="loading-spinner"></div>
-            <p>Loading Ultimate OSINT Framework...</p>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <a href="index.html" class="navbar-brand">
+                <i class="fas fa-search-location"></i> OSINT Framework
+            </a>
+
+            <ul class="navbar-nav">
+                <li class="nav-item"><a href="#tools" class="nav-link">Tools</a></li>
+                <li class="nav-item"><a href="#features" class="nav-link">Features</a></li>
+                <li class="nav-item"><a href="https://github.com/GRsoldier7/OSINT-Framework" target="_blank" class="nav-link">GitHub</a></li>
+            </ul>
+
+            <div class="theme-toggle-wrapper">
+                <span class="theme-toggle-icon"><i class="fas fa-sun"></i></span>
+                <label class="theme-toggle">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="theme-toggle-slider"></span>
+                </label>
+                <span class="theme-toggle-icon"><i class="fas fa-moon"></i></span>
+            </div>
         </div>
-    </div>
-    
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content text-center">
+            <h1 data-animate="fade-in">Ultimate OSINT Framework</h1>
+            <p data-animate="slide-in">A comprehensive platform for Open Source Intelligence gathering and investigation.</p>
+
+            <div class="search-bar" data-animate="slide-in">
+                <input type="text" placeholder="Search for OSINT tools and techniques..." data-search-input>
+                <button type="button"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="text-center mb-6">Key Features</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="card feature-card" data-animate="slide-in">
+                    <div class="icon"><i class="fas fa-search"></i></div>
+                    <h3>Multi-Engine Search</h3>
+                    <p>Search across multiple engines simultaneously to get comprehensive results from various sources.</p>
+                </div>
+
+                <div class="card feature-card" data-animate="slide-in">
+                    <div class="icon"><i class="fas fa-user-secret"></i></div>
+                    <h3>Username Analysis</h3>
+                    <p>Find accounts associated with usernames across various platforms and analyze digital footprints.</p>
+                </div>
+
+                <div class="card feature-card" data-animate="slide-in">
+                    <div class="icon"><i class="fas fa-envelope"></i></div>
+                    <h3>Email Investigation</h3>
+                    <p>Verify emails, check for breaches, and find associated profiles and information.</p>
+                </div>
+
+                <div class="card feature-card" data-animate="slide-in">
+                    <div class="icon"><i class="fas fa-globe"></i></div>
+                    <h3>Domain Analysis</h3>
+                    <p>Investigate websites, check WHOIS data, DNS records, and find related information.</p>
+                </div>
+
+                <div class="card feature-card" data-animate="slide-in">
+                    <div class="icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Privacy Focused</h3>
+                    <p>All processing happens in your browser. No data is stored on our servers.</p>
+                </div>
+
+                <div class="card feature-card" data-animate="slide-in">
+                    <div class="icon"><i class="fas fa-robot"></i></div>
+                    <h3>AI Integration</h3>
+                    <p>Leverage AI capabilities for advanced analysis and insights in your investigations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section class="tools" id="tools">
+        <div class="container">
+            <h2 class="text-center mb-6">OSINT Tools</h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="card tool-card" data-animate="slide-in">
+                    <div class="card-body">
+                        <div class="icon"><i class="fas fa-search"></i></div>
+                        <h3>Search Engines Tool</h3>
+                        <p>Search across multiple search engines simultaneously, including specialized and social media search.</p>
+                    </div>
+                    <a href="tools/search.html" class="btn btn-primary mt-4">Open Tool</a>
+                </div>
+
+                <div class="card tool-card" data-animate="slide-in">
+                    <div class="card-body">
+                        <div class="icon"><i class="fas fa-user"></i></div>
+                        <h3>Username Search</h3>
+                        <p>Find accounts associated with a username across various social media and online platforms.</p>
+                    </div>
+                    <a href="tools/username.html" class="btn btn-primary mt-4">Open Tool</a>
+                </div>
+
+                <div class="card tool-card" data-animate="slide-in">
+                    <div class="card-body">
+                        <div class="icon"><i class="fas fa-envelope"></i></div>
+                        <h3>Email Analysis</h3>
+                        <p>Verify email addresses, check for data breaches, and find associated profiles and information.</p>
+                    </div>
+                    <a href="tools/email.html" class="btn btn-primary mt-4">Open Tool</a>
+                </div>
+
+                <div class="card tool-card" data-animate="slide-in">
+                    <div class="card-body">
+                        <div class="icon"><i class="fas fa-globe"></i></div>
+                        <h3>Domain Analysis</h3>
+                        <p>Investigate websites, check WHOIS data, DNS records, and find related information.</p>
+                    </div>
+                    <a href="tools/domain.html" class="btn btn-primary mt-4">Open Tool</a>
+                </div>
+
+                <div class="card tool-card" data-animate="slide-in">
+                    <div class="card-body">
+                        <div class="icon"><i class="fas fa-network-wired"></i></div>
+                        <h3>IP Address Lookup</h3>
+                        <p>Get detailed information about IP addresses, including geolocation and network data.</p>
+                    </div>
+                    <a href="tools/ip.html" class="btn btn-primary mt-4">Open Tool</a>
+                </div>
+
+                <div class="card tool-card" data-animate="slide-in">
+                    <div class="card-body">
+                        <div class="icon"><i class="fas fa-brain"></i></div>
+                        <h3>AI-Powered Analysis</h3>
+                        <p>Use AI to analyze data, generate insights, and assist with investigations.</p>
+                    </div>
+                    <a href="tools/ai.html" class="btn btn-primary mt-4">Open Tool</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="#" class="footer-link">Home</a>
+                <a href="#tools" class="footer-link">Tools</a>
+                <a href="#features" class="footer-link">Features</a>
+                <a href="https://github.com/GRsoldier7/OSINT-Framework" target="_blank" class="footer-link">GitHub</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Use</a>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2024 Ultimate OSINT Framework. All Rights Reserved.</p>
+                <p class="mt-2">For legitimate OSINT research and educational purposes only.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/magicui.js"></script>
+    <script>
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('OSINT Framework initialized');
+
+            // Show welcome notification
+            setTimeout(() => {
+                if (window.MagicUI && window.MagicUI.notify) {
+                    window.MagicUI.notify.success('Welcome to the Ultimate OSINT Framework!');
+                }
+            }, 1000);
+        });
+    </script>
+
     <noscript>
         <div class="noscript-message">
             <h2>JavaScript Required</h2>
             <p>This application requires JavaScript to function properly. Please enable JavaScript in your browser settings and reload the page.</p>
         </div>
     </noscript>
-    
-    <!-- Application initialization -->
-    <script>
-        // Check if the browser supports all required features
-        function checkBrowserSupport() {
-            const requiredFeatures = [
-                'Promise' in window,
-                'fetch' in window,
-                'localStorage' in window,
-                'sessionStorage' in window,
-                'JSON' in window
-            ];
-            
-            return requiredFeatures.every(feature => feature === true);
-        }
-        
-        // Initialize the application
-        function initApp() {
-            if (!checkBrowserSupport()) {
-                document.getElementById('app').innerHTML = `
-                    <div class="browser-support-error">
-                        <h2>Browser Not Supported</h2>
-                        <p>Your browser does not support all the features required by this application. Please upgrade to a modern browser such as Chrome, Firefox, Edge, or Safari.</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            // The main application will be initialized by the main.js script
-        }
-        
-        // Initialize the application when the DOM is ready
-        document.addEventListener('DOMContentLoaded', initApp);
-    </script>
 </body>
 </html>
