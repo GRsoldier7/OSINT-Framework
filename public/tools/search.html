@@ -599,7 +599,7 @@
         }
 
         /**
-         * Generate AI suggestions for search query
+         * Generate AI suggestions for search query using the OpenRouter API
          */
         function generateAISuggestions() {
             const query = document.getElementById('searchQuery').value.trim();
@@ -623,10 +623,66 @@
                 </li>
             `;
 
-            // In a real implementation, this would call an AI API
-            // For now, we'll use some mock suggestions based on the query
-            setTimeout(() => {
-                const suggestions = generateMockSuggestions(query);
+            // Call our AI API endpoint
+            fetch('/api/ai/search-suggestions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success && data.data && data.data.length > 0) {
+                    const suggestions = data.data;
+
+                    suggestionsContainer.innerHTML = '';
+
+                    suggestions.forEach(suggestion => {
+                        const item = document.createElement('li');
+                        item.className = 'suggestion-item';
+                        item.innerHTML = `
+                            <i class="fas fa-lightbulb suggestion-icon"></i>
+                            <span class="suggestion-text">${suggestion}</span>
+                            <button class="suggestion-use" data-suggestion="${suggestion}">Use</button>
+                        `;
+                        suggestionsContainer.appendChild(item);
+                    });
+
+                    // Add event listeners to "Use" buttons
+                    document.querySelectorAll('.suggestion-use').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const suggestion = this.getAttribute('data-suggestion');
+                            document.getElementById('searchQuery').value = suggestion;
+
+                            // Show notification
+                            if (window.MagicUI && window.MagicUI.notify) {
+                                window.MagicUI.notify.success(`Using suggestion: "${suggestion}"`);
+                            }
+
+                            // Generate new suggestions
+                            generateAISuggestions();
+                        });
+                    });
+                } else {
+                    suggestionsContainer.innerHTML = `
+                        <li class="suggestion-item">
+                            <i class="fas fa-info-circle suggestion-icon"></i>
+                            <span class="suggestion-text">No suggestions available for this query</span>
+                        </li>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching AI suggestions:', error);
+
+                // Fallback to local suggestions if API fails
+                const suggestions = generateLocalSuggestions(query);
 
                 if (suggestions.length > 0) {
                     suggestionsContainer.innerHTML = '';
@@ -665,16 +721,20 @@
                         </li>
                     `;
                 }
-            }, 1000);
+
+                // Show error notification
+                if (window.MagicUI && window.MagicUI.notify) {
+                    window.MagicUI.notify.error('Error connecting to AI service. Using local suggestions instead.');
+                }
+            });
         }
 
         /**
-         * Generate mock search suggestions based on query
+         * Generate local search suggestions based on query (fallback if API fails)
          * @param {string} query Search query
          * @returns {string[]} Array of suggestions
          */
-        function generateMockSuggestions(query) {
-            // In a real implementation, this would call an AI API
+        function generateLocalSuggestions(query) {
             const suggestions = [];
 
             // Add variations with quotes
@@ -700,7 +760,6 @@
             }
 
             // Add boolean operators
-            const lastWord = words[words.length - 1];
             suggestions.push(`${query} AND security`);
             suggestions.push(`${query} OR alternative`);
             suggestions.push(`${query} -scam`);
