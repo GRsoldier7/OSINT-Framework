@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Username Search Tool - OSINT Framework</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #3498db;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #2980b9;
+        }
+        .checkbox-group {
+            margin-bottom: 15px;
+        }
+        .checkbox-group h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .checkbox-item {
+            margin-bottom: 5px;
+        }
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Username Search Tool</h1>
+        <p>Find accounts associated with a username across various platforms</p>
+    </div>
+
+    <div class="container">
+        <a href="../basic.html" class="back-link">← Back to Home</a>
+        
+        <div class="card">
+            <h2>Username Search Tool</h2>
+            <p>This tool allows you to find accounts associated with a username across various social media and online platforms. Enter a username and select the platforms you want to check.</p>
+            
+            <form id="usernameForm">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" placeholder="Enter a username..." required>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Social Media Platforms</h3>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="twitter" name="platforms" value="twitter" checked>
+                        <label for="twitter">Twitter</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="facebook" name="platforms" value="facebook" checked>
+                        <label for="facebook">Facebook</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="instagram" name="platforms" value="instagram" checked>
+                        <label for="instagram">Instagram</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="tiktok" name="platforms" value="tiktok">
+                        <label for="tiktok">TikTok</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="youtube" name="platforms" value="youtube">
+                        <label for="youtube">YouTube</label>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Professional Platforms</h3>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="linkedin" name="platforms" value="linkedin" checked>
+                        <label for="linkedin">LinkedIn</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="github" name="platforms" value="github">
+                        <label for="github">GitHub</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="medium" name="platforms" value="medium">
+                        <label for="medium">Medium</label>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Gaming Platforms</h3>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="steam" name="platforms" value="steam">
+                        <label for="steam">Steam</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="twitch" name="platforms" value="twitch">
+                        <label for="twitch">Twitch</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="xbox" name="platforms" value="xbox">
+                        <label for="xbox">Xbox</label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="button">Search Selected Platforms</button>
+                <button type="button" id="searchAllButton" class="button">Search All Platforms</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 Ultimate OSINT Framework. All Rights Reserved.</p>
+        <p>For legitimate OSINT research and educational purposes only.</p>
+    </div>
+
+    <script>
+        document.getElementById('usernameForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const selectedPlatforms = Array.from(document.querySelectorAll('input[name="platforms"]:checked')).map(cb => cb.value);
+            
+            if (username && selectedPlatforms.length > 0) {
+                searchUsername(username, selectedPlatforms);
+            } else {
+                alert('Please enter a username and select at least one platform.');
+            }
+        });
+        
+        document.getElementById('searchAllButton').addEventListener('click', function() {
+            const username = document.getElementById('username').value;
+            const allPlatforms = Array.from(document.querySelectorAll('input[name="platforms"]')).map(cb => cb.value);
+            
+            if (username) {
+                searchUsername(username, allPlatforms);
+            } else {
+                alert('Please enter a username.');
+            }
+        });
+        
+        function searchUsername(username, platforms) {
+            const platformUrls = {
+                twitter: `https://twitter.com/${encodeURIComponent(username)}`,
+                facebook: `https://facebook.com/${encodeURIComponent(username)}`,
+                instagram: `https://instagram.com/${encodeURIComponent(username)}`,
+                tiktok: `https://tiktok.com/@${encodeURIComponent(username)}`,
+                youtube: `https://youtube.com/@${encodeURIComponent(username)}`,
+                linkedin: `https://linkedin.com/in/${encodeURIComponent(username)}`,
+                github: `https://github.com/${encodeURIComponent(username)}`,
+                medium: `https://medium.com/@${encodeURIComponent(username)}`,
+                steam: `https://steamcommunity.com/id/${encodeURIComponent(username)}`,
+                twitch: `https://twitch.tv/${encodeURIComponent(username)}`,
+                xbox: `https://xboxgamertag.com/search/${encodeURIComponent(username)}`
+            };
+            
+            platforms.forEach(platform => {
+                if (platformUrls[platform]) {
+                    window.open(platformUrls[platform], '_blank');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

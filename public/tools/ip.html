@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Analysis Tool - OSINT Framework</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #3498db;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #2980b9;
+        }
+        .checkbox-group {
+            margin-bottom: 15px;
+        }
+        .checkbox-group h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .checkbox-item {
+            margin-bottom: 5px;
+        }
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>IP Analysis Tool</h1>
+        <p>Get detailed information about IP addresses</p>
+    </div>
+
+    <div class="container">
+        <a href="../basic.html" class="back-link">← Back to Home</a>
+        
+        <div class="card">
+            <h2>IP Analysis Tool</h2>
+            <p>This tool allows you to get detailed information about IP addresses, including geolocation, reputation, and network information. Enter an IP address and select the services you want to use.</p>
+            
+            <form id="ipForm">
+                <div class="form-group">
+                    <label for="ip">IP Address:</label>
+                    <input type="text" id="ip" name="ip" placeholder="Enter an IP address (e.g., 8.8.8.8)..." required>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Geolocation</h3>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="ipinfo" name="services" value="ipinfo" checked>
+                        <label for="ipinfo">IPinfo.io</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="ipapi" name="services" value="ipapi">
+                        <label for="ipapi">IP-API</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="ipgeolocation" name="services" value="ipgeolocation">
+                        <label for="ipgeolocation">IPGeolocation</label>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Reputation & Security</h3>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="abuseipdb" name="services" value="abuseipdb" checked>
+                        <label for="abuseipdb">AbuseIPDB</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="virustotal" name="services" value="virustotal" checked>
+                        <label for="virustotal">VirusTotal</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="threatcrowd" name="services" value="threatcrowd">
+                        <label for="threatcrowd">ThreatCrowd</label>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Network Information</h3>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="shodan" name="services" value="shodan" checked>
+                        <label for="shodan">Shodan</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="censys" name="services" value="censys">
+                        <label for="censys">Censys</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="bgpview" name="services" value="bgpview">
+                        <label for="bgpview">BGPView</label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="button">Analyze IP</button>
+                <button type="button" id="analyzeAllButton" class="button">Use All Services</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 Ultimate OSINT Framework. All Rights Reserved.</p>
+        <p>For legitimate OSINT research and educational purposes only.</p>
+    </div>
+
+    <script>
+        document.getElementById('ipForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const ip = document.getElementById('ip').value;
+            const selectedServices = Array.from(document.querySelectorAll('input[name="services"]:checked')).map(cb => cb.value);
+            
+            if (ip && selectedServices.length > 0) {
+                analyzeIP(ip, selectedServices);
+            } else {
+                alert('Please enter an IP address and select at least one service.');
+            }
+        });
+        
+        document.getElementById('analyzeAllButton').addEventListener('click', function() {
+            const ip = document.getElementById('ip').value;
+            const allServices = Array.from(document.querySelectorAll('input[name="services"]')).map(cb => cb.value);
+            
+            if (ip) {
+                analyzeIP(ip, allServices);
+            } else {
+                alert('Please enter an IP address.');
+            }
+        });
+        
+        function analyzeIP(ip, services) {
+            const serviceUrls = {
+                ipinfo: `https://ipinfo.io/${encodeURIComponent(ip)}`,
+                ipapi: `https://ip-api.com/#${encodeURIComponent(ip)}`,
+                ipgeolocation: `https://ipgeolocation.io/ip-location/${encodeURIComponent(ip)}`,
+                abuseipdb: `https://www.abuseipdb.com/check/${encodeURIComponent(ip)}`,
+                virustotal: `https://www.virustotal.com/gui/ip-address/${encodeURIComponent(ip)}`,
+                threatcrowd: `https://threatcrowd.org/ip.php?ip=${encodeURIComponent(ip)}`,
+                shodan: `https://www.shodan.io/host/${encodeURIComponent(ip)}`,
+                censys: `https://search.censys.io/hosts/${encodeURIComponent(ip)}`,
+                bgpview: `https://bgpview.io/ip/${encodeURIComponent(ip)}`
+            };
+            
+            services.forEach(service => {
+                if (serviceUrls[service]) {
+                    window.open(serviceUrls[service], '_blank');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

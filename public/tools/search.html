@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Engines Tool - OSINT Framework</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #3498db;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #2980b9;
+        }
+        .checkbox-group {
+            margin-bottom: 15px;
+        }
+        .checkbox-group h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .checkbox-item {
+            margin-bottom: 5px;
+        }
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Search Engines Tool</h1>
+        <p>Search across multiple search engines simultaneously</p>
+    </div>
+
+    <div class="container">
+        <a href="../basic.html" class="back-link">← Back to Home</a>
+        
+        <div class="card">
+            <h2>Search Engines Tool</h2>
+            <p>This tool allows you to search across multiple search engines simultaneously. Enter your search query and select the search engines you want to use.</p>
+            
+            <form id="searchForm">
+                <div class="form-group">
+                    <label for="searchQuery">Search Query:</label>
+                    <input type="text" id="searchQuery" name="searchQuery" placeholder="Enter your search query..." required>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>General Search Engines</h3>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="google" name="engines" value="google" checked>
+                        <label for="google">Google</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="bing" name="engines" value="bing" checked>
+                        <label for="bing">Bing</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="duckduckgo" name="engines" value="duckduckgo" checked>
+                        <label for="duckduckgo">DuckDuckGo</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="yandex" name="engines" value="yandex">
+                        <label for="yandex">Yandex</label>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Specialized Search</h3>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="googleNews" name="engines" value="googleNews">
+                        <label for="googleNews">Google News</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="googleImages" name="engines" value="googleImages">
+                        <label for="googleImages">Google Images</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="googleScholar" name="engines" value="googleScholar">
+                        <label for="googleScholar">Google Scholar</label>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Social Media Search</h3>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="twitter" name="engines" value="twitter">
+                        <label for="twitter">Twitter</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reddit" name="engines" value="reddit">
+                        <label for="reddit">Reddit</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="linkedin" name="engines" value="linkedin">
+                        <label for="linkedin">LinkedIn</label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="button">Search Selected Engines</button>
+                <button type="button" id="searchAllButton" class="button">Search All Engines</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 Ultimate OSINT Framework. All Rights Reserved.</p>
+        <p>For legitimate OSINT research and educational purposes only.</p>
+    </div>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const query = document.getElementById('searchQuery').value;
+            const selectedEngines = Array.from(document.querySelectorAll('input[name="engines"]:checked')).map(cb => cb.value);
+            
+            if (query && selectedEngines.length > 0) {
+                performSearch(query, selectedEngines);
+            } else {
+                alert('Please enter a search query and select at least one search engine.');
+            }
+        });
+        
+        document.getElementById('searchAllButton').addEventListener('click', function() {
+            const query = document.getElementById('searchQuery').value;
+            const allEngines = Array.from(document.querySelectorAll('input[name="engines"]')).map(cb => cb.value);
+            
+            if (query) {
+                performSearch(query, allEngines);
+            } else {
+                alert('Please enter a search query.');
+            }
+        });
+        
+        function performSearch(query, engines) {
+            const engineUrls = {
+                google: `https://www.google.com/search?q=${encodeURIComponent(query)}`,
+                bing: `https://www.bing.com/search?q=${encodeURIComponent(query)}`,
+                duckduckgo: `https://duckduckgo.com/?q=${encodeURIComponent(query)}`,
+                yandex: `https://yandex.com/search/?text=${encodeURIComponent(query)}`,
+                googleNews: `https://news.google.com/search?q=${encodeURIComponent(query)}`,
+                googleImages: `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}`,
+                googleScholar: `https://scholar.google.com/scholar?q=${encodeURIComponent(query)}`,
+                twitter: `https://twitter.com/search?q=${encodeURIComponent(query)}`,
+                reddit: `https://www.reddit.com/search/?q=${encodeURIComponent(query)}`,
+                linkedin: `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(query)}`
+            };
+            
+            engines.forEach(engine => {
+                if (engineUrls[engine]) {
+                    window.open(engineUrls[engine], '_blank');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

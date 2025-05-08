@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Analysis Tool - OSINT Framework</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #3498db;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            min-height: 150px;
+            resize: vertical;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #2980b9;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        .tab.active {
+            background-color: white;
+            border-color: #ddd;
+            border-bottom-color: white;
+            margin-bottom: -1px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>AI Analysis Tool</h1>
+        <p>Use AI to analyze data, generate insights, and assist with investigations</p>
+    </div>
+
+    <div class="container">
+        <a href="../basic.html" class="back-link">← Back to Home</a>
+        
+        <div class="card">
+            <h2>AI Analysis Tool</h2>
+            <p>This tool allows you to use AI to analyze data, generate insights, and assist with OSINT investigations. Select a capability and enter the relevant information.</p>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="entity-extraction">Entity Extraction</div>
+                <div class="tab" data-tab="search-queries">Search Queries</div>
+                <div class="tab" data-tab="report-generation">Report Generation</div>
+                <div class="tab" data-tab="image-analysis">Image Analysis</div>
+            </div>
+            
+            <div class="tab-content active" id="entity-extraction">
+                <h3>Entity Extraction</h3>
+                <p>Extract entities (people, organizations, locations, etc.) from text.</p>
+                
+                <form id="entityExtractionForm">
+                    <div class="form-group">
+                        <label for="entityText">Text to Analyze:</label>
+                        <textarea id="entityText" name="entityText" placeholder="Enter text to extract entities from..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="button">Extract Entities</button>
+                </form>
+            </div>
+            
+            <div class="tab-content" id="search-queries">
+                <h3>Search Query Generation</h3>
+                <p>Generate effective search queries for OSINT research.</p>
+                
+                <form id="searchQueryForm">
+                    <div class="form-group">
+                        <label for="searchTopic">Research Topic:</label>
+                        <input type="text" id="searchTopic" name="searchTopic" placeholder="Enter a research topic..." required>
+                    </div>
+                    
+                    <button type="submit" class="button">Generate Search Queries</button>
+                </form>
+            </div>
+            
+            <div class="tab-content" id="report-generation">
+                <h3>Report Generation</h3>
+                <p>Generate a comprehensive OSINT report based on your findings.</p>
+                
+                <form id="reportForm">
+                    <div class="form-group">
+                        <label for="reportData">Investigation Findings:</label>
+                        <textarea id="reportData" name="reportData" placeholder="Enter your investigation findings..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="button">Generate Report</button>
+                </form>
+            </div>
+            
+            <div class="tab-content" id="image-analysis">
+                <h3>Image Analysis</h3>
+                <p>Analyze images for OSINT purposes.</p>
+                
+                <form id="imageAnalysisForm">
+                    <div class="form-group">
+                        <label for="imageUrl">Image URL:</label>
+                        <input type="text" id="imageUrl" name="imageUrl" placeholder="Enter an image URL..." required>
+                    </div>
+                    
+                    <button type="submit" class="button">Analyze Image</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 Ultimate OSINT Framework. All Rights Reserved.</p>
+        <p>For legitimate OSINT research and educational purposes only.</p>
+    </div>
+
+    <script>
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs and tab contents
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Show corresponding tab content
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Entity Extraction
+        document.getElementById('entityExtractionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const text = document.getElementById('entityText').value;
+            
+            if (text) {
+                // In a real implementation, this would call an AI API
+                // For now, we'll redirect to an AI service
+                window.open(`https://claude.ai/`, '_blank');
+                alert('In a real implementation, this would use an AI API to extract entities from the text. For now, we\'re redirecting to Claude AI where you can paste your text.');
+            } else {
+                alert('Please enter text to analyze.');
+            }
+        });
+        
+        // Search Query Generation
+        document.getElementById('searchQueryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const topic = document.getElementById('searchTopic').value;
+            
+            if (topic) {
+                // In a real implementation, this would call an AI API
+                window.open(`https://claude.ai/`, '_blank');
+                alert('In a real implementation, this would use an AI API to generate search queries. For now, we\'re redirecting to Claude AI where you can ask for search query suggestions.');
+            } else {
+                alert('Please enter a research topic.');
+            }
+        });
+        
+        // Report Generation
+        document.getElementById('reportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const data = document.getElementById('reportData').value;
+            
+            if (data) {
+                // In a real implementation, this would call an AI API
+                window.open(`https://claude.ai/`, '_blank');
+                alert('In a real implementation, this would use an AI API to generate a report. For now, we\'re redirecting to Claude AI where you can ask for report generation.');
+            } else {
+                alert('Please enter investigation findings.');
+            }
+        });
+        
+        // Image Analysis
+        document.getElementById('imageAnalysisForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const imageUrl = document.getElementById('imageUrl').value;
+            
+            if (imageUrl) {
+                // In a real implementation, this would call an AI API
+                window.open(`https://claude.ai/`, '_blank');
+                alert('In a real implementation, this would use an AI API to analyze the image. For now, we\'re redirecting to Claude AI where you can upload the image for analysis.');
+            } else {
+                alert('Please enter an image URL.');
+            }
+        });
+    </script>
+</body>
+</html>

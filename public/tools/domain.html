@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain Analysis Tool - OSINT Framework</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #3498db;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #2980b9;
+        }
+        .checkbox-group {
+            margin-bottom: 15px;
+        }
+        .checkbox-group h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .checkbox-item {
+            margin-bottom: 5px;
+        }
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Domain Analysis Tool</h1>
+        <p>Investigate websites and domains for WHOIS data, DNS records, and more</p>
+    </div>
+
+    <div class="container">
+        <a href="../basic.html" class="back-link">← Back to Home</a>
+        
+        <div class="card">
+            <h2>Domain Analysis Tool</h2>
+            <p>This tool allows you to investigate websites and domains for WHOIS data, DNS records, and other technical information. Enter a domain name and select the tools you want to use.</p>
+            
+            <form id="domainForm">
+                <div class="form-group">
+                    <label for="domain">Domain Name:</label>
+                    <input type="text" id="domain" name="domain" placeholder="Enter a domain name (e.g., example.com)..." required>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>WHOIS & Registration</h3>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="whois" name="tools" value="whois" checked>
+                        <label for="whois">WHOIS Lookup</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="domaintools" name="tools" value="domaintools">
+                        <label for="domaintools">DomainTools</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="viewdns" name="tools" value="viewdns" checked>
+                        <label for="viewdns">ViewDNS.info</label>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>DNS & Technical</h3>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="dnsdumpster" name="tools" value="dnsdumpster" checked>
+                        <label for="dnsdumpster">DNSdumpster</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="securitytrails" name="tools" value="securitytrails">
+                        <label for="securitytrails">SecurityTrails</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="mxtoolbox" name="tools" value="mxtoolbox">
+                        <label for="mxtoolbox">MX Toolbox</label>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Website Analysis</h3>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="builtwith" name="tools" value="builtwith" checked>
+                        <label for="builtwith">BuiltWith</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="wappalyzer" name="tools" value="wappalyzer">
+                        <label for="wappalyzer">Wappalyzer</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="wayback" name="tools" value="wayback" checked>
+                        <label for="wayback">Wayback Machine</label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="button">Analyze Domain</button>
+                <button type="button" id="analyzeAllButton" class="button">Use All Tools</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 Ultimate OSINT Framework. All Rights Reserved.</p>
+        <p>For legitimate OSINT research and educational purposes only.</p>
+    </div>
+
+    <script>
+        document.getElementById('domainForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const domain = document.getElementById('domain').value;
+            const selectedTools = Array.from(document.querySelectorAll('input[name="tools"]:checked')).map(cb => cb.value);
+            
+            if (domain && selectedTools.length > 0) {
+                analyzeDomain(domain, selectedTools);
+            } else {
+                alert('Please enter a domain name and select at least one tool.');
+            }
+        });
+        
+        document.getElementById('analyzeAllButton').addEventListener('click', function() {
+            const domain = document.getElementById('domain').value;
+            const allTools = Array.from(document.querySelectorAll('input[name="tools"]')).map(cb => cb.value);
+            
+            if (domain) {
+                analyzeDomain(domain, allTools);
+            } else {
+                alert('Please enter a domain name.');
+            }
+        });
+        
+        function analyzeDomain(domain, tools) {
+            const toolUrls = {
+                whois: `https://who.is/whois/${encodeURIComponent(domain)}`,
+                domaintools: `https://whois.domaintools.com/${encodeURIComponent(domain)}`,
+                viewdns: `https://viewdns.info/whois/?domain=${encodeURIComponent(domain)}`,
+                dnsdumpster: `https://dnsdumpster.com/`,
+                securitytrails: `https://securitytrails.com/domain/${encodeURIComponent(domain)}/dns`,
+                mxtoolbox: `https://mxtoolbox.com/SuperTool.aspx?action=mx%3a${encodeURIComponent(domain)}&run=toolpage`,
+                builtwith: `https://builtwith.com/${encodeURIComponent(domain)}`,
+                wappalyzer: `https://www.wappalyzer.com/lookup/${encodeURIComponent(domain)}`,
+                wayback: `https://web.archive.org/web/*/${encodeURIComponent(domain)}`
+            };
+            
+            tools.forEach(tool => {
+                if (toolUrls[tool]) {
+                    window.open(toolUrls[tool], '_blank');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
