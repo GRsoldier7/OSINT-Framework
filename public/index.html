@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ultimate OSINT Framework</title>
+    
+    <!-- Meta tags for SEO and social sharing -->
+    <meta name="description" content="A comprehensive, browser-based Open Source Intelligence (OSINT) framework for investigators, researchers, journalists, and security professionals.">
+    <meta name="keywords" content="OSINT, intelligence, investigation, research, security, framework">
+    <meta name="author" content="OSINT Framework Team">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://osint-framework.example.com/">
+    <meta property="og:title" content="Ultimate OSINT Framework">
+    <meta property="og:description" content="A comprehensive, browser-based Open Source Intelligence (OSINT) framework for investigators, researchers, journalists, and security professionals.">
+    <meta property="og:image" content="https://osint-framework.example.com/img/osint-framework-preview.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://osint-framework.example.com/">
+    <meta property="twitter:title" content="Ultimate OSINT Framework">
+    <meta property="twitter:description" content="A comprehensive, browser-based Open Source Intelligence (OSINT) framework for investigators, researchers, journalists, and security professionals.">
+    <meta property="twitter:image" content="https://osint-framework.example.com/img/osint-framework-preview.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/main.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/js/main.js" as="script">
+    <link rel="preload" href="/css/main.css" as="style">
+    
+    <!-- Application scripts -->
+    <script src="/js/main.js" defer></script>
+</head>
+<body>
+    <div id="app">
+        <!-- App content will be rendered here -->
+        <div class="loading-container">
+            <div class="loading-spinner"></div>
+            <p>Loading Ultimate OSINT Framework...</p>
+        </div>
+    </div>
+    
+    <noscript>
+        <div class="noscript-message">
+            <h2>JavaScript Required</h2>
+            <p>This application requires JavaScript to function properly. Please enable JavaScript in your browser settings and reload the page.</p>
+        </div>
+    </noscript>
+    
+    <!-- Application initialization -->
+    <script>
+        // Check if the browser supports all required features
+        function checkBrowserSupport() {
+            const requiredFeatures = [
+                'Promise' in window,
+                'fetch' in window,
+                'localStorage' in window,
+                'sessionStorage' in window,
+                'JSON' in window
+            ];
+            
+            return requiredFeatures.every(feature => feature === true);
+        }
+        
+        // Initialize the application
+        function initApp() {
+            if (!checkBrowserSupport()) {
+                document.getElementById('app').innerHTML = `
+                    <div class="browser-support-error">
+                        <h2>Browser Not Supported</h2>
+                        <p>Your browser does not support all the features required by this application. Please upgrade to a modern browser such as Chrome, Firefox, Edge, or Safari.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // The main application will be initialized by the main.js script
+        }
+        
+        // Initialize the application when the DOM is ready
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>

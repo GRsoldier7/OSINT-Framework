@@ -1,0 +1,50 @@
+{
+  "name": "Ultimate OSINT Framework",
+  "short_name": "OSINT",
+  "description": "A comprehensive, browser-based Open Source Intelligence (OSINT) framework",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3498db",
+  "icons": [
+    {
+      "src": "/img/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/img/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["security", "utilities", "productivity"],
+  "orientation": "any",
+  "lang": "en-US",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "shortcuts": [
+    {
+      "name": "Search Engines",
+      "short_name": "Search",
+      "description": "Open the Search Engines tool",
+      "url": "/search-engines",
+      "icons": [{ "src": "/img/search-icon.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Username Search",
+      "short_name": "Username",
+      "description": "Open the Username Search tool",
+      "url": "/username-search",
+      "icons": [{ "src": "/img/username-icon.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Email Analysis",
+      "short_name": "Email",
+      "description": "Open the Email Analysis tool",
+      "url": "/email-analysis",
+      "icons": [{ "src": "/img/email-icon.png", "sizes": "96x96" }]
+    }
+  ]
+}
