@@ -80,7 +80,20 @@ The framework integrates with the following MCP servers:
 
 6. Open your browser and navigate to:
    ```
-   http://localhost:3000
+   http://localhost:5000
+   ```
+
+### Quick Start
+
+For a simpler setup, you can run:
+   ```
+   node setup.js
+   ```
+This will install dependencies and set up the environment file automatically.
+
+Then start the simple server:
+   ```
+   npm run start:simple
    ```
 
 ### Production Deployment
@@ -180,8 +193,7 @@ Contributions are welcome! Here's how you can contribute:
 5. Push to the branch (`git push origin feature/your-feature`)
 6. Open a Pull Request
 
-Please follow the [Vibe Coding Markdown Rulebook](./Vibe%20Coding%20Markdown%20Rulebook.md) for all contributions.
-
+Please follow the Vibe Coding guidelines for all contributions.
 ## 📜 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.

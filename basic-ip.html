@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSINT IP Address Lookup Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+        }
+        .sidebar h2 {
+            color: white;
+            border-bottom: 1px solid #555;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 5px 0;
+        }
+        .sidebar a:hover {
+            color: #4CAF50;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .tool-container {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .tool-container h2 {
+            color: #4CAF50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .checkbox-group {
+            margin-bottom: 15px;
+        }
+        .checkbox-group h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+        .checkbox-group label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        .button-group {
+            margin-top: 15px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button.clear {
+            background-color: #f44336;
+        }
+        button.clear:hover {
+            background-color: #d32f2f;
+        }
+        button.submit-all {
+            background-color: #2196F3;
+        }
+        button.submit-all:hover {
+            background-color: #0b7dda;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>OSINT Search Tools</h1>
+    </div>
+    
+    <div class="container">
+        <div class="sidebar">
+            <h2>Tools</h2>
+            <ul>
+                <li><a href="basic-search.html">Search Engines</a></li>
+                <li><a href="#">Facebook</a></li>
+                <li><a href="#">Twitter</a></li>
+                <li><a href="#">Instagram</a></li>
+                <li><a href="#">LinkedIn</a></li>
+                <li><a href="basic-email.html">Email Addresses</a></li>
+                <li><a href="basic-username.html">Usernames</a></li>
+                <li><a href="#">Names</a></li>
+                <li><a href="#">Addresses</a></li>
+                <li><a href="#">Phone Numbers</a></li>
+                <li><a href="#">Documents</a></li>
+                <li><a href="#">Images</a></li>
+                <li><a href="#">Videos</a></li>
+                <li><a href="basic-domain.html">Domains</a></li>
+                <li><a href="#" class="active">IP Addresses</a></li>
+                <li><a href="#">Breaches & Leaks</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <div class="tool-container">
+                <h2>IP Address Lookup Tool</h2>
+                
+                <div class="input-group">
+                    <label for="ip-query">IP Address:</label>
+                    <input type="text" id="ip-query" placeholder="Enter IP address (e.g., 8.8.8.8)">
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Geolocation</h3>
+                    <label><input type="checkbox" id="ipinfo" checked> IPinfo.io</label>
+                    <label><input type="checkbox" id="ipapi" checked> IP-API</label>
+                    <label><input type="checkbox" id="ipgeolocation" checked> IPGeolocation</label>
+                    <label><input type="checkbox" id="ipstack"> IPStack</label>
+                    <label><input type="checkbox" id="maxmind"> MaxMind</label>
+                    <label><input type="checkbox" id="ipdata"> IPData</label>
+                    
+                    <div class="button-group">
+                        <button id="geo-submit">Submit Selected</button>
+                        <button id="geo-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Reputation & Security</h3>
+                    <label><input type="checkbox" id="abuseipdb" checked> AbuseIPDB</label>
+                    <label><input type="checkbox" id="virustotal" checked> VirusTotal</label>
+                    <label><input type="checkbox" id="ipvoid" checked> IPVoid</label>
+                    <label><input type="checkbox" id="threatcrowd" checked> ThreatCrowd</label>
+                    <label><input type="checkbox" id="greynoise"> GreyNoise</label>
+                    <label><input type="checkbox" id="xforce"> IBM X-Force Exchange</label>
+                    
+                    <div class="button-group">
+                        <button id="reputation-submit">Submit Selected</button>
+                        <button id="reputation-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Network & Infrastructure</h3>
+                    <label><input type="checkbox" id="shodan" checked> Shodan</label>
+                    <label><input type="checkbox" id="censys" checked> Censys</label>
+                    <label><input type="checkbox" id="zoomeye"> ZoomEye</label>
+                    <label><input type="checkbox" id="fofa"> FOFA</label>
+                    <label><input type="checkbox" id="onyphe"> Onyphe</label>
+                    <label><input type="checkbox" id="binaryedge"> BinaryEdge</label>
+                    
+                    <div class="button-group">
+                        <button id="network-submit">Submit Selected</button>
+                        <button id="network-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Whois & ASN</h3>
+                    <label><input type="checkbox" id="whois" checked> WHOIS IP Lookup</label>
+                    <label><input type="checkbox" id="bgpview" checked> BGPView</label>
+                    <label><input type="checkbox" id="hurricane" checked> Hurricane Electric</label>
+                    <label><input type="checkbox" id="robtex" checked> Robtex</label>
+                    <label><input type="checkbox" id="peeringdb"> PeeringDB</label>
+                    <label><input type="checkbox" id="ripe"> RIPE Stat</label>
+                    
+                    <div class="button-group">
+                        <button id="whois-submit">Submit Selected</button>
+                        <button id="whois-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Passive DNS</h3>
+                    <label><input type="checkbox" id="securitytrails" checked> SecurityTrails</label>
+                    <label><input type="checkbox" id="dnslytics" checked> DNSlytics</label>
+                    <label><input type="checkbox" id="viewdns" checked> ViewDNS.info</label>
+                    <label><input type="checkbox" id="threatminer"> ThreatMiner</label>
+                    <label><input type="checkbox" id="passivetotal"> PassiveTotal</label>
+                    <label><input type="checkbox" id="circl"> CIRCL Passive DNS</label>
+                    
+                    <div class="button-group">
+                        <button id="dns-submit">Submit Selected</button>
+                        <button id="dns-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button id="ip-clear" class="clear">Clear All</button>
+                    <button id="ip-submit-all" class="submit-all">Submit All Categories</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>&copy; 2024 OSINT Search Tools. All Rights Reserved.</p>
+    </div>
+    
+    <script>
+        // Geolocation Submit
+        document.getElementById('geo-submit').addEventListener('click', function() {
+            const ip = document.getElementById('ip-query').value;
+            if (!ip) {
+                alert('Please enter an IP address');
+                return;
+            }
+            
+            const tools = {
+                'ipinfo': 'https://ipinfo.io/',
+                'ipapi': 'http://ip-api.com/json/',
+                'ipgeolocation': 'https://ipgeolocation.io/ip-location/',
+                'ipstack': 'https://ipstack.com/',
+                'maxmind': 'https://www.maxmind.com/en/geoip-demo',
+                'ipdata': 'https://ipdata.co/'
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (document.getElementById(tool).checked) {
+                    if (tool === 'ipstack' || tool === 'maxmind' || tool === 'ipdata') {
+                        // These sites need JavaScript to search, so just open the homepage
+                        window.open(url, '_blank');
+                    } else {
+                        window.open(url + ip, '_blank');
+                    }
+                }
+            }
+        });
+        
+        // Geolocation Submit All
+        document.getElementById('geo-submit-all').addEventListener('click', function() {
+            const ip = document.getElementById('ip-query').value;
+            if (!ip) {
+                alert('Please enter an IP address');
+                return;
+            }
+            
+            const tools = {
+                'ipinfo': 'https://ipinfo.io/',
+                'ipapi': 'http://ip-api.com/json/',
+                'ipgeolocation': 'https://ipgeolocation.io/ip-location/',
+                'ipstack': 'https://ipstack.com/',
+                'maxmind': 'https://www.maxmind.com/en/geoip-demo',
+                'ipdata': 'https://ipdata.co/'
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (tool === 'ipstack' || tool === 'maxmind' || tool === 'ipdata') {
+                    // These sites need JavaScript to search, so just open the homepage
+                    window.open(url, '_blank');
+                } else {
+                    window.open(url + ip, '_blank');
+                }
+            }
+        });
+        
+        // Reputation & Security Submit
+        document.getElementById('reputation-submit').addEventListener('click', function() {
+            const ip = document.getElementById('ip-query').value;
+            if (!ip) {
+                alert('Please enter an IP address');
+                return;
+            }
+            
+            const tools = {
+                'abuseipdb': 'https://www.abuseipdb.com/check/',
+                'virustotal': 'https://www.virustotal.com/gui/ip-address/',
+                'ipvoid': 'https://www.ipvoid.com/ip-blacklist-check/',
+                'threatcrowd': 'https://www.threatcrowd.org/ip.php?ip=',
+                'greynoise': 'https://viz.greynoise.io/ip/',
+                'xforce': 'https://exchange.xforce.ibmcloud.com/ip/'
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (document.getElementById(tool).checked) {
+                    window.open(url + ip, '_blank');
+                }
+            }
+        });
+        
+        // Reputation & Security Submit All
+        document.getElementById('reputation-submit-all').addEventListener('click', function() {
+            const ip = document.getElementById('ip-query').value;
+            if (!ip) {
+                alert('Please enter an IP address');
+                return;
+            }
+            
+            const tools = {
+                'abuseipdb': 'https://www.abuseipdb.com/check/',
+                'virustotal': 'https://www.virustotal.com/gui/ip-address/',
+                'ipvoid': 'https://www.ipvoid.com/ip-blacklist-check/',
+                'threatcrowd': 'https://www.threatcrowd.org/ip.php?ip=',
+                'greynoise': 'https://viz.greynoise.io/ip/',
+                'xforce': 'https://exchange.xforce.ibmcloud.com/ip/'
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                window.open(url + ip, '_blank');
+            }
+        });
+        
+        // Network & Infrastructure Submit
+        document.getElementById('network-submit').addEventListener('click', function() {
+            const ip = document.getElementById('ip-query').value;
+            if (!ip) {
+                alert('Please enter an IP address');
+                return;
+            }
+            
+            const tools = {
+                'shodan': 'https://www.shodan.io/host/',
+                'censys': 'https://search.censys.io/hosts/',
+                'zoomeye': 'https://www.zoomeye.org/searchResult?q=',
+                'fofa': 'https://fofa.info/',
+                'onyphe': 'https://www.onyphe.io/search/?query=',
+                'binaryedge': 'https://app.binaryedge.io/services/query?query='
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (document.getElementById(tool).checked) {
+                    if (tool === 'fofa') {
+                        // These sites need JavaScript to search, so just open the homepage
+                        window.open(url, '_blank');
+                    } else {
+                        window.open(url + ip, '_blank');
+                    }
+                }
+            }
+        });
+        
+        // Network & Infrastructure Submit All
+        document.getElementById('network-submit-all').addEventListener('click', function() {
+            const ip = document.getElementById('ip-query').value;
+            if (!ip) {
+                alert('Please enter an IP address');
+                return;
+            }
+            
+            const tools = {
+                'shodan': 'https://www.shodan.io/host/',
+                'censys': 'https://search.censys.io/hosts/',
+                'zoomeye': 'https://www.zoomeye.org/searchResult?q=',
+                'fofa': 'https://fofa.info/',
+                'onyphe': 'https://www.onyphe.io/search/?query=',
+                'binaryedge': 'https://app.binaryedge.io/services/query?query='
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (tool === 'fofa') {
+                    // These sites need JavaScript to search, so just open the homepage
+                    window.open(url, '_blank');
+                } else {
+                    window.open(url + ip, '_blank');
+                }
+            }
+        });
+        
+        // Whois & ASN Submit
+        document.getElementById('whois-submit').addEventListener('click', function() {
+            const ip = document.getElementById('ip-query').value;
+            if (!ip) {
+                alert('Please enter an IP address');
+                return;
+            }
+            
+            const tools = {
+                'whois': 'https://whois.domaintools.com/',
+                'bgpview': 'https://bgpview.io/ip/',
+                'hurricane': 'https://bgp.he.net/ip/',
+                'robtex': 'https://www.robtex.com/ip/',
+                'peeringdb': 'https://www.peeringdb.com/search?q=',
+                'ripe': 'https://stat.ripe.net/app/launchpad/#search='
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (document.getElementById(tool).checked) {
+                    window.open(url + ip, '_blank');
+                }
+            }
+        });
+        
+        // Whois & ASN Submit All
+        document.getElementById('whois-submit-all').addEventListener('click', function() {
+            const ip = document.getElementById('ip-query').value;
+            if (!ip) {
+                alert('Please enter an IP address');
+                return;
+            }
+            
+            const tools = {
+                'whois': 'https://whois.domaintools.com/',
+                'bgpview': 'https://bgpview.io/ip/',
+                'hurricane': 'https://bgp.he.net/ip/',
+                'robtex': 'https://www.robtex.com/ip/',
+                'peeringdb': 'https://www.peeringdb.com/search?q=',
+                'ripe': 'https://stat.ripe.net/app/launchpad/#search='
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                window.open(url + ip, '_blank');
+            }
+        });
+        
+        // Passive DNS Submit
+        document.getElementById('dns-submit').addEventListener('click', function() {
+            const ip = document.getElementById('ip-query').value;
+            if (!ip) {
+                alert('Please enter an IP address');
+                return;
+            }
+            
+            const tools = {
+                'securitytrails': 'https://securitytrails.com/list/ip/',
+                'dnslytics': 'https://dnslytics.com/ip/',
+                'viewdns': 'https://viewdns.info/reverseip/?host=',
+                'threatminer': 'https://www.threatminer.org/host.php?q=',
+                'passivetotal': 'https://community.riskiq.com/search/',
+                'circl': 'https://www.circl.lu/pdns/query/'
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (document.getElementById(tool).checked) {
+                    if (tool === 'passivetotal' || tool === 'circl') {
+                        // These sites need JavaScript to search, so just open the homepage
+                        window.open(url, '_blank');
+                    } else {
+                        window.open(url + ip, '_blank');
+                    }
+                }
+            }
+        });
+        
+        // Passive DNS Submit All
+        document.getElementById('dns-submit-all').addEventListener('click', function() {
+            const ip = document.getElementById('ip-query').value;
+            if (!ip) {
+                alert('Please enter an IP address');
+                return;
+            }
+            
+            const tools = {
+                'securitytrails': 'https://securitytrails.com/list/ip/',
+                'dnslytics': 'https://dnslytics.com/ip/',
+                'viewdns': 'https://viewdns.info/reverseip/?host=',
+                'threatminer': 'https://www.threatminer.org/host.php?q=',
+                'passivetotal': 'https://community.riskiq.com/search/',
+                'circl': 'https://www.circl.lu/pdns/query/'
+            };
+            
+            for (const [tool, url] of Object.entries(tools)) {
+                if (tool === 'passivetotal' || tool === 'circl') {
+                    // These sites need JavaScript to search, so just open the homepage
+                    window.open(url, '_blank');
+                } else {
+                    window.open(url + ip, '_blank');
+                }
+            }
+        });
+        
+        // Submit All Categories
+        document.getElementById('ip-submit-all').addEventListener('click', function() {
+            const ip = document.getElementById('ip-query').value;
+            if (!ip) {
+                alert('Please enter an IP address');
+                return;
+            }
+            
+            // Trigger all category submit buttons
+            document.getElementById('geo-submit-all').click();
+            document.getElementById('reputation-submit-all').click();
+            document.getElementById('network-submit-all').click();
+            document.getElementById('whois-submit-all').click();
+            document.getElementById('dns-submit-all').click();
+        });
+        
+        // Clear All
+        document.getElementById('ip-clear').addEventListener('click', function() {
+            document.getElementById('ip-query').value = '';
+            
+            // Reset all checkboxes to their default state
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                const id = checkbox.id;
+                if (['ipinfo', 'ipapi', 'ipgeolocation',
+                     'abuseipdb', 'virustotal', 'ipvoid', 'threatcrowd',
+                     'shodan', 'censys',
+                     'whois', 'bgpview', 'hurricane', 'robtex',
+                     'securitytrails', 'dnslytics', 'viewdns'].includes(id)) {
+                    checkbox.checked = true;
+                } else {
+                    checkbox.checked = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

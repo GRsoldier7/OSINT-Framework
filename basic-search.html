@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSINT Search Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+        }
+        .sidebar h2 {
+            color: white;
+            border-bottom: 1px solid #555;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 5px 0;
+        }
+        .sidebar a:hover {
+            color: #4CAF50;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .tool-container {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .tool-container h2 {
+            color: #4CAF50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .checkbox-group {
+            margin-bottom: 15px;
+        }
+        .checkbox-group h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+        .checkbox-group label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        .button-group {
+            margin-top: 15px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button.clear {
+            background-color: #f44336;
+        }
+        button.clear:hover {
+            background-color: #d32f2f;
+        }
+        button.submit-all {
+            background-color: #2196F3;
+        }
+        button.submit-all:hover {
+            background-color: #0b7dda;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>OSINT Search Tools</h1>
+    </div>
+    
+    <div class="container">
+        <div class="sidebar">
+            <h2>Tools</h2>
+            <ul>
+                <li><a href="#" class="active">Search Engines</a></li>
+                <li><a href="#">Facebook</a></li>
+                <li><a href="#">Twitter</a></li>
+                <li><a href="#">Instagram</a></li>
+                <li><a href="#">LinkedIn</a></li>
+                <li><a href="#">Email Addresses</a></li>
+                <li><a href="#">Usernames</a></li>
+                <li><a href="#">Names</a></li>
+                <li><a href="#">Addresses</a></li>
+                <li><a href="#">Phone Numbers</a></li>
+                <li><a href="#">Documents</a></li>
+                <li><a href="#">Images</a></li>
+                <li><a href="#">Videos</a></li>
+                <li><a href="#">Domains</a></li>
+                <li><a href="#">IP Addresses</a></li>
+                <li><a href="#">Breaches & Leaks</a></li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            <div class="tool-container">
+                <h2>Search Engines Tool</h2>
+                
+                <div class="input-group">
+                    <label for="search-query">Search Query:</label>
+                    <input type="text" id="search-query" placeholder="Enter search term">
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>General Search</h3>
+                    <label><input type="checkbox" id="google" checked> Google</label>
+                    <label><input type="checkbox" id="bing" checked> Bing</label>
+                    <label><input type="checkbox" id="yahoo" checked> Yahoo</label>
+                    <label><input type="checkbox" id="duckduckgo" checked> DuckDuckGo</label>
+                    <label><input type="checkbox" id="yandex" checked> Yandex</label>
+                    <label><input type="checkbox" id="baidu"> Baidu</label>
+                    <label><input type="checkbox" id="startpage"> Startpage</label>
+                    <label><input type="checkbox" id="qwant"> Qwant</label>
+                    
+                    <div class="button-group">
+                        <button id="general-submit">Submit Selected</button>
+                        <button id="general-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Specialized Search</h3>
+                    <label><input type="checkbox" id="google-news" checked> Google News</label>
+                    <label><input type="checkbox" id="google-images" checked> Google Images</label>
+                    <label><input type="checkbox" id="google-videos" checked> Google Videos</label>
+                    <label><input type="checkbox" id="google-maps" checked> Google Maps</label>
+                    <label><input type="checkbox" id="google-books"> Google Books</label>
+                    <label><input type="checkbox" id="google-scholar"> Google Scholar</label>
+                    
+                    <div class="button-group">
+                        <button id="specialized-submit">Submit Selected</button>
+                        <button id="specialized-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h3>Social Media Search</h3>
+                    <label><input type="checkbox" id="twitter" checked> Twitter</label>
+                    <label><input type="checkbox" id="facebook" checked> Facebook</label>
+                    <label><input type="checkbox" id="instagram" checked> Instagram</label>
+                    <label><input type="checkbox" id="linkedin" checked> LinkedIn</label>
+                    <label><input type="checkbox" id="reddit" checked> Reddit</label>
+                    <label><input type="checkbox" id="youtube" checked> YouTube</label>
+                    
+                    <div class="button-group">
+                        <button id="social-submit">Submit Selected</button>
+                        <button id="social-submit-all" class="submit-all">Submit All</button>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button id="search-clear" class="clear">Clear All</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>&copy; 2024 OSINT Search Tools. All Rights Reserved.</p>
+    </div>
+    
+    <script>
+        // General Search Submit
+        document.getElementById('general-submit').addEventListener('click', function() {
+            const query = document.getElementById('search-query').value;
+            if (!query) {
+                alert('Please enter a search query');
+                return;
+            }
+            
+            const engines = {
+                'google': 'https://www.google.com/search?q=',
+                'bing': 'https://www.bing.com/search?q=',
+                'yahoo': 'https://search.yahoo.com/search?p=',
+                'duckduckgo': 'https://duckduckgo.com/?q=',
+                'yandex': 'https://yandex.com/search/?text=',
+                'baidu': 'https://www.baidu.com/s?wd=',
+                'startpage': 'https://www.startpage.com/do/search?q=',
+                'qwant': 'https://www.qwant.com/?q='
+            };
+            
+            for (const [engine, url] of Object.entries(engines)) {
+                if (document.getElementById(engine).checked) {
+                    window.open(url + encodeURIComponent(query), '_blank');
+                }
+            }
+        });
+        
+        // General Search Submit All
+        document.getElementById('general-submit-all').addEventListener('click', function() {
+            const query = document.getElementById('search-query').value;
+            if (!query) {
+                alert('Please enter a search query');
+                return;
+            }
+            
+            const engines = {
+                'google': 'https://www.google.com/search?q=',
+                'bing': 'https://www.bing.com/search?q=',
+                'yahoo': 'https://search.yahoo.com/search?p=',
+                'duckduckgo': 'https://duckduckgo.com/?q=',
+                'yandex': 'https://yandex.com/search/?text=',
+                'baidu': 'https://www.baidu.com/s?wd=',
+                'startpage': 'https://www.startpage.com/do/search?q=',
+                'qwant': 'https://www.qwant.com/?q='
+            };
+            
+            for (const [engine, url] of Object.entries(engines)) {
+                window.open(url + encodeURIComponent(query), '_blank');
+            }
+        });
+        
+        // Specialized Search Submit
+        document.getElementById('specialized-submit').addEventListener('click', function() {
+            const query = document.getElementById('search-query').value;
+            if (!query) {
+                alert('Please enter a search query');
+                return;
+            }
+            
+            const engines = {
+                'google-news': 'https://news.google.com/search?q=',
+                'google-images': 'https://www.google.com/search?tbm=isch&q=',
+                'google-videos': 'https://www.google.com/search?tbm=vid&q=',
+                'google-maps': 'https://www.google.com/maps/search/',
+                'google-books': 'https://www.google.com/search?tbm=bks&q=',
+                'google-scholar': 'https://scholar.google.com/scholar?q='
+            };
+            
+            for (const [engine, url] of Object.entries(engines)) {
+                if (document.getElementById(engine).checked) {
+                    window.open(url + encodeURIComponent(query), '_blank');
+                }
+            }
+        });
+        
+        // Specialized Search Submit All
+        document.getElementById('specialized-submit-all').addEventListener('click', function() {
+            const query = document.getElementById('search-query').value;
+            if (!query) {
+                alert('Please enter a search query');
+                return;
+            }
+            
+            const engines = {
+                'google-news': 'https://news.google.com/search?q=',
+                'google-images': 'https://www.google.com/search?tbm=isch&q=',
+                'google-videos': 'https://www.google.com/search?tbm=vid&q=',
+                'google-maps': 'https://www.google.com/maps/search/',
+                'google-books': 'https://www.google.com/search?tbm=bks&q=',
+                'google-scholar': 'https://scholar.google.com/scholar?q='
+            };
+            
+            for (const [engine, url] of Object.entries(engines)) {
+                window.open(url + encodeURIComponent(query), '_blank');
+            }
+        });
+        
+        // Social Media Search Submit
+        document.getElementById('social-submit').addEventListener('click', function() {
+            const query = document.getElementById('search-query').value;
+            if (!query) {
+                alert('Please enter a search query');
+                return;
+            }
+            
+            const engines = {
+                'twitter': 'https://twitter.com/search?q=',
+                'facebook': 'https://www.facebook.com/search/top/?q=',
+                'instagram': 'https://www.instagram.com/explore/tags/',
+                'linkedin': 'https://www.linkedin.com/search/results/all/?keywords=',
+                'reddit': 'https://www.reddit.com/search/?q=',
+                'youtube': 'https://www.youtube.com/results?search_query='
+            };
+            
+            for (const [engine, url] of Object.entries(engines)) {
+                if (document.getElementById(engine).checked) {
+                    if (engine === 'instagram') {
+                        // Instagram uses hashtags without spaces
+                        window.open(url + encodeURIComponent(query.replace(/\s+/g, '')), '_blank');
+                    } else {
+                        window.open(url + encodeURIComponent(query), '_blank');
+                    }
+                }
+            }
+        });
+        
+        // Social Media Search Submit All
+        document.getElementById('social-submit-all').addEventListener('click', function() {
+            const query = document.getElementById('search-query').value;
+            if (!query) {
+                alert('Please enter a search query');
+                return;
+            }
+            
+            const engines = {
+                'twitter': 'https://twitter.com/search?q=',
+                'facebook': 'https://www.facebook.com/search/top/?q=',
+                'instagram': 'https://www.instagram.com/explore/tags/',
+                'linkedin': 'https://www.linkedin.com/search/results/all/?keywords=',
+                'reddit': 'https://www.reddit.com/search/?q=',
+                'youtube': 'https://www.youtube.com/results?search_query='
+            };
+            
+            for (const [engine, url] of Object.entries(engines)) {
+                if (engine === 'instagram') {
+                    // Instagram uses hashtags without spaces
+                    window.open(url + encodeURIComponent(query.replace(/\s+/g, '')), '_blank');
+                } else {
+                    window.open(url + encodeURIComponent(query), '_blank');
+                }
+            }
+        });
+        
+        // Clear All
+        document.getElementById('search-clear').addEventListener('click', function() {
+            document.getElementById('search-query').value = '';
+            
+            // Reset all checkboxes to their default state
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                const id = checkbox.id;
+                if (['google', 'bing', 'yahoo', 'duckduckgo', 'yandex', 
+                     'google-news', 'google-images', 'google-videos', 'google-maps',
+                     'twitter', 'facebook', 'instagram', 'linkedin', 'reddit', 'youtube'].includes(id)) {
+                    checkbox.checked = true;
+                } else {
+                    checkbox.checked = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
