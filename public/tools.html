@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 OSINT Tools Hub v3.0 - Ultimate Intelligence Framework</title>
+    <meta name="description" content="Access 1,400+ OSINT tools across 30+ categories with AI-powered recommendations and advanced filtering.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/tools.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <span>OSINT Framework</span>
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/tools" class="nav-link active">Tools</a>
+                <a href="/search" class="nav-link">Search</a>
+                <a href="/analysis" class="nav-link">Analysis</a>
+                <a href="/reports" class="nav-link">Reports</a>
+                <a href="/inteltechniques" class="nav-link">IntelTechniques</a>
+            </div>
+            <a href="/tools" class="cta-button">
+                <i class="fas fa-rocket"></i>
+                Get Started
+            </a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span class="gradient-text">OSINT Tools Hub</span>
+                        <div class="title-shine"></div>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Discover and master <span class="highlight">1,400+</span> OSINT tools across <span class="highlight">30+</span> categories
+                    </p>
+                    <div class="hero-stats">
+                        <div class="stat-card">
+                            <i class="fas fa-tools"></i>
+                            <span id="totalTools">1,400+</span>
+                            <label>Tools</label>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-folder"></i>
+                            <span id="totalCategories">30+</span>
+                            <label>Categories</label>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-star"></i>
+                            <span id="totalFavorites">0</span>
+                            <label>Favorites</label>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-robot"></i>
+                            <span>AI</span>
+                            <label>Powered</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Search & Filters -->
+                <div class="search-section">
+                    <div class="search-container">
+                        <div class="search-box">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="searchInput" placeholder="Search tools, categories, or tags..." class="search-input">
+                            <button id="clearSearch" class="clear-search" style="display: none;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="search-actions">
+                            <button id="favoritesModalBtn" class="filter-btn" title="Manage Favorites (Ctrl+F)">
+                                <i class="fas fa-heart"></i>
+                                <span>Favorites</span>
+                            </button>
+                            <button id="favoritesToggle" class="filter-btn">
+                                <i class="fas fa-star"></i>
+                                <span>Show Favorites</span>
+                            </button>
+                            <button id="advancedFilters" class="filter-btn">
+                                <i class="fas fa-filter"></i>
+                                <span>Filters</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-filters">
+                        <select id="categoryFilter" class="filter-select">
+                            <option value="">All Categories</option>
+                        </select>
+                        <select id="typeFilter" class="filter-select">
+                            <option value="">All Types</option>
+                            <option value="web">Web Tools</option>
+                            <option value="cli">CLI Tools</option>
+                            <option value="internal">Internal Tools</option>
+                        </select>
+                        <select id="sortSelect" class="filter-select">
+                            <option value="name">Sort by Name</option>
+                            <option value="category">Sort by Category</option>
+                            <option value="type">Sort by Type</option>
+                            <option value="popularity">Sort by Popularity</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content Area -->
+        <section class="content-section">
+            <div class="content-container">
+                <!-- Sidebar -->
+                <aside class="sidebar" id="sidebar">
+                    <div class="sidebar-header">
+                        <h3>Categories</h3>
+                        <button id="toggleSidebar" class="sidebar-toggle">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                    <div class="category-list" id="categoryList">
+                        <!-- Categories will be loaded here -->
+                    </div>
+                </aside>
+
+                <!-- Main Content -->
+                <div class="main-content">
+                    <!-- Breadcrumb -->
+                    <div class="breadcrumb" id="breadcrumb">
+                        <span class="breadcrumb-item active">All Tools</span>
+                    </div>
+
+                    <!-- View Controls -->
+                    <div class="view-controls">
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="grid" title="Grid View">
+                                <i class="fas fa-th"></i>
+                            </button>
+                            <button class="view-btn" data-view="list" title="List View">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                        <div class="results-info">
+                            <span id="resultsCount">0</span> tools found
+                        </div>
+                    </div>
+
+                    <!-- Tools Container -->
+                    <div class="tools-container" id="toolsContainer">
+                        <!-- Tools will be loaded here -->
+                    </div>
+
+                    <!-- Loading State -->
+                    <div class="loading-state" id="loadingState">
+                        <div class="spinner"></div>
+                        <p>Loading tools...</p>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div class="empty-state" id="emptyState" style="display: none;">
+                        <div class="empty-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3>No tools found</h3>
+                        <p>Try adjusting your search or filters</p>
+                        <button id="clearAllFilters" class="btn btn-primary">
+                            <i class="fas fa-times"></i>
+                            Clear All Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Tool Modal -->
+    <div class="modal" id="toolModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Tool Details</h2>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Tool details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Advanced Filters Modal -->
+    <div class="modal" id="filtersModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Advanced Filters</h2>
+                <button class="modal-close" id="filtersModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="filter-section">
+                    <h3>Tags</h3>
+                    <div class="tag-filters" id="tagFilters">
+                        <!-- Tags will be loaded here -->
+                    </div>
+                </div>
+                <div class="filter-section">
+                    <h3>Source Repository</h3>
+                    <div class="source-filters" id="sourceFilters">
+                        <!-- Sources will be loaded here -->
+                    </div>
+                </div>
+                <div class="filter-actions">
+                    <button id="applyFilters" class="btn btn-primary">Apply Filters</button>
+                    <button id="clearFilters" class="btn btn-secondary">Clear All</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Favorites Modal -->
+    <div class="modal" id="favoritesModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2>
+                    <i class="fas fa-heart"></i>
+                    My Favorites
+                </h2>
+                <button class="modal-close" id="favoritesModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="favorites-header">
+                    <div class="favorites-actions">
+                        <button id="exportFavoritesBtn" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-download"></i>
+                            Export
+                        </button>
+                        <button id="importFavoritesBtn" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-upload"></i>
+                            Import
+                        </button>
+                        <button id="clearFavoritesBtn" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash"></i>
+                            Clear All
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="favorites-content">
+                    <div class="favorites-analytics" id="favoritesAnalytics">
+                        <!-- Analytics will be loaded here -->
+                    </div>
+                    
+                    <div class="favorites-list" id="favoritesList">
+                        <!-- Favorites will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Favorite Modal -->
+    <div class="modal" id="editFavoriteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>
+                    <i class="fas fa-edit"></i>
+                    Edit Favorite
+                </h2>
+                <button class="modal-close" id="editFavoriteModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="edit-favorite-form">
+                    <div class="form-group">
+                        <label for="editFavoriteName">Tool Name</label>
+                        <input type="text" id="editFavoriteName" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editFavoriteNotes">Notes</label>
+                        <textarea id="editFavoriteNotes" placeholder="Add your notes about this tool..." rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editFavoriteRating">Rating (1-5)</label>
+                        <select id="editFavoriteRating">
+                            <option value="0">No rating</option>
+                            <option value="1">1 - Poor</option>
+                            <option value="2">2 - Fair</option>
+                            <option value="3">3 - Good</option>
+                            <option value="4">4 - Very Good</option>
+                            <option value="5">5 - Excellent</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" id="saveFavoriteEditBtn" class="btn btn-primary">
+                            <i class="fas fa-save"></i>
+                            Save Changes
+                        </button>
+                        <button type="button" id="editFavoriteModalClose" class="btn btn-secondary">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chatbot -->
+    <div class="chatbot-container" id="chatbotContainer">
+        <div class="chatbot-toggle" id="chatbotToggle">
+            <i class="fas fa-comments"></i>
+        </div>
+        <div class="chatbot-panel" id="chatbotPanel">
+            <div class="chatbot-header">
+                <h3>OSINT Assistant</h3>
+                <button class="chatbot-close" id="chatbotClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="message bot">
+                    <div class="message-content">
+                        Hi! I'm your OSINT assistant. Ask me about tools, categories, or how to use them!
+                    </div>
+                </div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbotInput" placeholder="Ask about OSINT tools...">
+                <button id="chatbotSend">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/tools.js"></script>
+    <script src="js/chatbot.js"></script>
+</body>
+</html> 

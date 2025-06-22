@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 AI Analysis - OSINT Framework v3.0</title>
+    <meta name="description" content="AI-powered OSINT analysis with threat assessment, data analysis, and automated report generation.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/analysis.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <span>OSINT Framework</span>
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/tools" class="nav-link">Tools</a>
+                <a href="/search" class="nav-link">Search</a>
+                <a href="/analysis" class="nav-link active">Analysis</a>
+                <a href="/reports" class="nav-link">Reports</a>
+                <a href="/inteltechniques" class="nav-link">IntelTechniques</a>
+            </div>
+            <a href="/tools" class="cta-button">
+                <i class="fas fa-rocket"></i>
+                Get Started
+            </a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span class="gradient-text">AI-Powered Analysis</span>
+                        <div class="title-shine"></div>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Leverage artificial intelligence to analyze OSINT data and generate <span class="highlight">actionable insights</span>
+                    </p>
+                </div>
+                
+                <!-- Stats -->
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-brain"></i>
+                        <span>AI-Powered</span>
+                        <label>Analysis</label>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Threat</span>
+                        <label>Assessment</label>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Auto</span>
+                        <label>Reports</label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analysis Tools -->
+        <section class="analysis-section">
+            <div class="analysis-container">
+                <div class="analysis-grid">
+                    <!-- Data Analysis -->
+                    <div class="analysis-card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="card-info">
+                                <h3>Data Analysis</h3>
+                                <p>Upload or paste data for AI-powered analysis and insights</p>
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-form">
+                            <div class="input-group">
+                                <label for="analysis-data">Data Input</label>
+                                <textarea id="analysis-data" placeholder="Paste your data here or upload a file..."></textarea>
+                            </div>
+                            
+                            <div class="file-upload">
+                                <input type="file" id="file-input" accept=".txt,.csv,.json,.xml">
+                                <label for="file-input" class="upload-label">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <span>Upload File</span>
+                                </label>
+                            </div>
+                            
+                            <button id="analyze-btn" class="btn btn-primary">
+                                <i class="fas fa-magic"></i>
+                                Analyze Data
+                            </button>
+                        </div>
+                        
+                        <div id="analysis-results" class="results-container" style="display: none;">
+                            <div class="results-header">
+                                <h4>Analysis Results</h4>
+                                <button class="copy-btn" onclick="copyResults('analysis-results')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <div class="results-content"></div>
+                        </div>
+                    </div>
+
+                    <!-- Threat Assessment -->
+                    <div class="analysis-card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="card-info">
+                                <h3>Threat Assessment</h3>
+                                <p>Assess potential threats and security risks</p>
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-form">
+                            <div class="input-group">
+                                <label for="threat-data">Threat Indicators</label>
+                                <textarea id="threat-data" placeholder="Enter threat indicators, IP addresses, domains, or suspicious data..."></textarea>
+                            </div>
+                            
+                            <div class="threat-level">
+                                <label>Assessment Level:</label>
+                                <select id="threat-level">
+                                    <option value="low">Low Priority</option>
+                                    <option value="medium">Medium Priority</option>
+                                    <option value="high">High Priority</option>
+                                    <option value="critical">Critical</option>
+                                </select>
+                            </div>
+                            
+                            <button id="threat-btn" class="btn btn-danger">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Assess Threat
+                            </button>
+                        </div>
+                        
+                        <div id="threat-results" class="results-container" style="display: none;">
+                            <div class="results-header">
+                                <h4>Threat Assessment</h4>
+                                <button class="copy-btn" onclick="copyResults('threat-results')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <div class="results-content"></div>
+                        </div>
+                    </div>
+
+                    <!-- Report Generation -->
+                    <div class="analysis-card">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="card-info">
+                                <h3>Report Generation</h3>
+                                <p>Generate comprehensive OSINT reports</p>
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-form">
+                            <div class="input-group">
+                                <label for="report-template">Report Template</label>
+                                <select id="report-template">
+                                    <option value="standard">Standard Report</option>
+                                    <option value="executive">Executive Summary</option>
+                                    <option value="technical">Technical Analysis</option>
+                                    <option value="threat">Threat Intelligence</option>
+                                    <option value="compliance">Compliance Report</option>
+                                </select>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="report-data">Report Data</label>
+                                <textarea id="report-data" placeholder="Enter data for report generation..."></textarea>
+                            </div>
+                            
+                            <div class="report-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="include-charts" checked>
+                                    <span>Include Charts & Visualizations</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="include-recommendations" checked>
+                                    <span>Include Recommendations</span>
+                                </label>
+                            </div>
+                            
+                            <button id="report-btn" class="btn btn-success">
+                                <i class="fas fa-file-download"></i>
+                                Generate Report
+                            </button>
+                        </div>
+                        
+                        <div id="report-results" class="results-container" style="display: none;">
+                            <div class="results-header">
+                                <h4>Generated Report</h4>
+                                <div class="report-actions">
+                                    <button class="btn btn-sm btn-secondary" onclick="downloadReport()">
+                                        <i class="fas fa-download"></i>
+                                        Download
+                                    </button>
+                                    <button class="copy-btn" onclick="copyResults('report-results')">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="results-content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Features -->
+        <section class="features-section">
+            <div class="features-container">
+                <h2>AI-Powered Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>Intelligent Analysis</h3>
+                        <p>Advanced AI algorithms analyze patterns, anomalies, and correlations in your data</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <h3>Data Visualization</h3>
+                        <p>Automatically generate charts, graphs, and visual representations of your findings</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h3>Smart Insights</h3>
+                        <p>Get actionable insights and recommendations based on AI analysis</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3>Real-time Processing</h3>
+                        <p>Process large datasets quickly with real-time analysis capabilities</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- AI Chatbot -->
+    <div class="chatbot-container" id="chatbotContainer">
+        <div class="chatbot-toggle" id="chatbotToggle">
+            <i class="fas fa-comments"></i>
+        </div>
+        <div class="chatbot-panel" id="chatbotPanel">
+            <div class="chatbot-header">
+                <h3>AI Assistant</h3>
+                <button class="chatbot-close" id="chatbotClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="message bot">
+                    <div class="message-content">
+                        Hi! I'm your AI assistant. I can help you with data analysis, threat assessment, and report generation!
+                    </div>
+                </div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbotInput" placeholder="Ask about analysis...">
+                <button id="chatbotSend">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/analysis.js"></script>
+    <script src="js/chatbot.js"></script>
+    <script>
+        function copyResults(containerId) {
+            const container = document.getElementById(containerId);
+            const content = container.querySelector('.results-content').textContent;
+            navigator.clipboard.writeText(content).then(() => {
+                showNotification('Results copied to clipboard!', 'success');
+            });
+        }
+        
+        function downloadReport() {
+            const content = document.getElementById('report-results').querySelector('.results-content').textContent;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'osint-report.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html> 

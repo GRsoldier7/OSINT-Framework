@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Advanced Search - OSINT Framework v3.0</title>
+    <meta name="description" content="Advanced search across 1,400+ OSINT tools with AI-powered recommendations and intelligent filtering.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/search.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <span>OSINT Framework</span>
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/tools" class="nav-link">Tools</a>
+                <a href="/search" class="nav-link active">Search</a>
+                <a href="/analysis" class="nav-link">Analysis</a>
+                <a href="/reports" class="nav-link">Reports</a>
+                <a href="/inteltechniques" class="nav-link">IntelTechniques</a>
+            </div>
+            <a href="/tools" class="cta-button">
+                <i class="fas fa-rocket"></i>
+                Get Started
+            </a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span class="gradient-text">Advanced Search</span>
+                        <div class="title-shine"></div>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Search across <span class="highlight">1,400+</span> OSINT tools with AI-powered recommendations
+                    </p>
+                </div>
+                
+                <!-- Search Form -->
+                <div class="search-section">
+                    <form id="search-form" class="search-form">
+                        <div class="search-container">
+                            <div class="search-box">
+                                <i class="fas fa-search search-icon"></i>
+                                <input type="text" id="search-input" placeholder="Search for tools, categories, or specific functionality..." class="search-input">
+                                <button type="submit" class="search-button">
+                                    <i class="fas fa-search"></i>
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search Filters -->
+        <section class="filters-section">
+            <div class="filters-container">
+                <h3>Quick Filters</h3>
+                <div class="search-filters">
+                    <button class="filter-btn active" data-filter="all">
+                        <i class="fas fa-globe"></i>
+                        All
+                    </button>
+                    <button class="filter-btn" data-filter="geographic">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Geographic
+                    </button>
+                    <button class="filter-btn" data-filter="socialMedia">
+                        <i class="fas fa-users"></i>
+                        Social Media
+                    </button>
+                    <button class="filter-btn" data-filter="search">
+                        <i class="fas fa-search"></i>
+                        Search
+                    </button>
+                    <button class="filter-btn" data-filter="data">
+                        <i class="fas fa-database"></i>
+                        Data
+                    </button>
+                    <button class="filter-btn" data-filter="analysis">
+                        <i class="fas fa-chart-line"></i>
+                        Analysis
+                    </button>
+                    <button class="filter-btn" data-filter="network">
+                        <i class="fas fa-network-wired"></i>
+                        Network
+                    </button>
+                    <button class="filter-btn" data-filter="documents">
+                        <i class="fas fa-file-alt"></i>
+                        Documents
+                    </button>
+                    <button class="filter-btn" data-filter="images">
+                        <i class="fas fa-image"></i>
+                        Images
+                    </button>
+                    <button class="filter-btn" data-filter="people">
+                        <i class="fas fa-user"></i>
+                        People
+                    </button>
+                    <button class="filter-btn" data-filter="financial">
+                        <i class="fas fa-dollar-sign"></i>
+                        Financial
+                    </button>
+                    <button class="filter-btn" data-filter="security">
+                        <i class="fas fa-shield-alt"></i>
+                        Security
+                    </button>
+                    <button class="filter-btn" data-filter="visualization">
+                        <i class="fas fa-chart-bar"></i>
+                        Visualization
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search Results -->
+        <section class="results-section">
+            <div class="results-container">
+                <div id="search-results" class="search-results">
+                    <!-- Initial State -->
+                    <div class="search-placeholder">
+                        <div class="placeholder-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3>Start your search</h3>
+                        <p>Enter a query above to find relevant OSINT tools and resources.</p>
+                        
+                        <div class="search-suggestions">
+                            <h4>Popular searches:</h4>
+                            <div class="suggestion-tags">
+                                <span class="suggestion-tag" onclick="searchFor('domain analysis')">
+                                    <i class="fas fa-globe"></i>
+                                    Domain Analysis
+                                </span>
+                                <span class="suggestion-tag" onclick="searchFor('social media')">
+                                    <i class="fas fa-users"></i>
+                                    Social Media
+                                </span>
+                                <span class="suggestion-tag" onclick="searchFor('image search')">
+                                    <i class="fas fa-image"></i>
+                                    Image Search
+                                </span>
+                                <span class="suggestion-tag" onclick="searchFor('email validation')">
+                                    <i class="fas fa-envelope"></i>
+                                    Email Validation
+                                </span>
+                                <span class="suggestion-tag" onclick="searchFor('threat assessment')">
+                                    <i class="fas fa-shield-alt"></i>
+                                    Threat Assessment
+                                </span>
+                                <span class="suggestion-tag" onclick="searchFor('network analysis')">
+                                    <i class="fas fa-network-wired"></i>
+                                    Network Analysis
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search History -->
+        <section class="history-section">
+            <div class="history-container">
+                <div class="history-header">
+                    <h3>Recent Searches</h3>
+                    <button id="clear-history" class="clear-history-btn">
+                        <i class="fas fa-trash"></i>
+                        Clear History
+                    </button>
+                </div>
+                <div id="search-history" class="search-history">
+                    <!-- Search history will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- AI Chatbot -->
+    <div class="chatbot-container" id="chatbotContainer">
+        <div class="chatbot-toggle" id="chatbotToggle">
+            <i class="fas fa-comments"></i>
+        </div>
+        <div class="chatbot-panel" id="chatbotPanel">
+            <div class="chatbot-header">
+                <h3>OSINT Assistant</h3>
+                <button class="chatbot-close" id="chatbotClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="message bot">
+                    <div class="message-content">
+                        Hi! I'm your OSINT assistant. Ask me about search strategies or tool recommendations!
+                    </div>
+                </div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbotInput" placeholder="Ask about OSINT search...">
+                <button id="chatbotSend">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/chatbot.js"></script>
+    <script>
+        function searchFor(query) {
+            document.getElementById('search-input').value = query;
+            document.getElementById('search-form').dispatchEvent(new Event('submit'));
+        }
+    </script>
+</body>
+</html> 

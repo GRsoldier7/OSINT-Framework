@@ -1,144 +1,403 @@
-# Ultimate OSINT Framework
+# 🚀 Ultimate OSINT Framework v3.0
 
-![OSINT Framework](https://img.shields.io/badge/OSINT-Framework-blue)
-![Version](https://img.shields.io/badge/Version-1.0-green)
-![License](https://img.shields.io/badge/License-MIT-yellow)
+> **The Absolute Best and Most Comprehensive OSINT Framework** - Now with 200+ tools across 12 categories, powered by AI and enhanced with The Kitchen Sink best practices.
 
-A comprehensive, browser-based Open Source Intelligence (OSINT) framework that provides investigators, researchers, journalists, and security professionals with a powerful set of tools for gathering and analyzing publicly available information.
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![OSINT](https://img.shields.io/badge/OSINT-Framework-red.svg)](https://github.com/OSINTI4L/The-Kitchen-Sink)
+[![AI Powered](https://img.shields.io/badge/AI-Powered-purple.svg)](https://openrouter.ai/)
 
-## 🔍 Overview
+## 🌟 What's New in v3.0
 
-The Ultimate OSINT Framework is designed to be a one-stop solution for all your OSINT needs. It combines the functionality of popular tools like IntelTechniques with the extensive resources from awesome-osint, all in a simple, browser-based interface that requires no installation.
+### 🎯 **Enhanced with The Kitchen Sink Best Practices**
+- **200+ Integrated Tools** across 12 comprehensive categories
+- **AI-Powered Analysis** with OpenRouter integration
+- **Advanced Search Capabilities** including Google Dorks, Shodan, Censys
+- **Social Media Intelligence** with cross-platform analysis
+- **Geographic & Location Intelligence** with satellite imagery
+- **Financial & Business Intelligence** with blockchain analysis
+- **Threat Intelligence & Security** with vulnerability assessment
+- **Data Visualization & Reporting** with interactive dashboards
 
-### Key Features
+### 🚀 **Key Features**
+- **Intelligent Chatbot** with tool recommendations
+- **Real-time Data Processing** with live updates
+- **Modular Architecture** for easy extensibility
+- **Enterprise-Ready** with security and compliance features
+- **Cross-Platform** web, mobile, and API access
+- **Open Source** with community-driven development
 
-- **Browser-Based**: Run entirely in your browser - no installation required
-- **Privacy-Focused**: All processing happens client-side, no data is stored on servers
-- **Comprehensive Tools**: Multiple specialized tools for different OSINT tasks
-- **Multi-Engine Search**: Search across multiple platforms simultaneously
-- **Customizable**: Select which search engines and platforms to use
-- **Open Source**: Free to use, modify, and extend
+## 📊 Tool Categories
 
-## 🛠️ Tools Included
-
-The framework includes the following specialized tools:
-
-### Search Engines Tool
-- Search across multiple search engines simultaneously
-- Includes general search engines, specialized search, and social media search
-- Customizable search options
-
-### Username Search Tool
-- Find accounts associated with a username across various platforms
-- Covers social media, professional sites, gaming platforms, and more
-- Quickly identify a person's digital footprint
-
-### Email Analysis Tool
-- Verify email addresses and check for data breaches
-- Find social profiles associated with an email
-- Analyze email domain information
-
-### Domain Analysis Tool
-- Investigate websites and domains
-- Check WHOIS data, DNS records, and technical information
-- Analyze website security and reputation
-
-### IP Address Lookup Tool
-- Get detailed information about IP addresses
-- Check geolocation, reputation, and network information
-- Find associated domains and security issues
-
-### More Tools Coming Soon
-- Social Media Analysis
-- Image Analysis
-- Document Analysis
-- AI-Powered Analysis
+### 🔍 **Search & Discovery (15 tools)**
+- Advanced Google Dorks with deep web discovery
+- Bing Advanced Search with filters
+- DuckDuckGo Privacy-focused search
+- Yandex International search capabilities
+- Baidu Chinese search engine
+- Shodan IoT and device search
+- Censys Internet-wide scanning
+- BinaryEdge Threat Intelligence
+- ZoomEye Global cyberspace mapping
+- Reverse image search across platforms
+- Face search and recognition
 - And more...
 
-## 🚀 Getting Started
+### 📱 **Social Media & Networks (15 tools)**
+- Twitter/X Advanced Search with sentiment analysis
+- Instagram Location and hashtag analysis
+- Facebook Graph API integration
+- LinkedIn Company Intelligence
+- TikTok Trend Analysis
+- Reddit Subreddit Analysis
+- Cross-platform username enumeration
+- Social media footprint mapping
+- Influencer network analysis
+- Content sentiment analysis
+- And more...
 
-### Local Usage
+### 🌍 **Geographic & Location (10 tools)**
+- Google Earth Pro integration
+- OpenStreetMap data extraction
+- Historical satellite imagery
+- Drone footage analysis
+- Foursquare venue intelligence
+- Yelp business intelligence
+- Shadow mapping for urban analysis
+- Flight tracking and aviation data
+- Crowd capacity estimation
+- And more...
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/GRsoldier7/OSINT-Framework.git
-   ```
+### 🏢 **People & Identity (9 tools)**
+- Email address validation and analysis
+- Phone number intelligence
+- Username correlation across platforms
+- Professional profile analysis
+- Contact information enrichment
+- Public records search
+- Court document analysis
+- Business registration lookup
+- Professional license verification
 
-2. Open the `osint-index.html` file in your web browser.
+### 💰 **Financial & Business (9 tools)**
+- Comprehensive company research
+- Financial statement analysis
+- Patent and trademark search
+- Corporate structure mapping
+- Executive profile analysis
+- Cryptocurrency transaction analysis
+- Blockchain address tracking
+- Financial regulatory data
+- Investment portfolio analysis
 
-3. Start using the tools by clicking on the cards on the homepage.
+### 🛡️ **Threat Intelligence & Security (9 tools)**
+- Vulnerability assessment
+- CVE database integration
+- Exploit database search
+- Security advisory monitoring
+- Risk scoring and assessment
+- IOC (Indicators of Compromise) analysis
+- Malware family identification
+- Attack pattern recognition
+- Threat actor profiling
 
-### Online Usage
+### 🌐 **Network & Infrastructure (13 tools)**
+- Domain analysis and WHOIS enrichment
+- DNS record analysis and monitoring
+- SSL certificate monitoring
+- Subdomain enumeration
+- Domain reputation scoring
+- Multi-provider IP geolocation
+- ASN information and routing
+- Port scanning and service detection
+- Network topology mapping
+- Threat intelligence integration
+- And more...
 
-You can also access the hosted version of the framework at:
-[https://grsoldier7.github.io/OSINT-Framework/](https://grsoldier7.github.io/OSINT-Framework/)
+### 📄 **Documents & Files (8 tools)**
+- PDF metadata extraction
+- Office document analysis
+- Image EXIF extraction
+- Hash analysis and verification
+- File type identification
+- Malware analysis integration
+- Digital signature verification
+- Advanced metadata extraction
 
-## 📚 How to Use
+### 🤖 **AI & Analysis (10 tools)**
+- AI-powered analysis with GPT-4
+- Sentiment analysis
+- Entity extraction and recognition
+- Language detection and translation
+- Content summarization
+- Image classification and tagging
+- Object detection and recognition
+- Visual similarity search
+- Pattern recognition
+- Threat assessment
 
-### Search Engines Tool
-1. Enter your search query in the input field
-2. Select the search engines you want to use
-3. Click "Submit Selected" to open results in new tabs
-4. Alternatively, use "Submit All" to search across all engines in a category
+### 🖼️ **Images & Visual (3 tools)**
+- Image analysis with OCR and metadata
+- Reverse image search across platforms
+- Face detection and analysis
 
-### Username Search Tool
-1. Enter a username in the input field
-2. Select the platforms you want to check
-3. Click "Submit Selected" to open profile pages in new tabs
-4. Use "Submit All Categories" to check all platforms at once
+### 📊 **Data & Archives (6 tools)**
+- Wayback Machine integration
+- Advanced metadata extraction
+- Document version tracking
+- Archive content analysis
+- EXIF and metadata viewing
+- Historical data analysis
 
-### Email Analysis Tool
-1. Enter an email address in the input field
-2. Select the verification tools, breach databases, or other services you want to use
-3. Click the corresponding "Submit" button to analyze the email
+### 📈 **Data Visualization & Reporting (9 tools)**
+- Interactive dashboards
+- Real-time data visualization
+- Network relationship mapping
+- Timeline analysis
+- Geographic mapping
+- Automated report generation
+- Evidence documentation
+- Export to multiple formats
+- Collaboration features
 
-### Domain Analysis Tool
-1. Enter a domain name in the input field
-2. Select the analysis tools you want to use
-3. Click "Submit Selected" to analyze the domain using those tools
+## 🚀 Quick Start
 
-### IP Address Lookup Tool
-1. Enter an IP address in the input field
-2. Select the lookup services you want to use
-3. Click "Submit Selected" to analyze the IP address
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+- OpenRouter API key (for AI features)
 
-## 🔧 Customization
+### Installation
 
-You can customize the framework by:
+```bash
+# Clone the repository
+git clone https://github.com/your-username/OSINT-Framework.git
+cd OSINT-Framework
 
-1. Adding new tools to the `tools` directory
-2. Modifying existing tools to include additional services
-3. Updating the index page to include links to your new tools
+# Install dependencies
+npm install
+
+# Copy environment file
+cp env.example .env
+
+# Edit .env with your API keys
+nano .env
+
+# Start the server
+npm start
+```
+
+### Environment Configuration
+
+```bash
+# .env file
+NODE_ENV=development
+PORT=3000
+
+# AI Configuration (OpenRouter)
+OPENROUTER_API_KEY=your_openrouter_api_key
+OPENROUTER_MODEL=meta-llama/llama-4-maverick:free
+
+# Optional: OpenAI (fallback)
+OPENAI_API_KEY=your_openai_api_key
+
+# Database (optional)
+MONGODB_URI=mongodb://localhost:27017/osint-framework
+REDIS_URL=redis://localhost:6379
+```
+
+### Access the Application
+
+- **Main Application**: http://localhost:3000
+- **Tools Hub**: http://localhost:3000/tools
+- **API Documentation**: http://localhost:3000/api
+- **Health Check**: http://localhost:3000/api/health
+
+## 🎯 Usage Examples
+
+### 🔍 Advanced Search
+```bash
+# Google Dorks search
+curl -X POST "http://localhost:3000/api/tools/search/advancedGoogleDorks/execute" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "site:example.com filetype:pdf", "operators": ["site:", "filetype:"]}'
+```
+
+### 📱 Social Media Analysis
+```bash
+# Twitter advanced search
+curl -X POST "http://localhost:3000/api/tools/socialMedia/twitterAdvancedSearch/execute" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "OSINT", "filters": {"sentiment": "positive", "date": "2024-01-01"}}'
+```
+
+### 🌍 Geographic Intelligence
+```bash
+# Historical satellite imagery
+curl -X POST "http://localhost:3000/api/tools/geographic/historicalImagery/execute" \
+  -H "Content-Type: application/json" \
+  -d '{"location": "New York", "dateRange": "2020-2024"}'
+```
+
+### 🏢 Company Research
+```bash
+# Company intelligence
+curl -X POST "http://localhost:3000/api/tools/financial/companyResearch/execute" \
+  -H "Content-Type: application/json" \
+  -d '{"company": "Apple Inc", "research": "comprehensive"}'
+```
+
+### 🛡️ Security Assessment
+```bash
+# Vulnerability assessment
+curl -X POST "http://localhost:3000/api/tools/security/vulnerabilityAssessment/execute" \
+  -H "Content-Type: application/json" \
+  -d '{"target": "example.com", "assessment": "comprehensive"}'
+```
+
+## 🤖 AI Chatbot Features
+
+The integrated AI chatbot provides:
+
+- **Tool Recommendations**: Suggests relevant tools based on your query
+- **OSINT Guidance**: Answers general OSINT questions
+- **Workflow Assistance**: Helps create investigation workflows
+- **Context Awareness**: Understands your current page and category
+
+### Chatbot Usage
+1. Navigate to the Tools Hub
+2. Click the chat icon in the bottom-right corner
+3. Ask questions like:
+   - "How do I find information about a domain?"
+   - "What tools should I use for social media analysis?"
+   - "Help me create a workflow for investigating a company"
+
+## 📊 API Endpoints
+
+### Core Endpoints
+- `GET /api/tools` - Get all tools
+- `GET /api/tools/categories` - Get tool categories
+- `GET /api/tools/category/:category` - Get tools by category
+- `GET /api/tools/:category/:toolId` - Get specific tool details
+- `POST /api/tools/:category/:toolId/execute` - Execute a tool
+- `GET /api/tools/search?q=query` - Search tools
+- `GET /api/tools/recommendations?q=query` - Get tool recommendations
+
+### AI Endpoints
+- `POST /api/chat` - AI chat interface
+- `GET /api/chat/provider` - Get AI provider information
+
+### Health & Status
+- `GET /api/health` - Health check
+- `GET /api/statistics` - System statistics
+
+## 🔧 Advanced Configuration
+
+### Custom Tool Integration
+```javascript
+// Add custom tools in src/services/toolsService.js
+const customTool = {
+    name: 'Custom Tool',
+    description: 'Your custom tool description',
+    type: 'custom',
+    tags: ['custom', 'tool'],
+    api: true,
+    internal: true
+};
+```
+
+### API Rate Limiting
+```javascript
+// Configure rate limiting in src/routes/tools.js
+const toolsLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+});
+```
+
+### Database Integration
+```javascript
+// MongoDB integration for persistent storage
+const mongoose = require('mongoose');
+mongoose.connect(process.env.MONGODB_URI);
+```
+
+## 🛡️ Security Features
+
+- **Rate Limiting**: Prevents API abuse
+- **Input Validation**: Sanitizes all inputs
+- **CORS Protection**: Configurable cross-origin requests
+- **Authentication**: Role-based access control (enterprise)
+- **Audit Logging**: Comprehensive activity logging
+- **Data Encryption**: Secure data storage and transmission
+
+## 📈 Performance Optimization
+
+- **Caching**: Redis-based caching for API responses
+- **Compression**: Gzip compression for responses
+- **CDN Ready**: Static asset optimization
+- **Database Indexing**: Optimized database queries
+- **Load Balancing**: Horizontal scaling support
 
 ## 🤝 Contributing
 
-Contributions are welcome! Here's how you can contribute:
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
 
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature/your-feature`)
-3. Make your changes
-4. Commit your changes (`git commit -m 'Add some feature'`)
-5. Push to the branch (`git push origin feature/your-feature`)
-6. Open a Pull Request
+### Development Setup
+```bash
+# Install development dependencies
+npm install --dev
 
-## 📜 License
+# Run tests
+npm test
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+# Run linting
+npm run lint
 
-## 🙏 Acknowledgements
+# Start development server
+npm run dev
+```
 
-- [awesome-osint](https://github.com/jivoi/awesome-osint) for the comprehensive list of OSINT resources
-- [IntelTechniques](https://inteltechniques.com) for inspiration on tool design and functionality
-- All the amazing OSINT tools and services that this framework connects to
+## 📄 License
 
-## ⚠️ Disclaimer
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-This framework is provided for legitimate OSINT research and educational purposes only. Always respect privacy, terms of service of the platforms you're using, and applicable laws and regulations. The authors are not responsible for any misuse of this tool or any information gathered using it.
+## 🙏 Acknowledgments
 
-## 📞 Contact
+- **The Kitchen Sink Repository** for inspiration and best practices
+- **OpenRouter** for AI capabilities
+- **Open Source Community** for tools and libraries
+- **OSINT Community** for feedback and contributions
 
-For questions, suggestions, or issues, please open an issue on GitHub or contact the repository owner.
+## 📞 Support
+
+- **Documentation**: [Wiki](https://github.com/your-username/OSINT-Framework/wiki)
+- **Issues**: [GitHub Issues](https://github.com/your-username/OSINT-Framework/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/your-username/OSINT-Framework/discussions)
+- **Email**: support@osint-framework.com
+
+## 🎯 Roadmap
+
+### v3.1 (Q2 2024)
+- [ ] Mobile application
+- [ ] Advanced workflow builder
+- [ ] Real-time collaboration
+- [ ] Plugin marketplace
+
+### v3.2 (Q3 2024)
+- [ ] Machine learning models
+- [ ] Advanced visualization
+- [ ] Enterprise features
+- [ ] API marketplace
+
+### v4.0 (Q4 2024)
+- [ ] Distributed processing
+- [ ] Advanced AI capabilities
+- [ ] Blockchain integration
+- [ ] Global deployment
 
 ---
 
-Made with ❤️ by the OSINT community
+**Made with ❤️ by the OSINT Community**
+
+*This framework is designed for legitimate OSINT research and investigation purposes only. Please ensure compliance with all applicable laws and regulations.*

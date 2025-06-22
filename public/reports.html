@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports | OSINT Framework</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/tools.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <h1>OSINT Framework</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/tools">Tools Hub</a></li>
+                <li><a href="/search">Search</a></li>
+                <li><a href="/analysis">Analysis</a></li>
+                <li><a href="/reports" class="active">Reports</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <div class="page-header">
+                <h1>OSINT Reports</h1>
+                <p>Generate, manage, and export comprehensive OSINT reports</p>
+            </div>
+
+            <div class="reports-grid">
+                <div class="report-card">
+                    <h3>Generate New Report</h3>
+                    <p>Create a new OSINT report from your findings</p>
+                    <div class="report-form">
+                        <input type="text" id="report-title" placeholder="Report Title">
+                        <select id="report-type">
+                            <option value="comprehensive">Comprehensive Analysis</option>
+                            <option value="executive">Executive Summary</option>
+                            <option value="technical">Technical Report</option>
+                            <option value="threat">Threat Intelligence</option>
+                        </select>
+                        <textarea id="report-content" placeholder="Enter your findings and analysis..."></textarea>
+                        <button id="generate-report-btn" class="btn btn-primary">Generate Report</button>
+                    </div>
+                </div>
+
+                <div class="report-card">
+                    <h3>Recent Reports</h3>
+                    <p>View and manage your recent reports</p>
+                    <div id="recent-reports" class="reports-list">
+                        <div class="report-item">
+                            <h4>Sample Report</h4>
+                            <p>Generated on: 2025-06-21</p>
+                            <div class="report-actions">
+                                <button class="btn btn-sm btn-secondary">View</button>
+                                <button class="btn btn-sm btn-primary">Export</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="report-card">
+                    <h3>Report Templates</h3>
+                    <p>Use predefined templates for consistent reporting</p>
+                    <div class="template-list">
+                        <div class="template-item">
+                            <h4>Standard OSINT Report</h4>
+                            <p>Comprehensive template for general OSINT investigations</p>
+                            <button class="btn btn-sm btn-primary">Use Template</button>
+                        </div>
+                        <div class="template-item">
+                            <h4>Threat Intelligence Report</h4>
+                            <p>Specialized template for threat analysis</p>
+                            <button class="btn btn-sm btn-primary">Use Template</button>
+                        </div>
+                        <div class="template-item">
+                            <h4>Executive Summary</h4>
+                            <p>High-level summary for stakeholders</p>
+                            <button class="btn btn-sm btn-primary">Use Template</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/reports.js"></script>
+</body>
+</html> 
