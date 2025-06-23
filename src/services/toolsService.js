@@ -174,13 +174,41 @@ class ToolsService {
     // Get all tools
     getAllTools() {
         try {
-            const totalTools = this.getTotalToolCount();
+            const allTools = [];
+            
+            // Flatten the nested structure
+            Object.entries(this.tools).forEach(([category, subcategories]) => {
+                Object.entries(subcategories).forEach(([subcategory, tools]) => {
+                    Object.entries(tools).forEach(([toolId, tool]) => {
+                        allTools.push({
+                            id: toolId,
+                            category,
+                            subcategory,
+                            ...tool
+                        });
+                    });
+                });
+            });
+            
+            const totalTools = allTools.length;
+            const categoryCount = Object.keys(this.categories).length;
+            
+            console.log(`Tools retrieved successfully`, {
+                service: 'osint-framework',
+                version: '3.0.0',
+                count: totalTools
+            });
+            
             return {
                 success: true,
-                tools: this.tools,
-                categories: this.categories,
-                totalTools: totalTools,
-                categoryCount: Object.keys(this.categories).length
+                data: {
+                    tools: this.tools,
+                    categories: this.categories,
+                    allTools: allTools,
+                    totalTools: totalTools,
+                    categoryCount: categoryCount
+                },
+                message: `Retrieved ${totalTools} tools across ${categoryCount} categories`
             };
         } catch (error) {
             console.error('Error getting all tools', {
