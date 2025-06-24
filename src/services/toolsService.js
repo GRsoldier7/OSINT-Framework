@@ -175,7 +175,6 @@ class ToolsService {
     getAllTools() {
         try {
             const allTools = [];
-            
             // Flatten the nested structure
             Object.entries(this.tools).forEach(([category, subcategories]) => {
                 Object.entries(subcategories).forEach(([subcategory, tools]) => {
@@ -189,16 +188,19 @@ class ToolsService {
                     });
                 });
             });
-            
+            // Debug log
+            require('../utils/logger').logger.info('DEBUG getAllTools', {
+                allToolsLength: allTools.length,
+                sample: allTools[0],
+                toolsKeys: Object.keys(this.tools)
+            });
             const totalTools = allTools.length;
             const categoryCount = Object.keys(this.categories).length;
-            
-            console.log(`Tools retrieved successfully`, {
+            require('../utils/logger').logger.info('Tools retrieved successfully', {
                 service: 'osint-framework',
                 version: '3.0.0',
                 count: totalTools
             });
-            
             return {
                 success: true,
                 data: {
@@ -211,7 +213,7 @@ class ToolsService {
                 message: `Retrieved ${totalTools} tools across ${categoryCount} categories`
             };
         } catch (error) {
-            console.error('Error getting all tools', {
+            require('../utils/logger').logger.error('Error getting all tools', {
                 service: 'osint-framework',
                 version: '3.0.0',
                 error: error.message
@@ -451,7 +453,226 @@ class ToolsService {
         }
     }
 
-    // ... existing analysis methods remain the same ...
+    // AI Analysis implementation
+    async performAIAnalysis(parameters) {
+        try {
+            const { data, analysisType, context } = parameters;
+            
+            // Use the enhanced tools service for AI analysis
+            const result = await this.enhancedTools.performContentSummarization({
+                content: data,
+                length: 'medium'
+            });
+
+            return {
+                success: true,
+                tool: 'AI Analysis',
+                type: 'internal',
+                status: 'success',
+                message: 'AI analysis completed successfully',
+                data: {
+                    analysisType,
+                    context,
+                    result: result.data,
+                    timestamp: new Date().toISOString()
+                }
+            };
+        } catch (error) {
+            logger.error('AI Analysis error', { error: error.message });
+            return {
+                success: false,
+                tool: 'AI Analysis',
+                type: 'internal',
+                status: 'error',
+                message: 'AI analysis failed',
+                error: error.message
+            };
+        }
+    }
+
+    // Threat Assessment implementation
+    async performThreatAssessment(parameters) {
+        try {
+            const { target, assessmentType } = parameters;
+            
+            // Use the enhanced tools service for threat assessment
+            const result = await this.enhancedTools.performVulnerabilityAssessment({
+                target,
+                assessment: assessmentType
+            });
+
+            return {
+                success: true,
+                tool: 'Threat Assessment',
+                type: 'internal',
+                status: 'success',
+                message: 'Threat assessment completed successfully',
+                data: {
+                    target,
+                    assessmentType,
+                    result: result.data,
+                    timestamp: new Date().toISOString()
+                }
+            };
+        } catch (error) {
+            logger.error('Threat Assessment error', { error: error.message });
+            return {
+                success: false,
+                tool: 'Threat Assessment',
+                type: 'internal',
+                status: 'error',
+                message: 'Threat assessment failed',
+                error: error.message
+            };
+        }
+    }
+
+    // Pattern Recognition implementation
+    async performPatternRecognition(parameters) {
+        try {
+            const { data, patternType } = parameters;
+            
+            // Use the enhanced tools service for pattern recognition
+            const result = await this.enhancedTools.performEntityExtraction({
+                text: data,
+                entities: patternType
+            });
+
+            return {
+                success: true,
+                tool: 'Pattern Recognition',
+                type: 'internal',
+                status: 'success',
+                message: 'Pattern recognition completed successfully',
+                data: {
+                    patternType,
+                    result: result.data,
+                    timestamp: new Date().toISOString()
+                }
+            };
+        } catch (error) {
+            logger.error('Pattern Recognition error', { error: error.message });
+            return {
+                success: false,
+                tool: 'Pattern Recognition',
+                type: 'internal',
+                status: 'error',
+                message: 'Pattern recognition failed',
+                error: error.message
+            };
+        }
+    }
+
+    // Domain Analysis implementation
+    async performDomainAnalysis(parameters) {
+        try {
+            const { domain, analysisType } = parameters;
+            
+            // Use the enhanced tools service for domain analysis
+            const result = await this.enhancedTools.performWhoisEnrichment({
+                domain,
+                enrichment: analysisType
+            });
+
+            return {
+                success: true,
+                tool: 'Domain Analysis',
+                type: 'internal',
+                status: 'success',
+                message: 'Domain analysis completed successfully',
+                data: {
+                    domain,
+                    analysisType,
+                    result: result.data,
+                    timestamp: new Date().toISOString()
+                }
+            };
+        } catch (error) {
+            logger.error('Domain Analysis error', { error: error.message });
+            return {
+                success: false,
+                tool: 'Domain Analysis',
+                type: 'internal',
+                status: 'error',
+                message: 'Domain analysis failed',
+                error: error.message
+            };
+        }
+    }
+
+    // IP Analysis implementation
+    async performIPAnalysis(parameters) {
+        try {
+            const { ip, analysisType } = parameters;
+            
+            // Use the enhanced tools service for IP analysis
+            const result = await this.enhancedTools.performIpGeolocationMulti({
+                ip,
+                providers: analysisType
+            });
+
+            return {
+                success: true,
+                tool: 'IP Analysis',
+                type: 'internal',
+                status: 'success',
+                message: 'IP analysis completed successfully',
+                data: {
+                    ip,
+                    analysisType,
+                    result: result.data,
+                    timestamp: new Date().toISOString()
+                }
+            };
+        } catch (error) {
+            logger.error('IP Analysis error', { error: error.message });
+            return {
+                success: false,
+                tool: 'IP Analysis',
+                type: 'internal',
+                status: 'error',
+                message: 'IP analysis failed',
+                error: error.message
+            };
+        }
+    }
+
+    // SSL Analysis implementation
+    async performSslAnalysis(parameters) {
+        try {
+            const { domain, analysisType } = parameters;
+            
+            // Use the enhanced tools service for SSL analysis
+            const result = await this.enhancedTools.performSslCertificateMonitoring({
+                domain,
+                monitoring: analysisType
+            });
+
+            return {
+                success: true,
+                tool: 'SSL Analysis',
+                type: 'internal',
+                status: 'success',
+                message: 'SSL analysis completed successfully',
+                data: {
+                    domain,
+                    analysisType,
+                    result: result.data,
+                    timestamp: new Date().toISOString()
+                }
+            };
+        } catch (error) {
+            logger.error('SSL Analysis error', { error: error.message });
+            return {
+                success: false,
+                tool: 'SSL Analysis',
+                type: 'internal',
+                status: 'error',
+                message: 'SSL analysis failed',
+                error: error.message
+            };
+        }
+    }
 
     // Get total tool count
     getTotalToolCount() {
@@ -699,21 +920,58 @@ class ToolsService {
         );
     }
 
-    // Get tool by ID across all categories
-    getToolById(category, toolId) {
-        try {
-            if (this.tools[category]) {
-                for (const subcategory in this.tools[category]) {
-                    if (this.tools[category][subcategory][toolId]) {
-                        return this.tools[category][subcategory][toolId];
-                    }
+    // Get tool details by category and toolId (search all subcategories, fallback to global search)
+    async getToolDetails(toolId, category) {
+        // Try normal lookup first
+        if (this.tools[category]) {
+            for (const subcategory in this.tools[category]) {
+                if (this.tools[category][subcategory][toolId]) {
+                    return {
+                        success: true,
+                        data: this.tools[category][subcategory][toolId],
+                        category,
+                        subcategory
+                    };
                 }
             }
-            return null;
-        } catch (error) {
-            console.error('Error getting tool by ID:', error);
-            return null;
         }
+        // Fallback: search all categories/subcategories
+        for (const cat in this.tools) {
+            for (const subcat in this.tools[cat]) {
+                if (this.tools[cat][subcat][toolId]) {
+                    return {
+                        success: true,
+                        data: this.tools[cat][subcat][toolId],
+                        category: cat,
+                        subcategory: subcat
+                    };
+                }
+            }
+        }
+        console.warn(`Tool not found: ${toolId} in category ${category}`);
+        return { success: false, message: 'Tool not found' };
+    }
+
+    // Get tool by ID across all categories (robust)
+    getToolById(category, toolId) {
+        // Try normal lookup first
+        if (this.tools[category]) {
+            for (const subcategory in this.tools[category]) {
+                if (this.tools[category][subcategory][toolId]) {
+                    return this.tools[category][subcategory][toolId];
+                }
+            }
+        }
+        // Fallback: search all categories/subcategories
+        for (const cat in this.tools) {
+            for (const subcat in this.tools[cat]) {
+                if (this.tools[cat][subcat][toolId]) {
+                    return this.tools[cat][subcat][toolId];
+                }
+            }
+        }
+        console.warn(`Tool not found by ID: ${toolId} in category ${category}`);
+        return null;
     }
 
     // Export favorites
@@ -768,6 +1026,15 @@ class ToolsService {
             console.error('Error clearing favorites:', error);
             return { success: false, error: error.message };
         }
+    }
+
+    // Get all categories
+    getCategories() {
+        return {
+            success: true,
+            data: this.categories,
+            message: `Retrieved ${Object.keys(this.categories).length} categories`
+        };
     }
 }
 

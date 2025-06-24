@@ -57,7 +57,8 @@
     "validator": "^13.11.0",
     "whois": "^2.13.5",
     "winston": "^3.11.0",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "apicache": "^1.6.3"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

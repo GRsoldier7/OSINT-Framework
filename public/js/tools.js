@@ -67,14 +67,15 @@ class ToolsPage {
     async loadTools() {
         try {
             const response = await fetch('/api/tools');
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
-            
             if (data.success) {
-                this.tools = data.data.tools;
+                this.tools = data.data.toolsByCategory || data.data.tools;
                 this.categories = data.data.categories;
                 this.filteredTools = this.getAllTools();
-                
-                console.log(`📊 Loaded ${this.getTotalToolCount()} tools across ${Object.keys(this.categories).length} categories`);
+                this.buildSearchIndex();
+                this.updateResultsCount();
+                this.updateStatistics();
             } else {
                 throw new Error(data.error || 'Failed to load tools');
             }
@@ -306,19 +307,46 @@ class ToolsPage {
     renderTools() {
         const container = document.getElementById('toolsContainer');
         if (!container) return;
-        
-        if (this.filteredTools.length === 0) {
+        container.innerHTML = '';
+        const tools = this.filteredTools;
+        if (!tools.length) {
             this.showEmptyState();
             return;
         }
-        
         this.hideEmptyState();
-        
-        const isListView = this.currentView === 'list';
-        const toolsHTML = this.filteredTools.map(tool => this.renderToolCard(tool, isListView)).join('');
-        
-        container.innerHTML = toolsHTML;
-        
+
+        // Virtual scroll variables
+        const TOOL_HEIGHT = this.currentView === 'grid' ? 180 : 80;
+        const VISIBLE_COUNT = Math.ceil(window.innerHeight / TOOL_HEIGHT) + 10;
+        let start = 0;
+        let end = Math.min(VISIBLE_COUNT, tools.length);
+
+        // Create a scrollable container
+        container.style.position = 'relative';
+        container.style.height = `${tools.length * TOOL_HEIGHT}px`;
+        container.style.overflowY = 'auto';
+        container.tabIndex = 0;
+        container.setAttribute('aria-label', 'Tools List');
+
+        // Render visible tools only
+        const renderVisible = () => {
+            const scrollTop = container.scrollTop;
+            start = Math.floor(scrollTop / TOOL_HEIGHT);
+            end = Math.min(start + VISIBLE_COUNT, tools.length);
+            container.innerHTML = '';
+            for (let i = start; i < end; i++) {
+                const tool = tools[i];
+                const card = this.renderToolCard(tool, this.currentView === 'list');
+                card.style.position = 'absolute';
+                card.style.top = `${i * TOOL_HEIGHT}px`;
+                card.setAttribute('tabindex', 0);
+                card.setAttribute('aria-label', tool.name);
+                container.appendChild(card);
+            }
+        };
+        container.onscroll = renderVisible;
+        renderVisible();
+
         // Add tool interaction listeners
         this.addToolInteractionListeners();
     }
@@ -525,54 +553,36 @@ class ToolsPage {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ category, toolId, metadata })
             });
-
             const data = await response.json();
-            
             if (data.success) {
-                const existingIndex = this.favorites.findIndex(f => f.id === data.data.id);
-                if (existingIndex >= 0) {
-                    this.favorites[existingIndex] = data.data;
-                } else {
-                    this.favorites.push(data.data);
-                }
-                
+                this.favorites.push(data.data);
                 this.updateFavoritesCount();
-                this.showNotification('Added to favorites', 'success');
-                return true;
+                await this.loadFavoritesAnalytics();
+                this.showNotification('Added to favorites!', 'success');
             } else {
-                this.showNotification(data.error || 'Failed to add to favorites', 'error');
-                return false;
+                throw new Error(data.error || 'Failed to add favorite');
             }
         } catch (error) {
-            console.error('Error adding to favorites:', error);
-            this.showNotification('Failed to add to favorites', 'error');
-            return false;
+            this.showNotification('Failed to add favorite: ' + error.message, 'error');
         }
     }
 
     async removeFromFavorites(category, toolId) {
         try {
-            const response = await fetch(`/api/tools/favorites/${category}/${toolId}`, {
+            const response = await fetch(`/api/tools/favorites/${encodeURIComponent(category)}/${encodeURIComponent(toolId)}`, {
                 method: 'DELETE'
             });
-
             const data = await response.json();
-            
             if (data.success) {
-                const favoriteId = `${category}_${toolId}`;
-                this.favorites = this.favorites.filter(f => f.id !== favoriteId);
-                
+                this.favorites = this.favorites.filter(f => !(f.category === category && f.toolId === toolId));
                 this.updateFavoritesCount();
-                this.showNotification('Removed from favorites', 'success');
-                return true;
+                await this.loadFavoritesAnalytics();
+                this.showNotification('Removed from favorites!', 'success');
             } else {
-                this.showNotification(data.error || 'Failed to remove from favorites', 'error');
-                return false;
+                throw new Error(data.error || 'Failed to remove favorite');
             }
         } catch (error) {
-            console.error('Error removing from favorites:', error);
-            this.showNotification('Failed to remove from favorites', 'error');
-            return false;
+            this.showNotification('Failed to remove favorite: ' + error.message, 'error');
         }
     }
 
@@ -781,6 +791,25 @@ class ToolsPage {
         document.getElementById('toggleSidebar')?.addEventListener('click', () => {
             this.toggleSidebar();
         });
+
+        // Keyboard navigation for tools
+        const container = document.getElementById('toolsContainer');
+        if (container) {
+            container.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                    const cards = Array.from(container.querySelectorAll('[tabindex="0"]'));
+                    const active = document.activeElement;
+                    const idx = cards.indexOf(active);
+                    if (e.key === 'ArrowDown' && idx < cards.length - 1) {
+                        cards[idx + 1].focus();
+                        e.preventDefault();
+                    } else if (e.key === 'ArrowUp' && idx > 0) {
+                        cards[idx - 1].focus();
+                        e.preventDefault();
+                    }
+                }
+            });
+        }
     }
 
     handleKeyboardShortcuts(e) {
