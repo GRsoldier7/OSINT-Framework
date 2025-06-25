@@ -32,3 +32,25 @@
 {"error":"Failed to generate response","level":"error","message":"Chat response failed","service":"osint-framework","timestamp":"2025-06-22T22:14:57.546Z","version":"3.0.0"}
 {"error":"toolsService.getCategories is not a function","level":"error","message":"Error retrieving tool categories","service":"osint-framework","timestamp":"2025-06-23T13:03:36.265Z","version":"3.0.0"}
 {"category":"financial","error":"toolsService.getToolDetails is not a function","level":"error","message":"Error retrieving tool details","service":"osint-framework","timestamp":"2025-06-23T13:03:49.889Z","toolId":"companyResearch","version":"3.0.0"}
+{"category":"favorites","error":"Cannot read properties of undefined (reading 'name')","level":"error","message":"Error retrieving tools by category","service":"osint-framework","timestamp":"2025-06-24T01:45:03.062Z","version":"3.0.0"}
+{"error":"Request failed with status code 401","level":"error","message":"AI chat error","provider":"openrouter","service":"osint-framework","timestamp":"2025-06-24T01:45:12.339Z","version":"3.0.0"}
+{"error":"Failed to generate response","level":"error","message":"Chat response failed","service":"osint-framework","timestamp":"2025-06-24T01:45:12.340Z","version":"3.0.0"}
+{"category":"favorites","error":"Cannot read properties of undefined (reading 'name')","level":"error","message":"Error retrieving tools by category","service":"osint-framework","timestamp":"2025-06-24T01:47:45.223Z","version":"3.0.0"}
+{"error":"Request failed with status code 401","level":"error","message":"AI chat error","provider":"openrouter","service":"osint-framework","timestamp":"2025-06-24T02:01:07.428Z","version":"3.0.0"}
+{"error":"Failed to generate response","level":"error","message":"Chat response failed","service":"osint-framework","timestamp":"2025-06-24T02:01:07.429Z","version":"3.0.0"}
+{"error":"Request failed with status code 401","level":"error","message":"AI chat error","provider":"openrouter","service":"osint-framework","timestamp":"2025-06-24T02:01:12.514Z","version":"3.0.0"}
+{"error":"Failed to generate response","level":"error","message":"Chat response failed","service":"osint-framework","timestamp":"2025-06-24T02:01:12.515Z","version":"3.0.0"}
+{"error":"Request failed with status code 401","level":"error","message":"AI chat error","provider":"openrouter","service":"osint-framework","timestamp":"2025-06-24T02:01:30.228Z","version":"3.0.0"}
+{"error":"Failed to generate response","level":"error","message":"Chat response failed","service":"osint-framework","timestamp":"2025-06-24T02:01:30.228Z","version":"3.0.0"}
+{"error":"Request failed with status code 401","level":"error","message":"AI chat error","provider":"openrouter","service":"osint-framework","timestamp":"2025-06-24T02:01:41.796Z","version":"3.0.0"}
+{"error":"Failed to generate response","level":"error","message":"Chat response failed","service":"osint-framework","timestamp":"2025-06-24T02:01:41.797Z","version":"3.0.0"}
+{"error":"Request failed with status code 401","level":"error","message":"AI chat error","provider":"openrouter","service":"osint-framework","timestamp":"2025-06-24T02:02:25.851Z","version":"3.0.0"}
+{"error":"Failed to generate response","level":"error","message":"Chat response failed","service":"osint-framework","timestamp":"2025-06-24T02:02:25.852Z","version":"3.0.0"}
+{"error":"Request failed with status code 401","level":"error","message":"AI chat error","provider":"openrouter","service":"osint-framework","timestamp":"2025-06-24T02:02:36.950Z","version":"3.0.0"}
+{"error":"Request failed with status code 401","level":"error","message":"AI chat error","provider":"openrouter","service":"osint-framework","timestamp":"2025-06-24T02:02:49.376Z","version":"3.0.0"}
+{"error":"Request failed with status code 401","level":"error","message":"AI chat error","provider":"openrouter","service":"osint-framework","timestamp":"2025-06-24T02:02:51.888Z","version":"3.0.0"}
+{"error":"Request failed with status code 401","level":"error","message":"AI chat error","provider":"openrouter","service":"osint-framework","timestamp":"2025-06-24T02:04:31.392Z","version":"3.0.0"}
+{"error":"Request failed with status code 401","level":"error","message":"AI chat error","provider":"openrouter","service":"osint-framework","timestamp":"2025-06-24T02:04:49.943Z","version":"3.0.0"}
+{"error":"Request failed with status code 401","level":"error","message":"AI chat error","provider":"openrouter","service":"osint-framework","timestamp":"2025-06-24T02:05:05.679Z","version":"3.0.0"}
+{"error":"Request failed with status code 401","level":"error","message":"AI chat error","provider":"openrouter","service":"osint-framework","timestamp":"2025-06-24T02:05:20.141Z","version":"3.0.0"}
+{"error":"Request failed with status code 401","level":"error","message":"AI chat error","provider":"openrouter","service":"osint-framework","timestamp":"2025-06-25T01:26:56.019Z","version":"3.0.0"}

@@ -229,19 +229,36 @@ class ToolsService {
     // Get tools by category
     getToolsByCategory(category) {
         if (!this.tools[category]) {
-            return {
-                success: false,
-                message: 'Category not found'
-            };
+            throw new Error('Category not found');
         }
 
+        const categoryTools = this.tools[category];
+        const allTools = [];
+        let totalCount = 0;
+
+        // Flatten the tools from all subcategories
+        Object.entries(categoryTools).forEach(([subcategory, tools]) => {
+            Object.entries(tools).forEach(([toolId, tool]) => {
+                allTools.push({
+                    id: toolId,
+                    category,
+                    subcategory,
+                    ...tool
+                });
+                totalCount++;
+            });
+        });
+
         return {
-            success: true,
-            data: {
-                category: category,
-                tools: this.tools[category],
-                categoryInfo: this.categories[category]
-            }
+            category: {
+                name: category,
+                icon: this.categories[category]?.icon || '📁',
+                description: this.categories[category]?.description || '',
+                toolCount: totalCount
+            },
+            tools: allTools,
+            count: totalCount,
+            subcategories: Object.keys(categoryTools)
         };
     }
 
@@ -261,21 +278,27 @@ class ToolsService {
     }
 
     // Search tools
-    searchTools(query) {
+    searchTools(query, filters = {}) {
         const results = [];
         const searchTerm = query.toLowerCase();
 
         for (const [category, subcategories] of Object.entries(this.tools)) {
             for (const [subcategory, tools] of Object.entries(subcategories)) {
                 for (const [toolId, tool] of Object.entries(tools)) {
+                    // Apply filters
+                    if (filters.type && tool.type !== filters.type) continue;
+                    if (filters.api !== undefined && tool.api !== filters.api) continue;
+                    if (filters.internal !== undefined && tool.internal !== filters.internal) continue;
+
+                    // Apply search
                     if (
                         tool.name.toLowerCase().includes(searchTerm) ||
                         tool.description.toLowerCase().includes(searchTerm) ||
-                        tool.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+                        (tool.tags && tool.tags.some(tag => tag.toLowerCase().includes(searchTerm)))
                     ) {
                         results.push({
                             ...tool,
-                            toolId,
+                            id: toolId,
                             category,
                             subcategory
                         });
@@ -285,12 +308,10 @@ class ToolsService {
         }
 
         return {
-            success: true,
-            data: {
-                query: query,
-                results: results,
-                count: results.length
-            }
+            query: query,
+            filters: filters,
+            results: results,
+            count: results.length
         };
     }
 

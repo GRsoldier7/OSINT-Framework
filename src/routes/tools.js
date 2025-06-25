@@ -93,36 +93,6 @@ router.get('/categories', cache('5 minutes'), async (req, res) => {
 });
 
 /**
- * @route GET /api/tools/category/:category
- * @desc Get tools by specific category
- * @access Public
- */
-router.get('/category/:category', async (req, res) => {
-    try {
-        const { category } = req.params;
-        const tools = await toolsService.getToolsByCategory(category);
-
-        logger.info('Tools retrieved by category', { category, count: tools.count });
-
-        res.json({
-            success: true,
-            data: tools,
-            message: `Retrieved ${tools.count} tools from ${tools.category.name} category`
-        });
-    } catch (error) {
-        logger.error('Error retrieving tools by category', {
-            category: req.params.category,
-            error: error.message
-        });
-        res.status(404).json({
-            success: false,
-            error: 'Category not found',
-            message: error.message
-        });
-    }
-});
-
-/**
  * @route GET /api/tools/search
  * @desc Search tools by query and filters
  * @access Public
@@ -170,97 +140,6 @@ router.get('/search', async (req, res) => {
         res.status(500).json({
             success: false,
             error: 'Failed to search tools',
-            message: error.message
-        });
-    }
-});
-
-/**
- * @route GET /api/tools/:category
- * @desc Get tools by category (alternative route)
- * @access Public
- */
-router.get('/:category', async (req, res) => {
-    try {
-        const { category } = req.params;
-        const tools = await toolsService.getToolsByCategory(category);
-
-        logger.info('Tools retrieved by category', { category, count: tools.count });
-
-        res.json({
-            success: true,
-            data: tools,
-            message: `Retrieved ${tools.count} tools from ${tools.category.name} category`
-        });
-    } catch (error) {
-        logger.error('Error retrieving tools by category', {
-            category: req.params.category,
-            error: error.message
-        });
-        res.status(404).json({
-            success: false,
-            error: 'Category not found',
-            message: error.message
-        });
-    }
-});
-
-/**
- * @route GET /api/tools/:category/:toolId
- * @desc Get specific tool details
- * @access Public
- */
-router.get('/:category/:toolId', async (req, res) => {
-    try {
-        const { category, toolId } = req.params;
-        const result = await toolsService.getToolDetails(toolId, category);
-        if (result.success) {
-            res.json(result);
-        } else {
-            res.status(404).json(result);
-        }
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-/**
- * @route POST /api/tools/:category/:toolId/execute
- * @desc Execute a specific tool
- * @access Public
- */
-router.post('/:category/:toolId/execute', async (req, res) => {
-    try {
-        const { category, toolId } = req.params;
-        const parameters = req.body || {};
-
-        // For now, we'll use 'General' as the default subcategory
-        // In a more sophisticated implementation, we could look up the tool to find its subcategory
-        const subcategory = 'General';
-        
-        const result = await toolsService.executeTool(category, subcategory, toolId, parameters);
-
-        logger.info('Tool executed successfully', {
-            category,
-            subcategory,
-            toolId,
-            type: result.type
-        });
-
-        res.json({
-            success: true,
-            data: result,
-            message: `${result.tool || toolId} execution completed`
-        });
-    } catch (error) {
-        logger.error('Error executing tool', {
-            category: req.params.category,
-            toolId: req.params.toolId,
-            error: error.message
-        });
-        res.status(500).json({
-            success: false,
-            error: 'Failed to execute tool',
             message: error.message
         });
     }
@@ -390,6 +269,127 @@ router.delete('/favorites/:category/:toolId', async (req, res) => {
         res.status(500).json({
             success: false,
             error: 'Failed to remove tool from favorites',
+            message: error.message
+        });
+    }
+});
+
+/**
+ * @route GET /api/tools/category/:category
+ * @desc Get tools by specific category
+ * @access Public
+ */
+router.get('/category/:category', async (req, res) => {
+    try {
+        const { category } = req.params;
+        const tools = await toolsService.getToolsByCategory(category);
+
+        logger.info('Tools retrieved by category', { category, count: tools.count });
+
+        res.json({
+            success: true,
+            data: tools,
+            message: `Retrieved ${tools.count} tools from ${tools.category.name} category`
+        });
+    } catch (error) {
+        logger.error('Error retrieving tools by category', {
+            category: req.params.category,
+            error: error.message
+        });
+        res.status(404).json({
+            success: false,
+            error: 'Category not found',
+            message: error.message
+        });
+    }
+});
+
+/**
+ * @route GET /api/tools/:category
+ * @desc Get tools by category (alternative route)
+ * @access Public
+ */
+router.get('/:category', async (req, res) => {
+    try {
+        const { category } = req.params;
+        const tools = await toolsService.getToolsByCategory(category);
+
+        logger.info('Tools retrieved by category', { category, count: tools.count });
+
+        res.json({
+            success: true,
+            data: tools,
+            message: `Retrieved ${tools.count} tools from ${tools.category.name} category`
+        });
+    } catch (error) {
+        logger.error('Error retrieving tools by category', {
+            category: req.params.category,
+            error: error.message
+        });
+        res.status(404).json({
+            success: false,
+            error: 'Category not found',
+            message: error.message
+        });
+    }
+});
+
+/**
+ * @route GET /api/tools/:category/:toolId
+ * @desc Get specific tool details
+ * @access Public
+ */
+router.get('/:category/:toolId', async (req, res) => {
+    try {
+        const { category, toolId } = req.params;
+        const result = await toolsService.getToolDetails(toolId, category);
+        if (result.success) {
+            res.json(result);
+        } else {
+            res.status(404).json(result);
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+/**
+ * @route POST /api/tools/:category/:toolId/execute
+ * @desc Execute a specific tool
+ * @access Public
+ */
+router.post('/:category/:toolId/execute', async (req, res) => {
+    try {
+        const { category, toolId } = req.params;
+        const parameters = req.body || {};
+
+        // For now, we'll use 'General' as the default subcategory
+        // In a more sophisticated implementation, we could look up the tool to find its subcategory
+        const subcategory = 'General';
+        
+        const result = await toolsService.executeTool(category, subcategory, toolId, parameters);
+
+        logger.info('Tool executed successfully', {
+            category,
+            subcategory,
+            toolId,
+            type: result.type
+        });
+
+        res.json({
+            success: true,
+            data: result,
+            message: `${result.tool || toolId} execution completed`
+        });
+    } catch (error) {
+        logger.error('Error executing tool', {
+            category: req.params.category,
+            toolId: req.params.toolId,
+            error: error.message
+        });
+        res.status(500).json({
+            success: false,
+            error: 'Failed to execute tool',
             message: error.message
         });
     }

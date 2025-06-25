@@ -1,87 +1,148 @@
 /**
- * 🚀 Ultimate OSINT Tools Hub v3.0
- * Advanced tool management with AI-powered recommendations, real-time search, and comprehensive analytics
+ * OSINT Framework Tools Hub - Ultimate World Class JavaScript v7.0
+ * Phenomenal functionality with advanced sorting, filtering, and UX
  */
 
-class ToolsPage {
+class UltimateOSINTToolsHub {
     constructor() {
-        this.tools = {};
-        this.categories = {};
+        this.tools = [];
         this.filteredTools = [];
-        this.currentView = 'grid';
+        this.favorites = [];
         this.currentCategory = null;
         this.currentSubcategory = null;
+        this.searchQuery = '';
+        this.viewMode = 'grid';
+        this.isLoading = false;
+        this.sidebarCollapsed = false;
+        this.theme = localStorage.getItem('theme') || 'light';
+        this.sortBy = 'name';
+        this.sortOrder = 'asc';
         this.filters = {
-            search: '',
             category: '',
             subcategory: '',
             type: '',
-            tags: [],
-            sources: [],
-            favoritesOnly: false,
-            rating: 0
+            sourceRepo: '',
+            tags: []
         };
-        this.currentSort = 'name';
-        this.favorites = [];
-        this.favoritesAnalytics = null;
-        this.searchHistory = [];
-        this.recentTools = [];
-        this.toolUsage = {};
-        this.isLoading = false;
-        this.searchDebounceTimer = null;
-        
-        // Performance optimization
-        this.toolCache = new Map();
-        this.searchIndex = new Map();
+        this.analytics = {
+            totalTools: 0,
+            categories: {},
+            favorites: 0,
+            recentSearches: []
+        };
         
         this.init();
     }
 
     async init() {
         try {
-            this.showLoading();
-            await Promise.all([
-                this.loadTools(),
-                this.loadFavorites(),
-                this.loadUserData()
-            ]);
-            
-            this.buildSearchIndex();
             this.setupEventListeners();
-            this.renderCategories();
-            this.renderTools();
-            this.updateStatistics();
-            this.updateFavoritesCount();
-            this.hideLoading();
-            
-            // Initialize AI recommendations
-            this.initializeAIRecommendations();
-            
-            console.log('🚀 OSINT Tools Hub v3.0 initialized successfully');
+            this.setupTheme();
+            this.setupAnimations();
+            this.loadFavorites();
+            await this.loadTools();
+            this.setupAdvancedFeatures();
+            this.showWelcomeMessage();
         } catch (error) {
-            console.error('Failed to initialize Tools Page:', error);
-            this.showError('Failed to initialize. Please refresh the page.');
+            console.error('Initialization error:', error);
+            this.showError('Failed to initialize tools hub');
         }
+    }
+
+    setupEventListeners() {
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', this.debounce(this.handleSearch.bind(this), 300));
+            searchInput.addEventListener('keydown', this.handleSearchKeydown.bind(this));
+        }
+
+        // Filter functionality
+        const filterSelects = document.querySelectorAll('.filter-select');
+        filterSelects.forEach(select => {
+            select.addEventListener('change', this.handleFilterChange.bind(this));
+        });
+
+        // View mode toggle
+        const viewToggles = document.querySelectorAll('.view-toggle-btn');
+        viewToggles.forEach(btn => {
+            btn.addEventListener('click', this.handleViewToggle.bind(this));
+        });
+
+        // Sidebar toggle
+        const sidebarToggle = document.querySelector('.sidebar-toggle');
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', this.toggleSidebar.bind(this));
+        }
+
+        // Theme toggle
+        const themeToggle = document.querySelector('.theme-toggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', this.toggleTheme.bind(this));
+        }
+
+        // Clear filters
+        const clearFilters = document.querySelector('.clear-filters');
+        if (clearFilters) {
+            clearFilters.addEventListener('click', this.clearAllFilters.bind(this));
+        }
+
+        // Sort functionality
+        const sortSelect = document.getElementById('sortSelect');
+        if (sortSelect) {
+            sortSelect.addEventListener('change', this.handleSortChange.bind(this));
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', this.handleKeyboardShortcuts.bind(this));
+
+        // Infinite scroll
+        this.setupInfiniteScroll();
+
+        // Drag and drop for favorites
+        this.setupDragAndDrop();
+    }
+
+    setupAdvancedFeatures() {
+        // Advanced search suggestions
+        this.setupSearchSuggestions();
+        
+        // Tool analytics
+        this.setupToolAnalytics();
+        
+        // Quick actions
+        this.setupQuickActions();
+        
+        // Export functionality
+        this.setupExportFeatures();
+        
+        // Performance monitoring
+        this.setupPerformanceMonitoring();
     }
 
     async loadTools() {
         try {
+            this.setLoading(true);
             const response = await fetch('/api/tools');
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
-            if (data.success) {
-                this.tools = data.data.toolsByCategory || data.data.tools;
-                this.categories = data.data.categories;
-                this.filteredTools = this.getAllTools();
-                this.buildSearchIndex();
+            
+            if (data.success && data.tools) {
+                this.tools = data.tools;
+                this.filteredTools = [...this.tools];
+                this.analytics.totalTools = this.tools.length;
+                this.updateAnalytics();
+                this.renderTools();
                 this.updateResultsCount();
-                this.updateStatistics();
+                this.setupCategoryNavigation();
+                this.showSuccess(`Loaded ${this.tools.length} tools successfully`);
             } else {
-                throw new Error(data.error || 'Failed to load tools');
+                throw new Error('Invalid response format');
             }
         } catch (error) {
             console.error('Error loading tools:', error);
-            this.showError('Failed to load tools. Please refresh the page.');
+            this.showError('Failed to load tools');
+        } finally {
+            this.setLoading(false);
         }
     }
 
@@ -91,954 +152,1193 @@ class ToolsPage {
             const data = await response.json();
             
             if (data.success) {
-                this.favorites = data.data;
-                await this.loadFavoritesAnalytics();
+                this.favorites = data.favorites || [];
+                this.analytics.favorites = this.favorites.length;
+                this.updateFavoritesDisplay();
             }
         } catch (error) {
             console.error('Error loading favorites:', error);
         }
     }
 
-    async loadUserData() {
-        try {
-            // Load user preferences and history from localStorage
-            const userData = localStorage.getItem('osint_user_data');
-            if (userData) {
-                const data = JSON.parse(userData);
-                this.searchHistory = data.searchHistory || [];
-                this.recentTools = data.recentTools || [];
-                this.toolUsage = data.toolUsage || {};
-            }
-        } catch (error) {
-            console.error('Error loading user data:', error);
+    handleSearch(event) {
+        this.searchQuery = event.target.value.toLowerCase();
+        this.applyFilters();
+        this.updateSearchAnalytics();
+    }
+
+    handleSearchKeydown(event) {
+        if (event.key === 'Enter') {
+            this.performAdvancedSearch();
+        } else if (event.key === 'Escape') {
+            event.target.value = '';
+            this.searchQuery = '';
+            this.applyFilters();
         }
     }
 
-    saveUserData() {
-        try {
-            const userData = {
-                searchHistory: this.searchHistory.slice(-50), // Keep last 50 searches
-                recentTools: this.recentTools.slice(-20), // Keep last 20 tools
-                toolUsage: this.toolUsage
-            };
-            localStorage.setItem('osint_user_data', JSON.stringify(userData));
-        } catch (error) {
-            console.error('Error saving user data:', error);
+    handleFilterChange(event) {
+        const { name, value } = event.target;
+        this.filters[name] = value;
+        this.applyFilters();
+        this.updateFilterAnalytics();
+    }
+
+    handleViewToggle(event) {
+        const viewMode = event.target.dataset.view;
+        this.setViewMode(viewMode);
+    }
+
+    handleSortChange(event) {
+        const [sortBy, sortOrder] = event.target.value.split('-');
+        this.sortBy = sortBy;
+        this.sortOrder = sortOrder;
+        this.applySorting();
+    }
+
+    toggleSidebar() {
+        this.sidebarCollapsed = !this.sidebarCollapsed;
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+        
+        if (this.sidebarCollapsed) {
+            sidebar.classList.add('collapsed');
+            mainContent.style.marginLeft = '80px';
+        } else {
+            sidebar.classList.remove('collapsed');
+            mainContent.style.marginLeft = '0';
+        }
+        
+        localStorage.setItem('sidebarCollapsed', this.sidebarCollapsed);
+    }
+
+    toggleTheme() {
+        this.theme = this.theme === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', this.theme);
+        localStorage.setItem('theme', this.theme);
+        
+        const themeToggle = document.querySelector('.theme-toggle');
+        if (themeToggle) {
+            themeToggle.innerHTML = this.theme === 'light' ? '🌙' : '☀️';
         }
     }
 
-    buildSearchIndex() {
-        this.searchIndex.clear();
-        this.toolCache.clear();
+    clearAllFilters() {
+        this.filters = {
+            category: '',
+            subcategory: '',
+            type: '',
+            sourceRepo: '',
+            tags: []
+        };
         
-        this.getAllTools().forEach(tool => {
-            // Cache tool data
-            this.toolCache.set(tool.id, tool);
-            
-            // Build search index
-            const searchTerms = [
-                tool.name.toLowerCase(),
-                tool.description.toLowerCase(),
-                tool.category.toLowerCase(),
-                tool.subcategory.toLowerCase(),
-                ...(tool.tags || []).map(tag => tag.toLowerCase())
-            ].join(' ');
-            
-            this.searchIndex.set(tool.id, searchTerms);
-        });
-    }
-
-    getAllTools() {
-        const allTools = [];
+        this.searchQuery = '';
+        this.currentCategory = null;
+        this.currentSubcategory = null;
         
-        Object.entries(this.tools).forEach(([category, subcategories]) => {
-            Object.entries(subcategories).forEach(([subcategory, tools]) => {
-                Object.entries(tools).forEach(([toolId, tool]) => {
-                    allTools.push({
-                        id: toolId,
-                        category,
-                        subcategory,
-                        ...tool
-                    });
-                });
-            });
+        // Reset form inputs
+        const filterSelects = document.querySelectorAll('.filter-select');
+        filterSelects.forEach(select => {
+            select.value = '';
         });
         
-        return allTools;
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.value = '';
+        }
+        
+        this.applyFilters();
+        this.showSuccess('All filters cleared');
     }
 
-    getTotalToolCount() {
-        return this.getAllTools().length;
-    }
+    applyFilters() {
+        let filtered = [...this.tools];
 
-    // Advanced search with fuzzy matching and relevance scoring
-    searchTools(query) {
-        if (!query.trim()) return this.getAllTools();
-        
-        const searchTerm = query.toLowerCase();
-        const results = [];
-        
-        this.searchIndex.forEach((searchTerms, toolId) => {
-            const tool = this.toolCache.get(toolId);
-            if (!tool) return;
-            
-            let score = 0;
-            
-            // Exact matches get highest score
-            if (tool.name.toLowerCase().includes(searchTerm)) score += 100;
-            if (tool.description.toLowerCase().includes(searchTerm)) score += 50;
-            if (tool.category.toLowerCase().includes(searchTerm)) score += 30;
-            if (tool.subcategory.toLowerCase().includes(searchTerm)) score += 20;
-            
-            // Tag matches
-            (tool.tags || []).forEach(tag => {
-                if (tag.toLowerCase().includes(searchTerm)) score += 15;
-            });
-            
-            // Partial matches
-            const words = searchTerm.split(' ');
-            words.forEach(word => {
-                if (tool.name.toLowerCase().includes(word)) score += 10;
-                if (tool.description.toLowerCase().includes(word)) score += 5;
-            });
-            
-            if (score > 0) {
-                results.push({ ...tool, relevanceScore: score });
-            }
-        });
-        
-        // Sort by relevance score
-        return results.sort((a, b) => b.relevanceScore - a.relevanceScore);
-    }
-
-    // Enhanced filtering system
-    filterTools() {
-        let filtered = this.getAllTools();
-        
         // Search filter
-        if (this.filters.search) {
-            filtered = this.searchTools(this.filters.search);
+        if (this.searchQuery) {
+            filtered = filtered.filter(tool => 
+                tool.name.toLowerCase().includes(this.searchQuery) ||
+                tool.description.toLowerCase().includes(this.searchQuery) ||
+                tool.category.toLowerCase().includes(this.searchQuery) ||
+                tool.subcategory.toLowerCase().includes(this.searchQuery) ||
+                tool.tags.some(tag => tag.toLowerCase().includes(this.searchQuery))
+            );
         }
-        
+
         // Category filter
         if (this.filters.category) {
             filtered = filtered.filter(tool => tool.category === this.filters.category);
         }
-        
+
         // Subcategory filter
         if (this.filters.subcategory) {
             filtered = filtered.filter(tool => tool.subcategory === this.filters.subcategory);
         }
-        
+
         // Type filter
         if (this.filters.type) {
             filtered = filtered.filter(tool => tool.type === this.filters.type);
         }
-        
+
+        // Source repository filter
+        if (this.filters.sourceRepo) {
+            filtered = filtered.filter(tool => tool.sourceRepo === this.filters.sourceRepo);
+        }
+
         // Tags filter
         if (this.filters.tags.length > 0) {
             filtered = filtered.filter(tool => 
-                this.filters.tags.some(tag => 
-                    (tool.tags || []).includes(tag)
-                )
+                this.filters.tags.some(tag => tool.tags.includes(tag))
             );
         }
-        
-        // Sources filter
-        if (this.filters.sources.length > 0) {
-            filtered = filtered.filter(tool => 
-                this.filters.sources.some(source => 
-                    tool.sourceRepo && tool.sourceRepo.includes(source)
-                )
-            );
-        }
-        
-        // Favorites only filter
-        if (this.filters.favoritesOnly) {
-            filtered = filtered.filter(tool => this.isFavorited(tool.category, tool.id));
-        }
-        
-        // Rating filter
-        if (this.filters.rating > 0) {
-            filtered = filtered.filter(tool => {
-                const favorite = this.getFavorite(tool.category, tool.id);
-                return favorite && favorite.rating >= this.filters.rating;
-            });
-        }
-        
+
         this.filteredTools = filtered;
-        this.sortTools();
+        this.applySorting();
         this.renderTools();
         this.updateResultsCount();
     }
 
-    // Enhanced sorting with multiple criteria
-    sortTools() {
-        const sortFunctions = {
-            name: (a, b) => a.name.localeCompare(b.name),
-            category: (a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name),
-            type: (a, b) => a.type.localeCompare(b.type) || a.name.localeCompare(b.name),
-            popularity: (a, b) => {
-                const aUsage = this.toolUsage[a.id] || 0;
-                const bUsage = this.toolUsage[b.id] || 0;
-                return bUsage - aUsage;
-            },
-            rating: (a, b) => {
-                const aRating = this.getFavorite(a.category, a.id)?.rating || 0;
-                const bRating = this.getFavorite(b.category, b.id)?.rating || 0;
-                return bRating - aRating;
-            },
-            recent: (a, b) => {
-                const aRecent = this.recentTools.indexOf(a.id);
-                const bRecent = this.recentTools.indexOf(b.id);
-                if (aRecent === -1 && bRecent === -1) return 0;
-                if (aRecent === -1) return 1;
-                if (bRecent === -1) return -1;
-                return aRecent - bRecent;
+    applySorting() {
+        this.filteredTools.sort((a, b) => {
+            let aValue = a[this.sortBy];
+            let bValue = b[this.sortBy];
+
+            // Handle different data types
+            if (typeof aValue === 'string') {
+                aValue = aValue.toLowerCase();
+                bValue = bValue.toLowerCase();
             }
-        };
-        
-        if (sortFunctions[this.currentSort]) {
-            this.filteredTools.sort(sortFunctions[this.currentSort]);
-        }
+
+            if (this.sortOrder === 'asc') {
+                return aValue > bValue ? 1 : -1;
+            } else {
+                return aValue < bValue ? 1 : -1;
+            }
+        });
     }
 
-    // Enhanced tool rendering with advanced features
+    setViewMode(mode) {
+        this.viewMode = mode;
+        const container = document.querySelector('.tools-container');
+        const viewToggles = document.querySelectorAll('.view-toggle-btn');
+        
+        // Update toggle buttons
+        viewToggles.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.view === mode);
+        });
+        
+        // Update container class
+        container.className = `tools-container ${mode}-view`;
+        
+        // Re-render tools
+        this.renderTools();
+        localStorage.setItem('viewMode', mode);
+    }
+
     renderTools() {
-        const container = document.getElementById('toolsContainer');
+        const container = document.querySelector('.tools-container');
         if (!container) return;
-        container.innerHTML = '';
-        const tools = this.filteredTools;
-        if (!tools.length) {
-            this.showEmptyState();
+
+        if (this.filteredTools.length === 0) {
+            container.innerHTML = this.renderEmptyState();
             return;
         }
-        this.hideEmptyState();
 
-        // Virtual scroll variables
-        const TOOL_HEIGHT = this.currentView === 'grid' ? 180 : 80;
-        const VISIBLE_COUNT = Math.ceil(window.innerHeight / TOOL_HEIGHT) + 10;
-        let start = 0;
-        let end = Math.min(VISIBLE_COUNT, tools.length);
+        const toolsHTML = this.filteredTools.map(tool => this.renderToolCard(tool)).join('');
+        container.innerHTML = toolsHTML;
 
-        // Create a scrollable container
-        container.style.position = 'relative';
-        container.style.height = `${tools.length * TOOL_HEIGHT}px`;
-        container.style.overflowY = 'auto';
-        container.tabIndex = 0;
-        container.setAttribute('aria-label', 'Tools List');
-
-        // Render visible tools only
-        const renderVisible = () => {
-            const scrollTop = container.scrollTop;
-            start = Math.floor(scrollTop / TOOL_HEIGHT);
-            end = Math.min(start + VISIBLE_COUNT, tools.length);
-            container.innerHTML = '';
-            for (let i = start; i < end; i++) {
-                const tool = tools[i];
-                const card = this.renderToolCard(tool, this.currentView === 'list');
-                card.style.position = 'absolute';
-                card.style.top = `${i * TOOL_HEIGHT}px`;
-                card.setAttribute('tabindex', 0);
-                card.setAttribute('aria-label', tool.name);
-                container.appendChild(card);
-            }
-        };
-        container.onscroll = renderVisible;
-        renderVisible();
-
-        // Add tool interaction listeners
-        this.addToolInteractionListeners();
+        // Add event listeners to tool cards
+        this.setupToolCardListeners();
     }
 
-    renderToolCard(tool, isListView = false) {
-        const isFavorited = this.isFavorited(tool.category, tool.id);
-        const favorite = this.getFavorite(tool.category, tool.id);
-        const usageCount = this.toolUsage[tool.id] || 0;
-        
-        const favoriteClass = isFavorited ? 'favorited' : '';
-        const favoriteIcon = isFavorited ? 'fas fa-heart' : 'far fa-heart';
-        const favoriteTitle = isFavorited ? 'Remove from favorites' : 'Add to favorites';
-        
-        const ratingStars = this.renderRatingStars(favorite?.rating || 0);
-        const usageBadge = usageCount > 0 ? `<span class="usage-badge">${usageCount} uses</span>` : '';
-        
-        const cardClass = isListView ? 'tool-card list-view' : 'tool-card';
-        
+    renderToolCard(tool) {
+        const isFavorite = this.favorites.some(fav => 
+            fav.category === tool.category && fav.toolId === tool.id
+        );
+
         return `
-            <div class="${cardClass}" data-tool-id="${tool.id}" data-category="${tool.category}" data-subcategory="${tool.subcategory}">
-                <div class="tool-header">
-                    <div class="tool-icon">
-                        <i class="${tool.icon || 'fas fa-tools'}"></i>
-                    </div>
+            <div class="tool-card fade-in" data-tool-id="${tool.id}" data-category="${tool.category}">
+                <div class="tool-card-header">
+                    <div class="tool-icon">${tool.icon}</div>
                     <div class="tool-info">
-                        <h3 class="tool-name">${tool.name}</h3>
-                        <div class="tool-meta">
-                            <span class="tool-category">${tool.category}</span>
-                            <span class="tool-subcategory">${tool.subcategory}</span>
-                            <span class="tool-type">${tool.type}</span>
+                        <h3 class="tool-name">${this.escapeHtml(tool.name)}</h3>
+                        <div class="tool-category">
+                            <span class="badge badge-primary">${this.escapeHtml(tool.category)}</span>
+                            <span class="badge badge-secondary">${this.escapeHtml(tool.subcategory)}</span>
+                        </div>
+                        <p class="tool-description">${this.escapeHtml(tool.description)}</p>
+                        <div class="tool-tags">
+                            ${tool.tags.slice(0, 3).map(tag => 
+                                `<span class="badge badge-info">${this.escapeHtml(tag)}</span>`
+                            ).join('')}
+                            ${tool.tags.length > 3 ? 
+                                `<span class="badge badge-secondary">+${tool.tags.length - 3}</span>` : ''
+                            }
                         </div>
                     </div>
                     <div class="tool-actions">
-                        <button class="favorite-btn ${favoriteClass}" title="${favoriteTitle}" data-action="toggle-favorite">
-                            <i class="${favoriteIcon}"></i>
+                        <button class="tool-action-btn favorite ${isFavorite ? 'active' : ''}" 
+                                data-action="favorite" data-tool-id="${tool.id}" data-category="${tool.category}">
+                            ${isFavorite ? '❤️' : '🤍'}
                         </button>
-                        <button class="tool-btn" title="Open tool" data-action="open-tool">
-                            <i class="fas fa-external-link-alt"></i>
+                        <button class="tool-action-btn" data-action="open" data-url="${tool.url}">
+                            🔗
                         </button>
-                        <button class="tool-btn" title="Tool details" data-action="show-details">
-                            <i class="fas fa-info-circle"></i>
+                        <button class="tool-action-btn" data-action="details" data-tool-id="${tool.id}">
+                            ℹ️
                         </button>
                     </div>
                 </div>
-                
-                <div class="tool-content">
-                    <p class="tool-description">${tool.description}</p>
-                    
-                    ${tool.tags && tool.tags.length > 0 ? `
-                        <div class="tool-tags">
-                            ${tool.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                        </div>
-                    ` : ''}
-                    
-                    <div class="tool-stats">
-                        ${ratingStars}
-                        ${usageBadge}
-                        ${favorite?.notes ? `<span class="notes-badge" title="${favorite.notes}">📝</span>` : ''}
+                <div class="tool-card-footer">
+                    <div class="tool-meta">
+                        <span class="tool-type">${this.escapeHtml(tool.type)}</span>
+                        <span class="tool-source">${this.escapeHtml(tool.sourceRepo)}</span>
+                    </div>
+                    <div class="tool-quick-actions">
+                        <button class="btn btn-sm btn-primary" data-action="analyze" data-tool-id="${tool.id}">
+                            Analyze
+                        </button>
+                        <button class="btn btn-sm btn-secondary" data-action="compare" data-tool-id="${tool.id}">
+                            Compare
+                        </button>
                     </div>
                 </div>
-                
-                ${isListView ? `
-                    <div class="tool-extra">
-                        <div class="tool-url">
-                            <a href="${tool.url}" target="_blank" rel="noopener noreferrer">
-                                ${tool.url}
-                            </a>
-                        </div>
-                        ${tool.sourceRepo ? `
-                            <div class="tool-source">
-                                <i class="fab fa-github"></i>
-                                <a href="${tool.sourceRepo}" target="_blank" rel="noopener noreferrer">
-                                    Source Code
-                                </a>
-                            </div>
-                        ` : ''}
-                    </div>
-                ` : ''}
             </div>
         `;
     }
 
-    renderRatingStars(rating) {
-        const stars = [];
-        for (let i = 1; i <= 5; i++) {
-            const starClass = i <= rating ? 'fas fa-star filled' : 'far fa-star';
-            stars.push(`<i class="${starClass}"></i>`);
-        }
-        return `<div class="rating-stars">${stars.join('')}</div>`;
+    renderEmptyState() {
+        return `
+            <div class="empty-state fade-in">
+                <div class="empty-state-icon">🔍</div>
+                <h3>No tools found</h3>
+                <p>Try adjusting your search criteria or filters</p>
+                <button class="btn btn-primary" onclick="toolsHub.clearAllFilters()">
+                    Clear Filters
+                </button>
+            </div>
+        `;
     }
 
-    addToolInteractionListeners() {
-        document.querySelectorAll('.tool-card').forEach(card => {
-            const toolId = card.dataset.toolId;
-            const category = card.dataset.category;
-            const subcategory = card.dataset.subcategory;
-            
+    setupToolCardListeners() {
+        const toolCards = document.querySelectorAll('.tool-card');
+        
+        toolCards.forEach(card => {
             // Favorite toggle
-            card.querySelector('[data-action="toggle-favorite"]')?.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.toggleFavorite(category, toolId);
-            });
-            
+            const favoriteBtn = card.querySelector('[data-action="favorite"]');
+            if (favoriteBtn) {
+                favoriteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.toggleFavorite(favoriteBtn.dataset.toolId, favoriteBtn.dataset.category);
+                });
+            }
+
             // Open tool
-            card.querySelector('[data-action="open-tool"]')?.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.openTool(category, toolId);
-            });
-            
-            // Show details
-            card.querySelector('[data-action="show-details"]')?.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.showToolDetails(category, toolId);
-            });
-            
-            // Card click for quick access
+            const openBtn = card.querySelector('[data-action="open"]');
+            if (openBtn) {
+                openBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.openTool(openBtn.dataset.url);
+                });
+            }
+
+            // Tool details
+            const detailsBtn = card.querySelector('[data-action="details"]');
+            if (detailsBtn) {
+                detailsBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.showToolDetails(detailsBtn.dataset.toolId);
+                });
+            }
+
+            // Quick actions
+            const analyzeBtn = card.querySelector('[data-action="analyze"]');
+            if (analyzeBtn) {
+                analyzeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.analyzeTool(analyzeBtn.dataset.toolId);
+                });
+            }
+
+            const compareBtn = card.querySelector('[data-action="compare"]');
+            if (compareBtn) {
+                compareBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.compareTool(compareBtn.dataset.toolId);
+                });
+            }
+
+            // Card click for quick preview
             card.addEventListener('click', () => {
-                this.quickAccessTool(category, toolId);
+                this.showToolPreview(card.dataset.toolId);
             });
         });
     }
 
-    async toggleFavorite(category, toolId) {
+    async toggleFavorite(toolId, category) {
         try {
-            if (this.isFavorited(category, toolId)) {
-                await this.removeFromFavorites(category, toolId);
+            const isFavorite = this.favorites.some(fav => 
+                fav.category === category && fav.toolId === toolId
+            );
+
+            if (isFavorite) {
+                // Remove from favorites
+                const response = await fetch(`/api/tools/favorites/${encodeURIComponent(category)}/${toolId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    this.favorites = this.favorites.filter(fav => 
+                        !(fav.category === category && fav.toolId === toolId)
+                    );
+                    this.showSuccess('Tool removed from favorites');
+                }
             } else {
-                await this.addToFavorites(category, toolId);
+                // Add to favorites
+                const response = await fetch('/api/tools/favorites', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ category, toolId })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    this.favorites.push(data.favorite);
+                    this.showSuccess('Tool added to favorites');
+                }
             }
-            
-            this.renderTools();
-            this.updateFavoritesCount();
+
+            this.analytics.favorites = this.favorites.length;
+            this.updateFavoritesDisplay();
+            this.renderTools(); // Re-render to update favorite buttons
         } catch (error) {
             console.error('Error toggling favorite:', error);
-            this.showNotification('Failed to update favorite', 'error');
+            this.showError('Failed to update favorites');
         }
     }
 
-    openTool(category, toolId) {
-        const tool = this.getTool(category, toolId);
+    openTool(url) {
+        window.open(url, '_blank', 'noopener,noreferrer');
+        this.trackToolUsage('open', url);
+    }
+
+    showToolDetails(toolId) {
+        const tool = this.tools.find(t => t.id === toolId);
         if (!tool) return;
-        
-        // Track usage
-        this.trackToolUsage(toolId);
-        
-        // Open in new tab
-        window.open(tool.url, '_blank', 'noopener,noreferrer');
-        
-        this.showNotification(`Opening ${tool.name}`, 'success');
-    }
 
-    showToolDetails(category, toolId) {
-        const tool = this.getTool(category, toolId);
-        if (!tool) return;
-        
-        this.showToolModal(tool);
-    }
-
-    quickAccessTool(category, toolId) {
-        const tool = this.getTool(category, toolId);
-        if (!tool) return;
-        
-        // Track usage
-        this.trackToolUsage(toolId);
-        
-        // Add to recent tools
-        this.addToRecentTools(toolId);
-        
-        // Show quick access modal
-        this.showQuickAccessModal(tool);
-    }
-
-    trackToolUsage(toolId) {
-        this.toolUsage[toolId] = (this.toolUsage[toolId] || 0) + 1;
-        this.saveUserData();
-    }
-
-    addToRecentTools(toolId) {
-        this.recentTools = [toolId, ...this.recentTools.filter(id => id !== toolId)].slice(0, 20);
-        this.saveUserData();
-    }
-
-    getTool(category, toolId) {
-        return this.tools[category]?.[this.getSubcategoryFromToolId(toolId)]?.[toolId];
-    }
-
-    getSubcategoryFromToolId(toolId) {
-        // Find the subcategory for a given tool ID
-        for (const [category, subcategories] of Object.entries(this.tools)) {
-            for (const [subcategory, tools] of Object.entries(subcategories)) {
-                if (tools[toolId]) {
-                    return subcategory;
-                }
-            }
-        }
-        return null;
-    }
-
-    // Enhanced favorites management
-    async addToFavorites(category, toolId, metadata = {}) {
-        try {
-            const response = await fetch('/api/tools/favorites', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ category, toolId, metadata })
-            });
-            const data = await response.json();
-            if (data.success) {
-                this.favorites.push(data.data);
-                this.updateFavoritesCount();
-                await this.loadFavoritesAnalytics();
-                this.showNotification('Added to favorites!', 'success');
-            } else {
-                throw new Error(data.error || 'Failed to add favorite');
-            }
-        } catch (error) {
-            this.showNotification('Failed to add favorite: ' + error.message, 'error');
-        }
-    }
-
-    async removeFromFavorites(category, toolId) {
-        try {
-            const response = await fetch(`/api/tools/favorites/${encodeURIComponent(category)}/${encodeURIComponent(toolId)}`, {
-                method: 'DELETE'
-            });
-            const data = await response.json();
-            if (data.success) {
-                this.favorites = this.favorites.filter(f => !(f.category === category && f.toolId === toolId));
-                this.updateFavoritesCount();
-                await this.loadFavoritesAnalytics();
-                this.showNotification('Removed from favorites!', 'success');
-            } else {
-                throw new Error(data.error || 'Failed to remove favorite');
-            }
-        } catch (error) {
-            this.showNotification('Failed to remove favorite: ' + error.message, 'error');
-        }
-    }
-
-    isFavorited(category, toolId) {
-        const favoriteId = `${category}_${toolId}`;
-        return this.favorites.some(f => f.id === favoriteId);
-    }
-
-    getFavorite(category, toolId) {
-        const favoriteId = `${category}_${toolId}`;
-        return this.favorites.find(f => f.id === favoriteId);
-    }
-
-    // Enhanced UI rendering
-    renderCategories() {
-        const container = document.getElementById('categoryList');
-        if (!container) return;
-        
-        const categoriesHTML = Object.entries(this.categories).map(([categoryName, categoryData]) => {
-            const subcategories = categoryData.subcategories || {};
-            const subcategoriesHTML = Object.entries(subcategories).map(([subName, subData]) => `
-                <div class="subcategory-item" data-category="${categoryName}" data-subcategory="${subName}">
-                    <i class="${subData.icon || '📋'}"></i>
-                    <span>${subName}</span>
-                    <span class="tool-count">${subData.count || 0}</span>
+        const modal = this.createModal(`
+            <div class="tool-details-modal">
+                <div class="tool-details-header">
+                    <div class="tool-icon-large">${tool.icon}</div>
+                    <div class="tool-info-large">
+                        <h2>${this.escapeHtml(tool.name)}</h2>
+                        <p class="tool-description-large">${this.escapeHtml(tool.description)}</p>
+                        <div class="tool-meta-large">
+                            <span class="badge badge-primary">${this.escapeHtml(tool.category)}</span>
+                            <span class="badge badge-secondary">${this.escapeHtml(tool.subcategory)}</span>
+                            <span class="badge badge-info">${this.escapeHtml(tool.type)}</span>
+                        </div>
+                    </div>
                 </div>
-            `).join('');
+                <div class="tool-details-content">
+                    <div class="tool-tags-large">
+                        <h4>Tags</h4>
+                        <div class="tags-container">
+                            ${tool.tags.map(tag => `<span class="badge badge-info">${this.escapeHtml(tag)}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="tool-actions-large">
+                        <a href="${tool.url}" target="_blank" class="btn btn-primary">
+                            Open Tool
+                        </a>
+                        <button class="btn btn-secondary" onclick="toolsHub.analyzeTool('${tool.id}')">
+                            Analyze
+                        </button>
+                        <button class="btn btn-secondary" onclick="toolsHub.compareTool('${tool.id}')">
+                            Compare
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `);
+
+        document.body.appendChild(modal);
+    }
+
+    showToolPreview(toolId) {
+        const tool = this.tools.find(t => t.id === toolId);
+        if (!tool) return;
+
+        // Create a quick preview tooltip
+        const tooltip = document.createElement('div');
+        tooltip.className = 'tool-preview-tooltip';
+        tooltip.innerHTML = `
+            <div class="tool-preview-content">
+                <h4>${this.escapeHtml(tool.name)}</h4>
+                <p>${this.escapeHtml(tool.description)}</p>
+                <div class="tool-preview-actions">
+                    <a href="${tool.url}" target="_blank" class="btn btn-sm btn-primary">Open</a>
+                    <button class="btn btn-sm btn-secondary" onclick="toolsHub.showToolDetails('${tool.id}')">Details</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(tooltip);
+        
+        // Position tooltip near the clicked card
+        const card = document.querySelector(`[data-tool-id="${toolId}"]`);
+        if (card) {
+            const rect = card.getBoundingClientRect();
+            tooltip.style.left = `${rect.right + 10}px`;
+            tooltip.style.top = `${rect.top}px`;
+        }
+
+        // Remove tooltip after 3 seconds
+        setTimeout(() => {
+            if (tooltip.parentNode) {
+                tooltip.parentNode.removeChild(tooltip);
+            }
+        }, 3000);
+    }
+
+    async analyzeTool(toolId) {
+        const tool = this.tools.find(t => t.id === toolId);
+        if (!tool) return;
+
+        try {
+            this.showLoading('Analyzing tool...');
             
-            return `
-                <div class="category-item" data-category="${categoryName}">
-                    <div class="category-header">
-                        <i class="${categoryData.icon || '🔧'}"></i>
-                        <span>${categoryName}</span>
-                        <span class="tool-count">${this.getCategoryToolCount(categoryName)}</span>
+            const response = await fetch(`/api/tools/${encodeURIComponent(tool.category)}/${toolId}/execute`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    action: 'analyze',
+                    parameters: {
+                        tool: tool.name,
+                        url: tool.url,
+                        category: tool.category
+                    }
+                })
+            });
+
+            const data = await response.json();
+            
+            if (data.success) {
+                this.showAnalysisResults(tool, data.result);
+            } else {
+                throw new Error(data.message || 'Analysis failed');
+            }
+        } catch (error) {
+            console.error('Analysis error:', error);
+            this.showError('Failed to analyze tool');
+        } finally {
+            this.hideLoading();
+        }
+    }
+
+    showAnalysisResults(tool, results) {
+        const modal = this.createModal(`
+            <div class="analysis-results-modal">
+                <div class="analysis-header">
+                    <h2>Analysis Results: ${this.escapeHtml(tool.name)}</h2>
+                </div>
+                <div class="analysis-content">
+                    <div class="analysis-summary">
+                        <h4>Summary</h4>
+                        <p>${this.escapeHtml(results.message || 'Analysis completed successfully')}</p>
                     </div>
-                    <div class="subcategories">
-                        ${subcategoriesHTML}
+                    <div class="analysis-details">
+                        <h4>Details</h4>
+                        <pre>${JSON.stringify(results.data, null, 2)}</pre>
                     </div>
+                </div>
+            </div>
+        `);
+
+        document.body.appendChild(modal);
+    }
+
+    compareTool(toolId) {
+        // Add to comparison list
+        if (!this.comparisonList) {
+            this.comparisonList = [];
+        }
+        
+        const tool = this.tools.find(t => t.id === toolId);
+        if (tool && !this.comparisonList.find(t => t.id === toolId)) {
+            this.comparisonList.push(tool);
+            this.showSuccess(`Added ${tool.name} to comparison`);
+            this.updateComparisonDisplay();
+        }
+    }
+
+    updateComparisonDisplay() {
+        // Create or update comparison panel
+        let comparisonPanel = document.querySelector('.comparison-panel');
+        
+        if (!comparisonPanel) {
+            comparisonPanel = document.createElement('div');
+            comparisonPanel.className = 'comparison-panel';
+            document.body.appendChild(comparisonPanel);
+        }
+
+        if (this.comparisonList && this.comparisonList.length > 0) {
+            comparisonPanel.innerHTML = `
+                <div class="comparison-header">
+                    <h4>Comparison (${this.comparisonList.length})</h4>
+                    <button class="btn btn-sm btn-primary" onclick="toolsHub.showComparison()">
+                        Compare
+                    </button>
+                    <button class="btn btn-sm btn-secondary" onclick="toolsHub.clearComparison()">
+                        Clear
+                    </button>
+                </div>
+                <div class="comparison-tools">
+                    ${this.comparisonList.map(tool => `
+                        <div class="comparison-tool">
+                            <span>${tool.icon} ${this.escapeHtml(tool.name)}</span>
+                            <button onclick="toolsHub.removeFromComparison('${tool.id}')">×</button>
+                        </div>
+                    `).join('')}
                 </div>
             `;
-        }).join('');
-        
-        container.innerHTML = categoriesHTML;
-        this.addCategoryEventListeners();
-    }
-
-    getCategoryToolCount(categoryName) {
-        const category = this.tools[categoryName];
-        if (!category) return 0;
-        
-        return Object.values(category).reduce((total, subcategory) => {
-            return total + Object.keys(subcategory).length;
-        }, 0);
-    }
-
-    addCategoryEventListeners() {
-        document.querySelectorAll('.category-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const category = item.dataset.category;
-                this.selectCategory(category);
-            });
-        });
-        
-        document.querySelectorAll('.subcategory-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const category = item.dataset.category;
-                const subcategory = item.dataset.subcategory;
-                this.selectSubcategory(category, subcategory);
-            });
-        });
-    }
-
-    selectCategory(category) {
-        this.currentCategory = category;
-        this.currentSubcategory = null;
-        this.filters.category = category;
-        this.filters.subcategory = '';
-        this.updateBreadcrumb();
-        this.filterTools();
-    }
-
-    selectSubcategory(category, subcategory) {
-        this.currentCategory = category;
-        this.currentSubcategory = subcategory;
-        this.filters.category = category;
-        this.filters.subcategory = subcategory;
-        this.updateBreadcrumb();
-        this.filterTools();
-    }
-
-    updateBreadcrumb() {
-        const container = document.getElementById('breadcrumb');
-        if (!container) return;
-        
-        let breadcrumbHTML = '<span class="breadcrumb-item" data-action="all">All Tools</span>';
-        
-        if (this.currentCategory) {
-            breadcrumbHTML += `<span class="breadcrumb-separator">/</span>`;
-            breadcrumbHTML += `<span class="breadcrumb-item" data-action="category">${this.currentCategory}</span>`;
-        }
-        
-        if (this.currentSubcategory) {
-            breadcrumbHTML += `<span class="breadcrumb-separator">/</span>`;
-            breadcrumbHTML += `<span class="breadcrumb-item" data-action="subcategory">${this.currentSubcategory}</span>`;
-        }
-        
-        container.innerHTML = breadcrumbHTML;
-        this.addBreadcrumbEventListeners();
-    }
-
-    addBreadcrumbEventListeners() {
-        document.querySelectorAll('.breadcrumb-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const action = item.dataset.action;
-                
-                switch (action) {
-                    case 'all':
-                        this.clearFilters();
-                        break;
-                    case 'category':
-                        this.selectCategory(this.currentCategory);
-                        break;
-                    case 'subcategory':
-                        this.selectSubcategory(this.currentCategory, this.currentSubcategory);
-                        break;
-                }
-            });
-        });
-    }
-
-    // Enhanced event listeners
-    setupEventListeners() {
-        // Search functionality
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) {
-            searchInput.addEventListener('input', (e) => {
-                clearTimeout(this.searchDebounceTimer);
-                this.searchDebounceTimer = setTimeout(() => {
-                    this.filters.search = e.target.value;
-                    this.addToSearchHistory(e.target.value);
-                    this.filterTools();
-                }, 300);
-            });
-        }
-
-        // Clear search
-        document.getElementById('clearSearch')?.addEventListener('click', () => {
-            this.filters.search = '';
-            searchInput.value = '';
-            this.filterTools();
-        });
-
-        // Category filter
-        document.getElementById('categoryFilter')?.addEventListener('change', (e) => {
-            this.filters.category = e.target.value;
-            this.filterTools();
-        });
-
-        // Type filter
-        document.getElementById('typeFilter')?.addEventListener('change', (e) => {
-            this.filters.type = e.target.value;
-            this.filterTools();
-        });
-
-        // Sort select
-        document.getElementById('sortSelect')?.addEventListener('change', (e) => {
-            this.currentSort = e.target.value;
-            this.sortTools();
-            this.renderTools();
-        });
-
-        // View toggle
-        document.querySelectorAll('.view-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                this.setView(btn.dataset.view);
-            });
-        });
-
-        // Favorites toggle
-        document.getElementById('favoritesToggle')?.addEventListener('click', () => {
-            this.toggleFavoritesView();
-        });
-
-        // Favorites modal
-        document.getElementById('favoritesModalBtn')?.addEventListener('click', () => {
-            this.showFavoritesModal();
-        });
-
-        // Advanced filters
-        document.getElementById('advancedFilters')?.addEventListener('click', () => {
-            this.showFiltersModal();
-        });
-
-        // Clear all filters
-        document.getElementById('clearAllFilters')?.addEventListener('click', () => {
-            this.clearFilters();
-        });
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            this.handleKeyboardShortcuts(e);
-        });
-
-        // Responsive sidebar
-        document.getElementById('toggleSidebar')?.addEventListener('click', () => {
-            this.toggleSidebar();
-        });
-
-        // Keyboard navigation for tools
-        const container = document.getElementById('toolsContainer');
-        if (container) {
-            container.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-                    const cards = Array.from(container.querySelectorAll('[tabindex="0"]'));
-                    const active = document.activeElement;
-                    const idx = cards.indexOf(active);
-                    if (e.key === 'ArrowDown' && idx < cards.length - 1) {
-                        cards[idx + 1].focus();
-                        e.preventDefault();
-                    } else if (e.key === 'ArrowUp' && idx > 0) {
-                        cards[idx - 1].focus();
-                        e.preventDefault();
-                    }
-                }
-            });
+            comparisonPanel.style.display = 'block';
+        } else {
+            comparisonPanel.style.display = 'none';
         }
     }
 
-    handleKeyboardShortcuts(e) {
-        // Ctrl/Cmd + F: Focus search
-        if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
-            e.preventDefault();
-            document.getElementById('searchInput')?.focus();
+    showComparison() {
+        if (!this.comparisonList || this.comparisonList.length < 2) {
+            this.showError('Please select at least 2 tools to compare');
+            return;
         }
-        
-        // Ctrl/Cmd + K: Quick access
-        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-            e.preventDefault();
-            this.showQuickAccessModal();
-        }
-        
-        // Escape: Clear search or close modals
-        if (e.key === 'Escape') {
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput && searchInput.value) {
-                searchInput.value = '';
-                this.filters.search = '';
-                this.filterTools();
-            }
-        }
+
+        const comparisonHTML = `
+            <div class="comparison-modal">
+                <div class="comparison-header">
+                    <h2>Tool Comparison</h2>
+                </div>
+                <div class="comparison-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                ${this.comparisonList.map(tool => `<th>${this.escapeHtml(tool.name)}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Category</td>
+                                ${this.comparisonList.map(tool => `<td>${this.escapeHtml(tool.category)}</td>`).join('')}
+                            </tr>
+                            <tr>
+                                <td>Type</td>
+                                ${this.comparisonList.map(tool => `<td>${this.escapeHtml(tool.type)}</td>`).join('')}
+                            </tr>
+                            <tr>
+                                <td>Tags</td>
+                                ${this.comparisonList.map(tool => `<td>${tool.tags.join(', ')}</td>`).join('')}
+                            </tr>
+                            <tr>
+                                <td>Actions</td>
+                                ${this.comparisonList.map(tool => `
+                                    <td>
+                                        <a href="${tool.url}" target="_blank" class="btn btn-sm btn-primary">Open</a>
+                                    </td>
+                                `).join('')}
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+
+        const modal = this.createModal(comparisonHTML);
+        document.body.appendChild(modal);
     }
 
-    addToSearchHistory(query) {
-        if (query.trim()) {
-            this.searchHistory = [query, ...this.searchHistory.filter(q => q !== query)].slice(0, 20);
-            this.saveUserData();
-        }
+    clearComparison() {
+        this.comparisonList = [];
+        this.updateComparisonDisplay();
+        this.showSuccess('Comparison cleared');
     }
 
-    toggleFavoritesView() {
-        this.filters.favoritesOnly = !this.filters.favoritesOnly;
-        const btn = document.getElementById('favoritesToggle');
-        if (btn) {
-            btn.innerHTML = this.filters.favoritesOnly ? 
-                '<i class="fas fa-star"></i><span>Show All</span>' : 
-                '<i class="fas fa-star"></i><span>Show Favorites</span>';
-        }
-        this.filterTools();
-    }
-
-    setView(view) {
-        this.currentView = view;
-        
-        document.querySelectorAll('.view-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.view === view);
-        });
-        
-        this.renderTools();
-    }
-
-    toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        const mainContent = document.querySelector('.main-content');
-        
-        sidebar.classList.toggle('collapsed');
-        mainContent.classList.toggle('expanded');
-    }
-
-    clearFilters() {
-        this.filters = {
-            search: '',
-            category: '',
-            subcategory: '',
-            type: '',
-            tags: [],
-            sources: [],
-            favoritesOnly: false,
-            rating: 0
-        };
-        
-        this.currentCategory = null;
-        this.currentSubcategory = null;
-        
-        // Reset UI
-        document.getElementById('searchInput').value = '';
-        document.getElementById('categoryFilter').value = '';
-        document.getElementById('typeFilter').value = '';
-        
-        this.updateBreadcrumb();
-        this.filterTools();
-    }
-
-    // Enhanced statistics and analytics
-    updateStatistics() {
-        const totalTools = this.getTotalToolCount();
-        const totalCategories = Object.keys(this.categories).length;
-        const totalFavorites = this.favorites.length;
-        
-        document.getElementById('totalTools').textContent = totalTools.toLocaleString();
-        document.getElementById('totalCategories').textContent = totalCategories;
-        document.getElementById('totalFavorites').textContent = totalFavorites;
+    removeFromComparison(toolId) {
+        this.comparisonList = this.comparisonList.filter(tool => tool.id !== toolId);
+        this.updateComparisonDisplay();
     }
 
     updateResultsCount() {
-        const count = this.filteredTools.length;
-        const total = this.getTotalToolCount();
+        const countElement = document.querySelector('.results-count');
+        if (countElement) {
+            countElement.textContent = `Showing ${this.filteredTools.length} of ${this.tools.length} tools`;
+        }
+    }
+
+    updateFavoritesDisplay() {
+        const favoritesCount = document.querySelector('.favorites-count');
+        if (favoritesCount) {
+            favoritesCount.textContent = this.favorites.length;
+        }
+    }
+
+    updateAnalytics() {
+        // Update category analytics
+        this.analytics.categories = {};
+        this.tools.forEach(tool => {
+            if (!this.analytics.categories[tool.category]) {
+                this.analytics.categories[tool.category] = 0;
+            }
+            this.analytics.categories[tool.category]++;
+        });
+    }
+
+    updateSearchAnalytics() {
+        if (this.searchQuery) {
+            this.analytics.recentSearches.unshift(this.searchQuery);
+            this.analytics.recentSearches = this.analytics.recentSearches.slice(0, 10);
+        }
+    }
+
+    updateFilterAnalytics() {
+        // Track filter usage for analytics
+        const activeFilters = Object.entries(this.filters)
+            .filter(([key, value]) => value && value.length > 0)
+            .map(([key, value]) => `${key}:${value}`);
         
-        const container = document.getElementById('resultsCount');
-        if (container) {
-            container.textContent = count.toLocaleString();
+        if (activeFilters.length > 0) {
+            console.log('Active filters:', activeFilters);
+        }
+    }
+
+    setupSearchSuggestions() {
+        const searchInput = document.getElementById('searchInput');
+        if (!searchInput) return;
+
+        // Create suggestions container
+        const suggestionsContainer = document.createElement('div');
+        suggestionsContainer.className = 'search-suggestions';
+        searchInput.parentNode.appendChild(suggestionsContainer);
+
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase();
+            if (query.length < 2) {
+                suggestionsContainer.style.display = 'none';
+                return;
+            }
+
+            const suggestions = this.getSearchSuggestions(query);
+            if (suggestions.length > 0) {
+                suggestionsContainer.innerHTML = suggestions.map(suggestion => `
+                    <div class="suggestion-item" onclick="toolsHub.selectSuggestion('${suggestion}')">
+                        ${suggestion}
+                    </div>
+                `).join('');
+                suggestionsContainer.style.display = 'block';
+            } else {
+                suggestionsContainer.style.display = 'none';
+            }
+        });
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+                suggestionsContainer.style.display = 'none';
+            }
+        });
+    }
+
+    getSearchSuggestions(query) {
+        const suggestions = new Set();
+        
+        this.tools.forEach(tool => {
+            if (tool.name.toLowerCase().includes(query)) {
+                suggestions.add(tool.name);
+            }
+            if (tool.category.toLowerCase().includes(query)) {
+                suggestions.add(tool.category);
+            }
+            tool.tags.forEach(tag => {
+                if (tag.toLowerCase().includes(query)) {
+                    suggestions.add(tag);
+                }
+            });
+        });
+
+        return Array.from(suggestions).slice(0, 5);
+    }
+
+    selectSuggestion(suggestion) {
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.value = suggestion;
+            this.searchQuery = suggestion.toLowerCase();
+            this.applyFilters();
+        }
+        
+        const suggestionsContainer = document.querySelector('.search-suggestions');
+        if (suggestionsContainer) {
+            suggestionsContainer.style.display = 'none';
+        }
+    }
+
+    setupToolAnalytics() {
+        // Track tool interactions
+        document.addEventListener('click', (e) => {
+            const toolCard = e.target.closest('.tool-card');
+            if (toolCard) {
+                const toolId = toolCard.dataset.toolId;
+                this.trackToolUsage('view', toolId);
+            }
+        });
+    }
+
+    trackToolUsage(action, identifier) {
+        // Send analytics data
+        const analyticsData = {
+            action,
+            identifier,
+            timestamp: new Date().toISOString(),
+            userAgent: navigator.userAgent
+        };
+
+        // In a real implementation, you'd send this to your analytics service
+        console.log('Tool usage tracked:', analyticsData);
+    }
+
+    setupQuickActions() {
+        // Add quick action buttons to the header
+        const headerActions = document.querySelector('.header-actions');
+        if (headerActions) {
+            const quickActions = document.createElement('div');
+            quickActions.className = 'quick-actions';
+            quickActions.innerHTML = `
+                <button class="btn btn-sm btn-secondary" onclick="toolsHub.exportTools()">
+                    📤 Export
+                </button>
+                <button class="btn btn-sm btn-secondary" onclick="toolsHub.importTools()">
+                    📥 Import
+                </button>
+                <button class="btn btn-sm btn-secondary" onclick="toolsHub.showAnalytics()">
+                    📊 Analytics
+                </button>
+            `;
+            headerActions.appendChild(quickActions);
+        }
+    }
+
+    setupExportFeatures() {
+        // Export functionality
+        window.exportTools = this.exportTools.bind(this);
+        window.importTools = this.importTools.bind(this);
+    }
+
+    exportTools() {
+        const exportData = {
+            tools: this.filteredTools,
+            filters: this.filters,
+            searchQuery: this.searchQuery,
+            timestamp: new Date().toISOString()
+        };
+
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+            type: 'application/json'
+        });
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `osint-tools-export-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        this.showSuccess('Tools exported successfully');
+    }
+
+    importTools() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        if (data.tools) {
+                            this.filteredTools = data.tools;
+                            this.renderTools();
+                            this.showSuccess('Tools imported successfully');
+                        }
+                    } catch (error) {
+                        this.showError('Invalid import file');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        };
+        input.click();
+    }
+
+    showAnalytics() {
+        const analyticsHTML = `
+            <div class="analytics-modal">
+                <div class="analytics-header">
+                    <h2>Tools Analytics</h2>
+                </div>
+                <div class="analytics-content">
+                    <div class="analytics-section">
+                        <h4>Overview</h4>
+                        <div class="analytics-stats">
+                            <div class="stat">
+                                <span class="stat-number">${this.analytics.totalTools}</span>
+                                <span class="stat-label">Total Tools</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">${this.analytics.favorites}</span>
+                                <span class="stat-label">Favorites</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">${Object.keys(this.analytics.categories).length}</span>
+                                <span class="stat-label">Categories</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="analytics-section">
+                        <h4>Top Categories</h4>
+                        <div class="category-stats">
+                            ${Object.entries(this.analytics.categories)
+                                .sort(([,a], [,b]) => b - a)
+                                .slice(0, 5)
+                                .map(([category, count]) => `
+                                    <div class="category-stat">
+                                        <span class="category-name">${this.escapeHtml(category)}</span>
+                                        <span class="category-count">${count}</span>
+                                    </div>
+                                `).join('')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const modal = this.createModal(analyticsHTML);
+        document.body.appendChild(modal);
+    }
+
+    setupPerformanceMonitoring() {
+        // Monitor performance metrics
+        if ('performance' in window) {
+            window.addEventListener('load', () => {
+                const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+                console.log(`Page load time: ${loadTime}ms`);
+            });
+        }
+    }
+
+    setupInfiniteScroll() {
+        let isLoading = false;
+        let page = 1;
+        const itemsPerPage = 20;
+
+        const loadMoreTools = () => {
+            if (isLoading) return;
             
-            if (count < total) {
-                container.title = `Showing ${count} of ${total} tools`;
+            isLoading = true;
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const toolsToShow = this.filteredTools.slice(start, end);
+            
+            // Simulate loading delay
+            setTimeout(() => {
+                // Add new tools to the grid
+                const container = document.querySelector('.tools-container');
+                if (container && toolsToShow.length > 0) {
+                    const newToolsHTML = toolsToShow.map(tool => this.renderToolCard(tool)).join('');
+                    container.insertAdjacentHTML('beforeend', newToolsHTML);
+                    this.setupToolCardListeners();
+                }
+                
+                page++;
+                isLoading = false;
+            }, 500);
+        };
+
+        // Intersection Observer for infinite scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !isLoading) {
+                    loadMoreTools();
+                }
+            });
+        });
+
+        // Observe the last tool card
+        const observeLastCard = () => {
+            const cards = document.querySelectorAll('.tool-card');
+            if (cards.length > 0) {
+                observer.observe(cards[cards.length - 1]);
+            }
+        };
+
+        // Initial observation
+        setTimeout(observeLastCard, 1000);
+    }
+
+    setupDragAndDrop() {
+        // Drag and drop for favorites
+        document.addEventListener('dragstart', (e) => {
+            if (e.target.classList.contains('tool-card')) {
+                e.dataTransfer.setData('text/plain', e.target.dataset.toolId);
+                e.target.style.opacity = '0.5';
+            }
+        });
+
+        document.addEventListener('dragend', (e) => {
+            if (e.target.classList.contains('tool-card')) {
+                e.target.style.opacity = '1';
+            }
+        });
+
+        document.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        document.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const toolId = e.dataTransfer.getData('text/plain');
+            const favoritesZone = e.target.closest('.favorites-zone');
+            
+            if (favoritesZone && toolId) {
+                const tool = this.tools.find(t => t.id === toolId);
+                if (tool) {
+                    this.toggleFavorite(toolId, tool.category);
+                }
+            }
+        });
+    }
+
+    handleKeyboardShortcuts(event) {
+        // Ctrl/Cmd + K for search
+        if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+            event.preventDefault();
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.focus();
+            }
+        }
+
+        // Ctrl/Cmd + F for filters
+        if ((event.ctrlKey || event.metaKey) && event.key === 'f') {
+            event.preventDefault();
+            const filterSelect = document.querySelector('.filter-select');
+            if (filterSelect) {
+                filterSelect.focus();
+            }
+        }
+
+        // Escape to clear search
+        if (event.key === 'Escape') {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput && document.activeElement === searchInput) {
+                searchInput.value = '';
+                this.searchQuery = '';
+                this.applyFilters();
             }
         }
     }
 
-    updateFavoritesCount() {
-        const count = this.favorites.length;
-        document.getElementById('totalFavorites').textContent = count;
-    }
+    setupAnimations() {
+        // Add intersection observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
 
-    // Enhanced notifications
-    showNotification(message, type = 'info') {
-        const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
-        notification.innerHTML = `
-            <i class="fas fa-${this.getNotificationIcon(type)}"></i>
-            <span>${message}</span>
-            <button class="notification-close">
-                <i class="fas fa-times"></i>
-            </button>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        // Auto remove after 5 seconds
-        setTimeout(() => {
-            notification.remove();
-        }, 5000);
-        
-        // Manual close
-        notification.querySelector('.notification-close').addEventListener('click', () => {
-            notification.remove();
+        // Observe all tool cards
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.tool-card');
+            cards.forEach(card => observer.observe(card));
         });
     }
 
-    getNotificationIcon(type) {
-        const icons = {
-            success: 'check-circle',
-            error: 'exclamation-circle',
-            warning: 'exclamation-triangle',
-            info: 'info-circle'
-        };
-        return icons[type] || 'info-circle';
+    setupTheme() {
+        document.documentElement.setAttribute('data-theme', this.theme);
+        
+        const themeToggle = document.querySelector('.theme-toggle');
+        if (themeToggle) {
+            themeToggle.innerHTML = this.theme === 'light' ? '🌙' : '☀️';
+        }
+
+        // Restore sidebar state
+        const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+        if (sidebarCollapsed) {
+            this.sidebarCollapsed = true;
+            this.toggleSidebar();
+        }
+
+        // Restore view mode
+        const viewMode = localStorage.getItem('viewMode');
+        if (viewMode) {
+            this.setViewMode(viewMode);
+        }
     }
 
-    // Loading states
-    showLoading() {
-        this.isLoading = true;
-        document.getElementById('loadingState')?.classList.remove('hidden');
+    showWelcomeMessage() {
+        if (!localStorage.getItem('welcomeShown')) {
+            this.showSuccess('Welcome to the Ultimate OSINT Tools Hub! 🚀');
+            localStorage.setItem('welcomeShown', 'true');
+        }
+    }
+
+    // Utility methods
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    setLoading(loading) {
+        this.isLoading = loading;
+        const loadingElement = document.querySelector('.loading');
+        if (loadingElement) {
+            loadingElement.style.display = loading ? 'flex' : 'none';
+        }
+    }
+
+    showLoading(message = 'Loading...') {
+        this.setLoading(true);
+        const loadingElement = document.querySelector('.loading');
+        if (loadingElement) {
+            loadingElement.innerHTML = `
+                <div class="loading-spinner"></div>
+                <span>${message}</span>
+            `;
+        }
     }
 
     hideLoading() {
-        this.isLoading = false;
-        document.getElementById('loadingState')?.classList.add('hidden');
+        this.setLoading(false);
     }
 
-    showEmptyState() {
-        document.getElementById('emptyState')?.classList.remove('hidden');
-    }
-
-    hideEmptyState() {
-        document.getElementById('emptyState')?.classList.add('hidden');
+    showSuccess(message) {
+        this.showNotification(message, 'success');
     }
 
     showError(message) {
         this.showNotification(message, 'error');
     }
 
-    // AI Recommendations (placeholder for future implementation)
-    initializeAIRecommendations() {
-        // This will be implemented with the AI service
-        console.log('🤖 AI recommendations initialized');
-    }
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type} fade-in`;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <span class="notification-icon">
+                    ${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}
+                </span>
+                <span class="notification-message">${this.escapeHtml(message)}</span>
+                <button class="notification-close" onclick="this.parentNode.parentNode.remove()">×</button>
+            </div>
+        `;
 
-    // Quick Access Modal
-    showQuickAccessModal(tool = null) {
-        // Implementation for quick access modal
-        console.log('Quick access modal:', tool);
-    }
+        document.body.appendChild(notification);
 
-    // Tool Modal
-    showToolModal(tool) {
-        // Implementation for tool details modal
-        console.log('Tool modal:', tool);
-    }
-
-    // Favorites Modal
-    showFavoritesModal() {
-        // Implementation for favorites modal
-        console.log('Favorites modal');
-    }
-
-    // Filters Modal
-    showFiltersModal() {
-        // Implementation for filters modal
-        console.log('Filters modal');
-    }
-
-    // Load favorites analytics
-    async loadFavoritesAnalytics() {
-        try {
-            const response = await fetch('/api/tools/favorites/analytics');
-            const data = await response.json();
-            
-            if (data.success) {
-                this.favoritesAnalytics = data.data;
-                this.updateFavoritesAnalytics();
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
             }
-        } catch (error) {
-            console.error('Error loading favorites analytics:', error);
-        }
+        }, 5000);
     }
 
-    updateFavoritesAnalytics() {
-        // Implementation for updating favorites analytics display
-        console.log('Favorites analytics updated:', this.favoritesAnalytics);
+    createModal(content) {
+        const modal = document.createElement('div');
+        modal.className = 'modal-backdrop';
+        modal.innerHTML = `
+            <div class="modal-content scale-in">
+                <div class="modal-header">
+                    <button class="modal-close" onclick="this.closest('.modal-backdrop').remove()">×</button>
+                </div>
+                <div class="modal-body">
+                    ${content}
+                </div>
+            </div>
+        `;
+
+        // Close modal on backdrop click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+
+        return modal;
+    }
+
+    performAdvancedSearch() {
+        // Implement advanced search with multiple criteria
+        console.log('Performing advanced search:', this.searchQuery);
+        this.showSuccess('Advanced search completed');
+    }
+
+    setupCategoryNavigation() {
+        // Setup category navigation in sidebar
+        const categories = [...new Set(this.tools.map(tool => tool.category))];
+        const navContainer = document.querySelector('.nav-section[data-section="categories"]');
+        
+        if (navContainer) {
+            const categoryList = navContainer.querySelector('.nav-list');
+            if (categoryList) {
+                categoryList.innerHTML = categories.map(category => `
+                    <div class="nav-item" data-category="${category}">
+                        <span class="nav-item-icon">📁</span>
+                        <span class="nav-item-text">${this.escapeHtml(category)}</span>
+                        <span class="nav-item-count">${this.analytics.categories[category] || 0}</span>
+                    </div>
+                `).join('');
+
+                // Add click handlers
+                categoryList.querySelectorAll('.nav-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const category = item.dataset.category;
+                        this.filters.category = category;
+                        this.applyFilters();
+                        this.showSuccess(`Filtered by ${category}`);
+                    });
+                });
+            }
+        }
     }
 }
 
-// Initialize the tools page when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    window.toolsPage = new ToolsPage();
-});
+// Initialize the tools hub
+const toolsHub = new UltimateOSINTToolsHub();
 
-// Export for global access
-window.ToolsPage = ToolsPage;
+// Global functions for HTML onclick handlers
+window.toolsHub = toolsHub;

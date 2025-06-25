@@ -58,6 +58,14 @@ class AIService {
 
   async chat(message, context = {}) {
     try {
+      // Check if we have valid API keys (not just present, but actually valid)
+      const hasValidKeys = this.openrouterApiKey && this.openrouterApiKey !== 'your-openrouter-api-key-here' ||
+                          this.openaiApiKey && this.openaiApiKey !== 'your-openai-api-key-here';
+      
+      if (!hasValidKeys) {
+        return this.getFallbackResponse(message, context);
+      }
+
       const systemPrompt = this.buildSystemPrompt(context);
       const response = await this.generateResponse(message, systemPrompt);
       
@@ -72,11 +80,9 @@ class AIService {
       };
     } catch (error) {
       logger.error('AI chat error', { error: error.message, provider: this.provider });
-      return {
-        success: false,
-        error: 'Failed to generate response',
-        message: error.message
-      };
+      
+      // Return fallback response on error
+      return this.getFallbackResponse(message, context);
     }
   }
 
@@ -375,6 +381,271 @@ Please provide:
         uptime: process.uptime()
       };
     }
+  }
+
+  getFallbackResponse(message, context = {}) {
+    const userMessage = message.toLowerCase();
+    
+    // Enhanced fallback responses based on user input
+    if (userMessage.includes('tool') || userMessage.includes('find') || userMessage.includes('search')) {
+      return {
+        success: true,
+        response: `I can help you find OSINT tools! Here are some popular categories to explore:
+
+🔍 **Search Tools**: Google Dorks, Shodan, Censys
+🌐 **Web Intelligence**: Wayback Machine, Archive.org
+👥 **People Search**: Social media platforms, public records
+📱 **Social Media**: Twitter, Facebook, Instagram analysis tools
+🗺️ **Geographic**: Satellite imagery, mapping tools
+🔒 **Security**: Vulnerability scanners, threat intelligence
+
+You can browse these categories in the sidebar or use the search bar to find specific tools. What type of investigation are you working on?`,
+        toolRecommendations: [
+          {
+            category: 'search',
+            name: 'Search Tools',
+            description: 'Advanced search engines and discovery platforms',
+            relevance: 0.9,
+            icon: '🔍',
+            color: '#3b82f6'
+          },
+          {
+            category: 'socialMedia',
+            name: 'Social Media',
+            description: 'Social media analysis and monitoring tools',
+            relevance: 0.8,
+            icon: '📱',
+            color: '#10b981'
+          }
+        ],
+        provider: 'fallback'
+      };
+    }
+    
+    if (userMessage.includes('social') || userMessage.includes('twitter') || userMessage.includes('facebook')) {
+      return {
+        success: true,
+        response: `For social media OSINT, here are some excellent tools and techniques:
+
+**Twitter/X Analysis:**
+- Advanced search operators
+- User profile analysis
+- Hashtag tracking
+- Network mapping
+
+**Facebook Investigation:**
+- Graph search techniques
+- Public profile analysis
+- Group and page monitoring
+
+**General Social Media:**
+- Cross-platform username search
+- Image reverse search
+- Geolocation analysis
+
+Would you like me to show you specific tools for any of these platforms?`,
+        toolRecommendations: [
+          {
+            category: 'socialMedia',
+            name: 'Social Media Tools',
+            description: 'Platform-specific analysis and monitoring',
+            relevance: 0.95,
+            icon: '📱',
+            color: '#10b981'
+          }
+        ],
+        provider: 'fallback'
+      };
+    }
+    
+    if (userMessage.includes('domain') || userMessage.includes('website') || userMessage.includes('ip')) {
+      return {
+        success: true,
+        response: `For domain and website investigation, here are key areas to explore:
+
+**Domain Analysis:**
+- WHOIS information
+- DNS records
+- SSL certificate details
+- Subdomain enumeration
+
+**IP Investigation:**
+- Geolocation
+- Reverse DNS lookup
+- Port scanning
+- Network mapping
+
+**Website Intelligence:**
+- Wayback Machine archives
+- Technology detection
+- Security headers
+- Content analysis
+
+Check out the "Network" and "Domains" categories for specific tools!`,
+        toolRecommendations: [
+          {
+            category: 'network',
+            name: 'Network Tools',
+            description: 'Domain analysis and network investigation',
+            relevance: 0.9,
+            icon: '🌐',
+            color: '#8b5cf6'
+          }
+        ],
+        provider: 'fallback'
+      };
+    }
+    
+    if (userMessage.includes('image') || userMessage.includes('photo') || userMessage.includes('picture')) {
+      return {
+        success: true,
+        response: `For image and visual OSINT, here are powerful techniques:
+
+**Reverse Image Search:**
+- Google Lens
+- TinEye
+- Yandex Images
+- Bing Visual Search
+
+**Image Analysis:**
+- EXIF data extraction
+- Metadata analysis
+- Geolocation from photos
+- Object recognition
+
+**Video Analysis:**
+- Frame extraction
+- Audio analysis
+- Background investigation
+
+Look in the "Images" category for specialized tools!`,
+        toolRecommendations: [
+          {
+            category: 'images',
+            name: 'Image Analysis',
+            description: 'Reverse search and visual intelligence tools',
+            relevance: 0.9,
+            icon: '🖼️',
+            color: '#f59e0b'
+          }
+        ],
+        provider: 'fallback'
+      };
+    }
+    
+    if (userMessage.includes('person') || userMessage.includes('people') || userMessage.includes('name')) {
+      return {
+        success: true,
+        response: `For people and identity investigation, here are effective approaches:
+
+**People Search:**
+- Public records databases
+- Social media profiles
+- Professional networks
+- Court records
+
+**Username Enumeration:**
+- Cross-platform username search
+- Email address discovery
+- Handle correlation
+
+**Background Research:**
+- Employment history
+- Education records
+- Business affiliations
+- Online presence
+
+Explore the "People Search" category for comprehensive tools!`,
+        toolRecommendations: [
+          {
+            category: 'geographic',
+            name: 'People Search',
+            description: 'Identity and background investigation tools',
+            relevance: 0.85,
+            icon: '👥',
+            color: '#ef4444'
+          }
+        ],
+        provider: 'fallback'
+      };
+    }
+    
+    if (userMessage.includes('help') || userMessage.includes('how') || userMessage.includes('guide')) {
+      return {
+        success: true,
+        response: `I'm here to help with your OSINT investigations! Here's how I can assist:
+
+**What I can do:**
+- Recommend tools for specific tasks
+- Explain OSINT methodologies
+- Guide you through investigation workflows
+- Suggest alternative approaches
+
+**Getting started:**
+1. Browse tools by category in the sidebar
+2. Use the search bar to find specific tools
+3. Ask me about any investigation type
+4. Save your favorite tools for quick access
+
+**Popular investigation types:**
+- Social media analysis
+- Domain and website research
+- People and identity investigation
+- Image and visual intelligence
+- Network and infrastructure analysis
+
+What type of investigation are you working on?`,
+        toolRecommendations: [
+          {
+            category: 'search',
+            name: 'Getting Started',
+            description: 'Essential tools for OSINT beginners',
+            relevance: 0.8,
+            icon: '🚀',
+            color: '#3b82f6'
+          }
+        ],
+        provider: 'fallback'
+      };
+    }
+    
+    // Default helpful response
+    return {
+      success: true,
+      response: `I'm your OSINT assistant! I can help you with:
+
+🔍 **Tool Recommendations**: Find the right tools for your investigation
+📚 **Methodology Guidance**: Learn OSINT techniques and workflows
+🎯 **Investigation Support**: Get help with specific research tasks
+💡 **Best Practices**: Understand ethical and legal considerations
+
+**Quick Start:**
+- Browse categories in the sidebar
+- Use the search bar to find specific tools
+- Ask me about any investigation type
+- Save your favorite tools
+
+What would you like to investigate today?`,
+      toolRecommendations: [
+        {
+          category: 'search',
+          name: 'Search Tools',
+          description: 'Start with basic search and discovery tools',
+          relevance: 0.7,
+          icon: '🔍',
+          color: '#3b82f6'
+        },
+        {
+          category: 'socialMedia',
+          name: 'Social Media',
+          description: 'Analyze social media platforms and networks',
+          relevance: 0.6,
+          icon: '📱',
+          color: '#10b981'
+        }
+      ],
+      provider: 'fallback'
+    };
   }
 }
 

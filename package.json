@@ -20,6 +20,7 @@
   "author": "OSINT Community",
   "license": "MIT",
   "dependencies": {
+    "apicache": "^1.6.3",
     "axios": "^1.6.0",
     "bcryptjs": "^2.4.3",
     "chart.js": "^4.4.0",
@@ -57,8 +58,7 @@
     "validator": "^13.11.0",
     "whois": "^2.13.5",
     "winston": "^3.11.0",
-    "xlsx": "^0.18.5",
-    "apicache": "^1.6.3"
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
